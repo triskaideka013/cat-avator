@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "littlejsengine": "^1.9.5",
+    "local-web-server": "^5.4.0"
+  }
+}
