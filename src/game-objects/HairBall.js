@@ -1,14 +1,14 @@
 import { EngineObject, vec2, Vector2 } from "littlejsengine";
 import { degreesToVector2 } from "../util/convert";
 
-class HairBall extends EngineObject
+export class HairBall extends EngineObject
 {
   /**
    * 
    * @param {Vector2} pos 
    * @param {number} angle
    */
-  constructor(pos, angle)
+  constructor(pos, angle=45)
   {
     super(pos); // set position
     

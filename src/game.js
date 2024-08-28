@@ -1,9 +1,6 @@
 
-/*
-    Little JS Hello World Demo
-    - Just prints "Hello World!"
-    - A good starting point for new projects
-*/
+import { drawTextScreen, engineInit, mainCanvasSize, vec2 } from "littlejsengine";
+import { HairBall } from "./game-objects/HairBall";
 
 'use strict';
 
@@ -12,7 +9,8 @@ function gameInit()
 {
     // called once after the engine starts up
     // setup the game
-	new HairBall(vec2(1,1))
+    
+	new HairBall(vec2(1,1)); // no angle specified, defaults to 45 degrees
 }
 
 ///////////////////////////////////////////////////////////////////////////////
