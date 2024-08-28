@@ -2,10 +2,11 @@
   "compilerOptions": {
     "checkJs": true,
     "target": "ES6",
-    },
-    "exclude": [
-      "engineRelease.js",
-      "engineExport.js"
-    ]
-  }
+    "moduleResolution": "nodenext",
+    "module": "NodeNext",
+  },
+  "exclude": [
+    "engineRelease.js",
+    "engineExport.js"
+  ]
 }
