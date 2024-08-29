@@ -1,4 +1,4 @@
-import { Vector2 } from "littlejsengine";
+import { Vector2 } from "../../node_modules/littlejsengine/dist/littlejs.esm.js";
 
 /**
  * 
