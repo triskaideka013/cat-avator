@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "checkJs": true,
+    "checkJs": false,
     "target": "ES6",
     "moduleResolution": "nodenext",
     "module": "NodeNext",
