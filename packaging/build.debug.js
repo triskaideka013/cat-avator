@@ -16,13 +16,16 @@ const BUILD_FOLDER = "build";
 
 ////////////////////////////////////////
 // Collect source files
-const sourceFiles = ["./src/game.js", "./vendor/littlejs/littlejs.release.js"];
+const sourceFiles = [];
 const sources = ["stages", "game-objects", "util"];
+
+sourceFiles.push("./vendor/littlejs/littlejs.release.js");
 
 for (let source of sources) {
   findGameFiles("./src", source, sourceFiles);
 }
 
+sourceFiles.push("./src/game.js");
 
 console.log("Found Source Files:");
 console.log(sourceFiles);
@@ -113,7 +116,7 @@ function htmlBuildStep(filename) {
 function findGameFiles(path, entry, gameFiles) {
   let target = `${path}/${entry}`;
 
-  if (fs.lstatSync(target).isFile()) {
+  if (fs.lstatSync(target).isFile() && target.endsWith(".js")) {
     gameFiles.push(target);
     return;
   }
