@@ -1,4 +1,3 @@
-// @ts-nocheck
 
 //import { drawTextScreen, engineInit, mainCanvasSize, mouseWasPressed, mousePos, Sound } from "../node_modules/littlejsengine/dist/littlejs.esm.js";
 //import { HairBall } from "./game-objects/HairBall.js";
