@@ -2,5 +2,12 @@
   "dependencies": {
     "littlejsengine": "^1.9.5",
     "local-web-server": "^5.4.0"
+  },
+  "devDependencies": {
+    "google-closure-compiler": "~20230502.0.0",
+    "roadroller": "~2.1.0",
+    "uglify-js": "~3.17.4",
+    "typescript": "~5.1.6",
+    "ect-bin": "~1.4.1"
   }
 }

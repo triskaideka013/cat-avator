@@ -1,0 +1,128 @@
+#!/usr/bin/env node
+
+/**
+ * LittleJS Build System
+ */
+
+"use strict";
+const fs = require("node:fs");
+const child_process = require("node:child_process");
+
+console.log("Running Debug Build");
+
+////////////////////////////////////////
+//Define build-time constants
+const BUILD_FOLDER = "build";
+
+////////////////////////////////////////
+// Collect source files
+const sourceFiles = ["./src/game.js", "./vendor/littlejs/littlejs.release.js"];
+const sources = ["stages", "game-objects", "util"];
+
+for (let source of sources) {
+  findGameFiles("./src", source, sourceFiles);
+}
+
+
+console.log("Found Source Files:");
+console.log(sourceFiles);
+
+////////////////////////////////////////
+// Collect Assets
+const assets = [];
+findGameFiles("./assets", assets);
+
+////////////////////////////////////////
+// Cleanup from previous build
+fs.rmSync(BUILD_FOLDER, { recursive: true, force: true });
+fs.mkdirSync(BUILD_FOLDER);
+
+////////////////////////////////////////
+// Move assets to build directory
+for (const file of assets) fs.copyFileSync(file, `${BUILD_FOLDER}/${file}`);
+
+////////////////////////////////////////
+// Compile
+
+Build(`${BUILD_FOLDER}/index.js`, sourceFiles, [
+  closureCompilerStep,
+  uglifyBuildStep,
+  roadrollerBuildStep,
+  htmlBuildStep,
+]);
+
+////////////////////////////////////////
+// Compilation steps
+// A single build with its own source files, build steps, and output file
+// - each build step is a callback that accepts a single filename
+function Build(outputFile, files = [], buildSteps = []) {
+  // copy files into a buffer
+  let buffer = "";
+  for (const file of files) buffer += fs.readFileSync(file) + "\n";
+
+  // output file
+  fs.writeFileSync(outputFile, buffer, { flag: "w+" });
+
+  // execute build steps in order
+  for (const buildStep of buildSteps) buildStep(outputFile);
+}
+
+function closureCompilerStep(filename) {
+  console.log(`Running closure compiler...`);
+
+  const filenameTemp = filename + ".tmp";
+  fs.copyFileSync(filename, filenameTemp);
+  child_process.execSync(
+    `npx google-closure-compiler --js=${filenameTemp} --js_output_file=${filename} --compilation_level=SIMPLE --language_in=ECMASCRIPT_2021 --language_out=ECMASCRIPT_2021 --warning_level=VERBOSE --jscomp_off=* --assume_function_wrapper`,
+    { stdio: "inherit" }
+  );
+  fs.rmSync(filenameTemp);
+}
+
+function uglifyBuildStep(filename) {
+  console.log(`Running uglify...`);
+  child_process.execSync(`npx uglifyjs ${filename} -c -m -o ${filename}`, {
+    stdio: "inherit",
+  });
+}
+
+function roadrollerBuildStep(filename) {
+  console.log(`Running roadroller...`);
+  child_process.execSync(`npx roadroller ${filename} -o ${filename}`, {
+    stdio: "inherit",
+  });
+}
+
+function htmlBuildStep(filename) {
+  console.log(`Building html...`);
+
+  // create html file
+  let buffer = "";
+  buffer += "<html><head></head><body><script>";
+  buffer += fs.readFileSync(filename);
+  buffer += "</script></body></html>";
+
+  // output html file
+  fs.writeFileSync(`${BUILD_FOLDER}/index.html`, buffer, { flag: "w+" });
+}
+
+////////////////////////////////////////
+// Utility Methods
+
+// recursive search for files within a given directory
+function findGameFiles(path, entry, gameFiles) {
+  let target = `${path}/${entry}`;
+
+  if (fs.lstatSync(target).isFile()) {
+    gameFiles.push(target);
+    return;
+  }
+
+  let contents = fs.readdirSync(target);
+
+  for (let content of contents) {
+    let childDir = `${path}/${entry}`;
+
+    findGameFiles(childDir, content, gameFiles);
+  }
+}

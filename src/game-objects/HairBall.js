@@ -1,9 +1,9 @@
-import { EngineObject, Vector2, vec2, Sound } from "../../node_modules/littlejsengine/dist/littlejs.esm.js";
-import { degreesToVector2 } from "../util/convert.js";
+// import { EngineObject, Vector2, vec2, Sound } from "../../node_modules/littlejsengine/dist/littlejs.esm.js";
+// import { degreesToVector2 } from "../util/convert.js";
 
-export class HairBall extends EngineObject
+class HairBall extends EngineObject
 {
-  powerup;
+  
   /**
    * 
    * @param {Vector2} pos 
