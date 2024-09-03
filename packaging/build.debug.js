@@ -17,9 +17,9 @@ const BUILD_FOLDER = "build";
 ////////////////////////////////////////
 // Collect source files
 const sourceFiles = [];
-const sources = ["stages", "game-objects", "util"];
+const sources = ["state", "stages", "game-objects", "util"];
 
-sourceFiles.push("./vendor/littlejs/littlejs.release.js");
+sourceFiles.push("./vendor/littlejs/littlejs.js");
 
 for (let source of sources) {
   findGameFiles("./src", source, sourceFiles);
