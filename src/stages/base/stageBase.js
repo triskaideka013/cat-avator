@@ -3,10 +3,10 @@
  * Extend to create a custom stage
  */
 class StageBase extends EngineObject {
-    constructor() {
+    constructor(stageName = "") {
       super();
   
-      this.state = new StageState();
+      this.state = new StageState(stageName);
     }
   
     /**
@@ -94,7 +94,12 @@ class StageBase extends EngineObject {
      */
     hasFailed()
     {
-      this.state.hasFailed();
+      return this.state.hasFailed();
+    }
+
+    hasWon()
+    {
+      return this.state.hasSucceeded();
     }
   }
   

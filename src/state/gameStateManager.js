@@ -1,19 +1,17 @@
 /**
  * Contains state management logic for controlling game flow
  */
+
+
 class GameStateManager {
   ///////////////////////////////////////////////////////////////////////////////
   // Ctor
   ///////////////////////////////////////////////////////////////////////////////
   constructor() {
-    // Core stages
-    this.introStage = new IntroStage();
-    this.elevatorStage = new ElevatorStage();
 
-    this.gameState = new GameState(this.introStage, this.elevatorStage);
-
-    // provide elevator stage with callback to be invoked on level selection
-    this.elevatorStage.onFloorSelected(this.floorWasSelected);
+    // Global game state
+    this.gameState = new GameState();
+    this.CAN_PLAY = true;
   }
 
   ///////////////////////////////////////////////////////////////////////////////
@@ -50,11 +48,37 @@ class GameStateManager {
    * @returns true if the current level has been failed, false otherwise
    */
   isGameOver() {
+    var hasQuit =
+      this.gameState.isContinueScreen() &&
+      this.gameState.getCurrentStage().hasFailed();
+
+    return this.gameState.getLivesLeft() == 0 || hasQuit;
+  }
+
+  /**
+   * Check whether the current level was failed
+   * @returns
+   */
+  levelWasFailed() {
     return this.getCurrentStage().hasFailed();
   }
 
+  levelWasWon()
+  {
+    return this.getCurrentStage().hasWon();
+  }
+
+  /**
+   * check if game state is on elevator stage
+   * @returns true if elevator stage is active, false otherwise
+   */
   isElevatorStage() {
     return this.gameState.isElevator();
+  }
+
+  isContinueScreen()
+  {
+    return this.gameState.isContinueScreen();
   }
 
   ///////////////////////////////////////////////////////////////////////////////
@@ -72,12 +96,30 @@ class GameStateManager {
     this.gameState.goToElevator();
   }
 
-  floorWasSelected(elevatorButton) {
-    console.log("game state gets selected button", elevatorButton);
-    this.selectedElevatorButton = elevatorButton;
-  }
-
   startNewLevel(newLevel) {
     this.gameState.goToLevel(newLevel);
+  }
+
+  goToContinueScreen() {
+    if (!this.isGameOver()) {
+      this.gameState.goToContinueScreen();
+    } 
+  }
+
+  goToGameOverScreen()
+  {
+    this.CAN_PLAY = false;
+    var gameOver = new GameOverStage();
+
+    this.gameState.goToLevel(gameOver);
+  }
+
+  /**
+   * mark current 
+   * level as succeeded, to unlock next elevator button
+   */
+  markLevelComplete()
+  {
+    this.gameState.markCurrentLevelComplete();
   }
 }

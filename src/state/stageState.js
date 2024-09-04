@@ -2,10 +2,12 @@ class StageState {
     ///////////////////////////////////////////////////////////////////////////////
     // Ctor
     ///////////////////////////////////////////////////////////////////////////////
-    constructor() {
+    constructor(name = "") {
       this.isComplete = false;
       this.isFailed = false;
       this.active = false;
+      this.name = name;
+      this.result = null;
     }
     
   
@@ -13,8 +15,10 @@ class StageState {
      * reset basic completion flags, set stage to active
      */
     begin() {
+      
       this.isComplete = false;
       this.isFailed = false;
+      this.result = null;
       this.active = true;
     }
   
@@ -24,7 +28,7 @@ class StageState {
     fail() {
       this.isComplete = true;
       this.isFailed = true;
-      this.isActive = false;
+      this.active = false;
     }
   
     /**
@@ -66,6 +70,16 @@ class StageState {
      */
     isActive() {
       return this.active;
+    }
+
+    getResult()
+    {
+      return this.result;
+    }
+
+    setResult(result)
+    {
+      this.result = result;
     }
   }
   
