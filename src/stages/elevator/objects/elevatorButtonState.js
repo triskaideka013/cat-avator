@@ -1,9 +1,9 @@
 class ElevatorButtonState
 {
-    constructor()
+    constructor(enabled, completed)
     {
-        this.enabled = false;
-        this.completed = false;
+        this.enabled = enabled;
+        this.completed = completed ;
     }
 
     isEnabled()
@@ -21,8 +21,14 @@ class ElevatorButtonState
         this.enabled = true;
     }
 
+    disable()
+    {
+        this.enabled = false;
+    }
+
     complete()
     {
         this.completed = true;
+        this.disable();
     }
 }

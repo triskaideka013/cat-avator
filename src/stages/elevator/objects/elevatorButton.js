@@ -1,16 +1,11 @@
 class ElevatorButton
 {
-    constructor(vector2, index)
+    constructor(vector2, index, enabled, completed)
     {
         this.x = vector2.x;
         this.y = vector2.y;
         this.index = index;
-        this.state = new ElevatorButtonState();
-
-        if(this.index == 0)
-        {
-            this.state.enable();
-        }
+        this.state = new ElevatorButtonState(enabled, completed);
     }
 
     getX()

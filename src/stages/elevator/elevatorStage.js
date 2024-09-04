@@ -1,6 +1,6 @@
 class ElevatorStage extends StageBase {
-  constructor() {
-    super();
+  constructor(completedLevels) {
+    super("elevator");
 
     //Game state registers callback to invoke when level is selected
     this.levelSelectedCallback = null;
@@ -15,7 +15,7 @@ class ElevatorStage extends StageBase {
     this.backgroundColor = hsl(0, 0, 0.2);
     this.levelSize = vec2(2, 6);
 
-    this.buttonMap = new ElevatorButtonMap(this.levelSize.x, this.levelSize.y);
+    this.buttonMap = new ElevatorButtonMap(this.levelSize.x, this.levelSize.y, completedLevels);
 
     // initialize button data
     const position = new vec2();
@@ -53,14 +53,14 @@ class ElevatorStage extends StageBase {
     var button = this.tryGetButtonPressd();
 
     if (button && button.getState().isEnabled()) {
-      console.log("active button clicked", button);
-      this.levelSelectedCallback(button);
-      this.state.complete();
+      // pass result payload to stage state 
+      this.state.setResult(button);
+      this.complete();
+
     }
   }
 
   gameRender() {
-    if (!this.state.isActive()) return;
   }
 
   gameRenderPost() {
@@ -97,7 +97,7 @@ class ElevatorStage extends StageBase {
 
           // draw background
           drawRect(drawPos, vec2(0.9), color);
-        } 
+        }
       }
     }
   }
@@ -119,15 +119,5 @@ class ElevatorStage extends StageBase {
     var button = this.buttonMap.getButton(adjustedMousePos);
 
     return button ?? false;
-  }
-
-  /**
-   * allow game state to provide us with it's own callback
-   * to be invoked when a player selectes a level
-   */
-
-  onFloorSelected(gameStateHook)
-  {
-    this.levelSelectedCallback = gameStateHook;
   }
 }
