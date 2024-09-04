@@ -15,7 +15,6 @@ const stateManager = new GameStateManager();
 ///////////////////////////////////////////////////////////////////////////////
 
 function gameInit() {
-  console.log("initializing intro stage");
   stateManager.initIntro();
 }
 
@@ -31,7 +30,6 @@ function gameUpdate() {
   if (stateManager.currentStageIsActive()) return;
 
   //stage is complete, decide what to do next
-  console.log("stage complete. resolving next action");
   resolveNextStage();
 }
 
@@ -77,28 +75,51 @@ function gameRenderPost() {
  * and initialize it
  */
 function resolveNextStage() {
-    // sanity check for game over
+  if (!stateManager.CAN_PLAY) return;
+
+  // is game over?
   if (stateManager.isGameOver()) {
-    console.log("Y'all done died, son.");
+    stateManager.goToGameOverScreen();
     return;
   }
 
   // leaving the intro?
-  if(stateManager.isIntroStage())
-  {
+  if (stateManager.isIntroStage()) {
     // leave intro state
     stateManager.completeIntro();
     stateManager.goToElevator();
     return;
   }
 
-  // has selected level?
-  if(stateManager.isElevatorStage())
-  {
+  ///////////////////////////////////////////////////////////////////////////////
+  // Determine the next playable level to load here.
+  // Player has selected a level from the elevator.
+  ///////////////////////////////////////////////////////////////////////////////
+  if (stateManager.isElevatorStage()) {
     // create a new level
     var platformer = new PlatformerStage();
     //transition to level
     stateManager.startNewLevel(platformer);
+  }
+
+  // Playable level was Failed?
+  if (stateManager.levelWasFailed()) {
+    stateManager.goToContinueScreen();
+    return;
+  }
+
+  // Coming from continue screen?
+  if (stateManager.isContinueScreen()) {
+    // Return to elevator
+    stateManager.goToElevator();
+    return;
+  }
+
+  // Playable level was won?
+  if (stateManager.levelWasWon()) {
+    stateManager.markLevelComplete();
+    stateManager.goToElevator();
+    return;
   }
 }
 

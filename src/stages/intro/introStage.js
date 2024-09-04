@@ -1,8 +1,10 @@
 class IntroStage extends StageBase {
 
+
+  
     
     constructor() {
-      super();
+      super("intro");
       this.timer = 0;
     }
   
@@ -15,8 +17,7 @@ class IntroStage extends StageBase {
   
       this.timer += 5;
   
-      if (this.timer > 600) {
-        console.log("intro stage completing");
+      if (this.timer > 200) {
         this.complete();
       }
     }
@@ -34,5 +35,7 @@ class IntroStage extends StageBase {
     }
   
     gameRenderPost() {}
+
+   
   }
   
