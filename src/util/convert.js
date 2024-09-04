@@ -1,11 +1,10 @@
-//import { Vector2 } from "../../node_modules/littlejsengine/dist/littlejs.esm.js";
 
 /**
  * 
  * @param {number} deg 
  * @returns
  */
-export function degreesToRadians(deg) {
+function degreesToRadians(deg) {
   return deg * (Math.PI/180)
 }
 
@@ -15,7 +14,7 @@ export function degreesToRadians(deg) {
  * @param {boolean} clockwise 
  * @returns 
  */
-export function radiansToVector2(rad, clockwise=false) {
+function radiansToVector2(rad, clockwise=false) {
     
     if (!!clockwise) {
         // clockwise [0, -1] going to [1, 0]
@@ -31,6 +30,6 @@ export function radiansToVector2(rad, clockwise=false) {
  * @param {number} deg 
  * @returns 
  */
-export function degreesToVector2(deg) {
+function degreesToVector2(deg) {
     return radiansToVector2( degreesToRadians(deg) ); 
 }
