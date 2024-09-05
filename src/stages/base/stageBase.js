@@ -1,22 +1,21 @@
 /**
- * base class for self-contained stages.  
+ * base class for self-contained stages.
  * Extend to create a custom stage
  */
-class StageBase extends EngineObject {
+class StageBase {
     constructor(stageName = "") {
-      super();
-  
+
       this.state = new StageState(stageName);
     }
-  
+
     /**
-     * Main update method.  
+     * Main update method.
      * your stage must implement this method.
-     * 
+     *
      * Don't forget to check whether your stage
-     * is active before executing update logic.  
-     * 
-     * Failure to do so may cause your stage to continue 
+     * is active before executing update logic.
+     *
+     * Failure to do so may cause your stage to continue
      * executing its update logic when in an inactive|complete|failed
      * state.
      */
@@ -24,36 +23,36 @@ class StageBase extends EngineObject {
 
       if (!this.state.isActive()) return;
     }
-  
+
     /**
-     * Initialization routine.  
+     * Initialization routine.
      * If your stage implements this method
-     * it must call 
-     * 
-     * super.init() 
+     * it must call
+     *
+     * super.init()
      */
     init() {
       this.state.begin();
     }
-  
+
     /**
      * Optional rendering method.
-     * Your may safely skip implementing this method if 
+     * Your may safely skip implementing this method if
      * your stage does not require it
      */
     gameRender() {}
-  
+
     /**
      * Optional rendering method.
-     * Your may safely skip implementing this method if 
+     * Your may safely skip implementing this method if
      * your stage does not require it
      */
     gameRenderPost() {}
-  
+
     /**
-     * retrieve the current StageStage object.  
+     * retrieve the current StageStage object.
      * Do not override.
-     * @returns 
+     * @returns
      */
     getState() {
       /**
@@ -62,7 +61,7 @@ class StageBase extends EngineObject {
        */
       return this.state;
     }
-  
+
     /**
      * Mark your stage as complete.
      * Do not override.
@@ -79,7 +78,7 @@ class StageBase extends EngineObject {
     {
       return this.state.hasCompleted();
     }
-  
+
     /**
      * Mark your stage as failed.
      * Do not override.
@@ -102,4 +101,3 @@ class StageBase extends EngineObject {
       return this.state.hasSucceeded();
     }
   }
-  
