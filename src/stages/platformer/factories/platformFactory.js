@@ -23,6 +23,9 @@ class PlatformFactory {
     platforms.push(
       new Platform(vec2(240, -50), vec2(5, 1), new Color(0, 1, 0.5))
     );
+    platforms.push(
+      new Platform(vec2(-50, 32), vec2(300, 1), new Color(0, 0, 0)) // ceiling
+    );
     return platforms;
   }
 }

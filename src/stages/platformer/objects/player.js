@@ -2,10 +2,11 @@
 // Move some things out of the update method.
 
 class Player extends RectObject {
-  constructor(position, size, color, platforms, powerups, minimumStageY) {
+  constructor(position, size, color, platforms, powerups, minimumStageY, enemies) {
     super(position, size, color);
     this.platforms = platforms;
     this.powerups = powerups;
+    this.enemies = enemies;
     this.startPos = position;
 
     this.minimumStageY = minimumStageY;
@@ -15,7 +16,7 @@ class Player extends RectObject {
     this.gravity = -0.5 / 60;
     this.playerVelocity = 10 / 60;
     this.jumpVelocity = 15 / 60;
-   
+
     this.jumpCount = 0;
     this.powerupCounter = 0;
 
@@ -33,7 +34,7 @@ class Player extends RectObject {
     {
       this.succeeded = true;
       return;
-      
+
     }
 
     // developer insta-fail ~ press 'N' to complete the stage
@@ -71,6 +72,21 @@ class Player extends RectObject {
         } else {
           this.pos.y = platform.pos.y - platform.size.y / 2 - this.size.y / 2;
           this.velocity.y *= -1;
+        }
+      }
+    }
+
+    for (const enemy of this.enemies) {
+      if (isOverlapping(this.pos, this.size, enemy.pos, enemy.size)) {
+        // kill the enemy if you're jumping on its head
+        if (this.velocity.y < 0) {
+          enemy.destroy();
+          this.enemies.splice(this.enemies.indexOf(enemy), 1);
+          // bounce off of the enemy's head
+          this.velocity.y = this.jumpVelocity;
+        } else {
+          // if you run into the enemy from the left or right side, you die
+          this.failed = true;
         }
       }
     }
