@@ -3,6 +3,7 @@ class PlatformerStage extends StageBase {
     super("platformer");
     this.platforms = [];
     this.powerups = [];
+    this.enemies = [];
     this.player = null;
   }
 
@@ -19,6 +20,9 @@ class PlatformerStage extends StageBase {
     this.platforms = PlatformFactory.createPlatforms();
     this.powerups = PowerupFactory.createPowerups();
 
+    // initialize enemies
+    this.enemies = EnemyFactory.createEnemies([this.platforms[2], this.platforms[5]]);
+
     // find pos.y of the lowest platform in level
     this.stageMinimumY = 0;
     this.platforms.forEach((p) => {
@@ -32,7 +36,8 @@ class PlatformerStage extends StageBase {
       new Color(1, 1, 1),
       this.platforms,
       this.powerups,
-      this.stageMinimumY
+      this.stageMinimumY,
+      this.enemies
     );
 
     // center camera on player
@@ -83,6 +88,7 @@ class PlatformerStage extends StageBase {
 
     this.platforms.forEach((platform) => platform.render());
     this.powerups.forEach((powerup) => powerup.render());
+    this.enemies.forEach((enemy) => enemy.render());
     this.player.render();
 
     // center on player
@@ -95,5 +101,6 @@ class PlatformerStage extends StageBase {
     this.player.destroy();
     this.platforms.forEach(p => p.destroy());
     this.powerups.forEach(p => p.destroy());
+    this.enemies.forEach(e => e.destroy());
   }
 }
