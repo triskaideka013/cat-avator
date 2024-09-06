@@ -1,4 +1,4 @@
-<html><head></head><body><script>// LittleJS - MIT License - Copyright 2021 Frank Force
+// LittleJS - MIT License - Copyright 2021 Frank Force
 
 'use strict';
 
@@ -6900,4 +6900,3 @@ function resolveNextStage() {
 // Startup LittleJS Engine
 engineInit(gameInit, gameUpdate, gameUpdatePost, gameRender, gameRenderPost);
 
-</script></body></html>
