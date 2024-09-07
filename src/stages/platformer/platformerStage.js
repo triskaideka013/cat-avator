@@ -34,12 +34,12 @@ class PlatformerStage extends StageBase {
     // initialize player
     this.player = new Player(
       vec2(10, 4),
-      vec2(2, 3),
-      new Color(1, 1, 1),
-      this.platforms,
-      this.powerups,
-      this.stageMinimumY,
-      this.enemies
+      {
+        platforms: this.platforms,
+        powerups: this.powerups,
+        stageMinimumY: this.stageMinimumY,
+        enemies: this.enemies
+      }
     );
 
     // center camera on player
