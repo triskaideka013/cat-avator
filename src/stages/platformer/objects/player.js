@@ -1,5 +1,5 @@
 // uncomment this line to reference LittleJS types -->
-// import { tile, drawTile, Color, vec2, keyWasPressed, keyIsDown, isOverlapping, update, drawText } from "../../../../node_modules/littlejsengine/dist/littlejs.esm" 
+// import { tile, drawTile, Color, vec2, keyWasPressed, keyIsDown, isOverlapping, update, drawText } from "../../../../node_modules/littlejsengine/dist/littlejs.esm"
 
 // TODO: Refactor Player class.
 // Move some things out of the update method.
@@ -16,22 +16,22 @@ const RIGHT = 'R', LEFT = 'L';
 
 class Player extends RectObject {
   /**
-   * @param {vec2} pos 
+   * @param {vec2} pos
    * @param {PlayerInit} opts
    */
   constructor(pos, opts) {
-    
+
     const size = vec2(2,2);
-    
+
     super(pos, size, tile(0));
 
     ({
-      platforms: this.platforms, 
+      platforms: this.platforms,
       powerups: this.powerups,
       enemies: this.enemies,
       minimumStageY: this.minimumStageY
     } = opts);
-    
+
     this.startPos = pos;
     this.pos = pos;
     this.size = size;
@@ -54,7 +54,7 @@ class Player extends RectObject {
   render() {
     super.render();
     // this.moji = drawText("🐈", this.pos, 2);
-    drawTile(this.pos, this.size, tile(0, vec2(18,14), 0), new Color(0,0,0,1), this.angle);
+    drawTile(this.pos, this.size, tile(0, vec2(18,14), 0), new Color(0,0,0,1), this.angle, this.mirror);
   }
 
   update() {
@@ -76,7 +76,7 @@ class Player extends RectObject {
       this.failed = true;
       return;
     }
-    
+
     // determine player orientation in x-axis
     let direction = null;
     if (keyIsDown(KeyboardKeys.ArrowLeft) || keyIsDown(KeyboardKeys.ArrowRight)) {
@@ -85,9 +85,9 @@ class Player extends RectObject {
     }
     if (direction !== null) {
       // direction changed
-      this.angle = (this.direction === LEFT) ? -90 : 0;
+      this.mirror = (this.direction === LEFT) ? true : false;
     }
-    
+
 
     this.velocity.x = keyIsDown(KeyboardKeys.ArrowLeft)
       ? -this.playerVelocity
@@ -144,38 +144,13 @@ class Player extends RectObject {
       }
     }
 
-    if (this.pos.y < this.minimumStageY && this.powerupCounter < 6) {
+    if (this.pos.y < this.minimumStageY) {
       this.failed = true;
     }
 
-    if (this.powerupCounter == 7) {
+    if (this.powerups.length === 0) {
       this.succeeded = true;
     }
-
-    // if (this.powerupCounter == 4) {
-    //     drawTextScreen('You Won!', vec2(200, 100), 75, new Color(1, 1, 0));
-    // }
-
-    // if (this.powerupCounter == 5) {
-    //     drawTextScreen('Just Kidding!', vec2(250, 100), 75, new Color(1, 1, 0));
-    // }
-
-    // if (this.powerupCounter == 6) {
-    //     drawTextScreen('It\'s a long way down...', vec2(300, 100), 60, new Color(0, 1, 1));
-    // }
-
-    // if (this.powerupCounter == 7) {
-    //     drawTextScreen('TO BE CONTINUED', vec2(300, 100), 60, new Color(1, 0, 1));
-    //     GameState.gameOver = true;
-    //     GameState.gameWon = true;
-    // }
-
-    // drawTextScreen(
-    //   `Score: ${this.powerupCounter}`,
-    //   vec2(1000, 50),
-    //   50,
-    //   new Color(1, 1, 1)
-    // );
   }
 
   getScore() {

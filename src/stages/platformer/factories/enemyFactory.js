@@ -1,8 +1,8 @@
 class EnemyFactory {
-  static createEnemies(platforms) {
+  static createEnemies(platformList, enemyIndexList) {
     const enemies = [];
-    platforms.forEach(platform => {
-      enemies.push(new Enemy(platform.pos, vec2(2, 2), new Color(1, 0, 0), platform));
+    enemyIndexList.forEach(enemyIndex => {
+      enemies.push(new Enemy(platformList[enemyIndex].pos, vec2(2, 2), new Color(1, 0, 0), platformList[enemyIndex]));
     });
     return enemies;
   }
