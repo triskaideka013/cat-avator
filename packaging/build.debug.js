@@ -33,7 +33,7 @@ console.log(sourceFiles);
 ////////////////////////////////////////
 // Collect Assets
 const assets = [];
-findGameFiles("./assets", assets);
+findGameAssets(assets);
 
 ////////////////////////////////////////
 // Cleanup from previous build
@@ -42,7 +42,10 @@ fs.mkdirSync(BUILD_FOLDER);
 
 ////////////////////////////////////////
 // Move assets to build directory
-for (const file of assets) fs.copyFileSync(file, `${BUILD_FOLDER}/${file}`);
+for (const src of assets) {
+  let file = src.split('/')[2]
+  fs.copyFileSync(src, `${BUILD_FOLDER}/${file}`);
+}
 
 ////////////////////////////////////////
 // Compile
@@ -127,5 +130,22 @@ function findGameFiles(path, entry, gameFiles) {
     let childDir = `${path}/${entry}`;
 
     findGameFiles(childDir, content, gameFiles);
+  }
+}
+
+function findGameAssets(gameFiles, path='./assets') {
+  let target = `${path}`;
+
+  if (fs.lstatSync(target).isFile()) {
+    gameFiles.push(target);
+    return;
+  }
+
+  let contents = fs.readdirSync(target);
+
+  for (let content of contents) {
+    let childDir = `${path}/${content}`;
+
+    findGameAssets(gameFiles, childDir);
   }
 }

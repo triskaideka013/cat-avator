@@ -1,29 +1,42 @@
 // uncomment this line to reference LittleJS types -->
-// import { drawTextScreen, Color, vec2, keyWasPressed, keyIsDown, isOverlapping } from "../../../../node_modules/littlejsengine/dist/littlejs.esm" 
+// import { drawTextScreen, Color, vec2, keyWasPressed, keyIsDown, isOverlapping, update, drawText } from "../../../../node_modules/littlejsengine/dist/littlejs.esm" 
 
 // TODO: Refactor Player class.
 // Move some things out of the update method.
 
+/**
+ * @typedef {Object} PlayerInit
+ * @property {any[]} platforms
+ * @property {any[]} powerups
+ * @property {any[]} enemies
+ * @property {number} minimumStageY
+ */
+
+const RIGHT = 'R', LEFT = 'L';
+
 class Player extends RectObject {
   /**
-   * 
-   * @param {vec2} position 
-   * @param {vec2} size 
-   * @param {Color} color 
-   * @param {any[]} platforms 
-   * @param {any[]} powerups 
-   * @param {number} minimumStageY 
-   * @param {any[]} enemies 
+   * @param {vec2} pos 
+   * @param {PlayerInit} opts
    */
-  constructor(position, size, color, platforms, powerups, minimumStageY, enemies) {
-    super(position, size, color);
-    this.platforms = platforms;
-    this.powerups = powerups;
-    this.enemies = enemies;
-    this.startPos = position;
+  constructor(pos, opts) {
+    
+    const size = vec2(0,2);
+    
+    super(pos, size);
 
-    this.minimumStageY = minimumStageY;
+    ({
+      platforms: this.platforms, 
+      powerups: this.powerups,
+      enemies: this.enemies,
+      minimumStageY: this.minimumStageY
+    } = opts);
+    
+    this.startPos = pos;
+    this.pos = pos;
+    this.size = size;
 
+    this.direction = RIGHT;
     this.velocity = vec2(0, 0);
     this.isOnGround = false;
     this.gravity = -0.5 / 60;
@@ -35,6 +48,11 @@ class Player extends RectObject {
 
     this.failed = false;
     this.succeeded = false;
+  }
+
+  render() {
+    super.render();
+    this.moji = drawText("🐈", this.pos, 2);
   }
 
   update() {
@@ -56,6 +74,14 @@ class Player extends RectObject {
       this.failed = true;
       return;
     }
+    
+    // determine player orientation in x-axis
+    let direction = keyIsDown(KeyboardKeys.ArrowLeft) ? LEFT : RIGHT;
+    if (direction !== this.direction) {
+      // direction changed
+      console.log(this);
+    }
+    this.direction = direction;
 
     this.velocity.x = keyIsDown(KeyboardKeys.ArrowLeft)
       ? -this.playerVelocity

@@ -1,3 +1,6 @@
+// uncomment this line to reference LittleJS types -->
+// import { engineInit } from "../node_modules/littlejsengine/dist/littlejs.esm"
+
 "use strict";
 glEnable = false;
 
@@ -125,4 +128,4 @@ function resolveNextStage() {
 
 ///////////////////////////////////////////////////////////////////////////////
 // Startup LittleJS Engine
-engineInit(gameInit, gameUpdate, gameUpdatePost, gameRender, gameRenderPost);
+engineInit(gameInit, gameUpdate, gameUpdatePost, gameRender, gameRenderPost, ['gato.png']);
