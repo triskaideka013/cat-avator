@@ -1,5 +1,5 @@
 // uncomment this line to reference LittleJS types -->
-// import { drawTextScreen, Color, vec2, keyWasPressed, keyIsDown, isOverlapping, update, drawText } from "../../../../node_modules/littlejsengine/dist/littlejs.esm" 
+// import { tile, drawTile, Color, vec2, keyWasPressed, keyIsDown, isOverlapping, update, drawText } from "../../../../node_modules/littlejsengine/dist/littlejs.esm" 
 
 // TODO: Refactor Player class.
 // Move some things out of the update method.
@@ -21,9 +21,9 @@ class Player extends RectObject {
    */
   constructor(pos, opts) {
     
-    const size = vec2(0,2);
+    const size = vec2(2,2);
     
-    super(pos, size);
+    super(pos, size, tile(0));
 
     ({
       platforms: this.platforms, 
@@ -37,6 +37,7 @@ class Player extends RectObject {
     this.size = size;
 
     this.direction = RIGHT;
+    this.angle = 0;
     this.velocity = vec2(0, 0);
     this.isOnGround = false;
     this.gravity = -0.5 / 60;
@@ -52,7 +53,8 @@ class Player extends RectObject {
 
   render() {
     super.render();
-    this.moji = drawText("🐈", this.pos, 2);
+    // this.moji = drawText("🐈", this.pos, 2);
+    drawTile(this.pos, this.size, tile(0, vec2(18,14), 0), new Color(0,0,0,1), this.angle);
   }
 
   update() {
@@ -76,12 +78,16 @@ class Player extends RectObject {
     }
     
     // determine player orientation in x-axis
-    let direction = keyIsDown(KeyboardKeys.ArrowLeft) ? LEFT : RIGHT;
-    if (direction !== this.direction) {
-      // direction changed
-      console.log(this);
+    let direction = null;
+    if (keyIsDown(KeyboardKeys.ArrowLeft) || keyIsDown(KeyboardKeys.ArrowRight)) {
+      direction = keyIsDown(KeyboardKeys.ArrowLeft) ? LEFT : RIGHT;
+      this.direction = direction;
     }
-    this.direction = direction;
+    if (direction !== null) {
+      // direction changed
+      this.angle = (this.direction === LEFT) ? -90 : 0;
+    }
+    
 
     this.velocity.x = keyIsDown(KeyboardKeys.ArrowLeft)
       ? -this.playerVelocity
