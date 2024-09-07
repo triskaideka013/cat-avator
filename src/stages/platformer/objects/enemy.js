@@ -1,4 +1,14 @@
+// uncomment this line to reference LittleJS types -->
+// import { Color, vec2, drawRect } from "../../../../node_modules/littlejsengine/dist/littlejs.esm" 
+
 class Enemy extends RectObject {
+  /**
+   * 
+   * @param {vec2} position 
+   * @param {vec2} size 
+   * @param {Color} color 
+   * @param {any} platform 
+   */
   constructor(position, size, color, platform) {
     super(position, size, color);
     this.platform = platform;

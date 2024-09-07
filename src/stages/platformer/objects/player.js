@@ -1,7 +1,20 @@
+// uncomment this line to reference LittleJS types -->
+// import { drawTextScreen, Color, vec2, keyWasPressed, keyIsDown, isOverlapping } from "../../../../node_modules/littlejsengine/dist/littlejs.esm" 
+
 // TODO: Refactor Player class.
 // Move some things out of the update method.
 
 class Player extends RectObject {
+  /**
+   * 
+   * @param {vec2} position 
+   * @param {vec2} size 
+   * @param {Color} color 
+   * @param {any[]} platforms 
+   * @param {any[]} powerups 
+   * @param {number} minimumStageY 
+   * @param {any[]} enemies 
+   */
   constructor(position, size, color, platforms, powerups, minimumStageY, enemies) {
     super(position, size, color);
     this.platforms = platforms;

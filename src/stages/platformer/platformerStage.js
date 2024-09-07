@@ -1,3 +1,6 @@
+// uncomment this line to reference LittleJS types -->
+// import { Color, vec2, drawTextScreen } from "../../../node_modules/littlejsengine/dist/littlejs.esm" 
+
 class PlatformerStage extends StageBase {
   constructor() {
     super("platformer");
@@ -28,7 +31,6 @@ class PlatformerStage extends StageBase {
     this.platforms.forEach((p) => {
       if (p.pos.y < this.stageMinimumY) this.stageMinimumY = p.pos.y;
     });
-
     // initialize player
     this.player = new Player(
       vec2(10, 4),
