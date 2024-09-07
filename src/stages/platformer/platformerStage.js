@@ -1,13 +1,55 @@
 // uncomment this line to reference LittleJS types -->
-// import { Color, vec2, drawTextScreen } from "../../../node_modules/littlejsengine/dist/littlejs.esm" 
+// import { Color, vec2, drawTextScreen } from "../../../node_modules/littlejsengine/dist/littlejs.esm"
+
+// color constants
+const color = {
+  red: [1, 0, 0],
+  yellow: [1, 1, 0],
+  green: [0, 1, 0],
+  aqua: [0, 1, 1],
+  fuchsia: [1, 0, 1],
+  black: [0, 0, 0]
+};
+
+// level config
+const defaultLevelConfig = {
+  platforms: [
+    {x: -30, y: 3, width: 10, height: 1, color: color.yellow},
+    {x: 10, y: 3, width: 10, height: 1, color: color.red},
+    {x: 20, y: 8, width: 10, height: 1, color: color.green},
+    {x: 30, y: 14, width: 10, height: 1, color: color.aqua},
+    {x: 40, y: 8, width: 10, height: 1, color: color.yellow},
+    {x: 50, y: 3, width: 10, height: 1, color: color.fuchsia},
+    {x: 70, y: 3, width: 5, height: 1, color: color.aqua},
+    {x: 90, y: 8, width: 5, height: 1, color: color.red},
+    {x: 95, y: 25, width: 5, height: 1, color: color.black},
+    {x: 110, y: 2, width: 20, height: 1, color: color.green},
+    {x: 140, y: 2, width: 5, height: 1, color: color.red},
+    {x: 180, y: 2, width: 5, height: 1, color: color.aqua},
+    {x: 240, y: 2, width: 5, height: 1, color: color.aqua},
+    {x: 240, y: -50, width: 5, height: 1, color: color.aqua},
+    {x: -50, y: 32, width: 300, height: 1, color: color.black}
+  ],
+  powerups: [
+    {x: -30, y: 5},
+    {x: 6, y: 5},
+    {x: 140, y: 5},
+    {x: 180, y: 7},
+    {x: 100, y: 30},
+    {x: 240, y: 4},
+    {x: 240, y: -48}
+  ],
+  enemies: [2, 5]
+};
 
 class PlatformerStage extends StageBase {
-  constructor() {
+  constructor(levelConfig = defaultLevelConfig) {
     super("platformer");
     this.platforms = [];
     this.powerups = [];
     this.enemies = [];
     this.player = null;
+    this.levelConfig = levelConfig;
   }
 
   init() {
@@ -20,16 +62,16 @@ class PlatformerStage extends StageBase {
     cameraScale = 4 * 12;
 
     // initialize platforms and powerups
-    this.platforms = PlatformFactory.createPlatforms();
-    this.powerups = PowerupFactory.createPowerups();
+    this.platforms = PlatformFactory.createPlatforms(this.levelConfig.platforms);
+    this.powerups = PowerupFactory.createPowerups(this.levelConfig.powerups);
 
     // initialize enemies
-    this.enemies = EnemyFactory.createEnemies([this.platforms[2], this.platforms[5]]);
+    this.enemies = EnemyFactory.createEnemies(this.platforms, this.levelConfig.enemies);
 
     // find pos.y of the lowest platform in level
-    this.stageMinimumY = 0;
+    this.minimumStageY = 0;
     this.platforms.forEach((p) => {
-      if (p.pos.y < this.stageMinimumY) this.stageMinimumY = p.pos.y;
+      if (p.pos.y < this.minimumStageY) this.minimumStageY = p.pos.y;
     });
     // initialize player
     this.player = new Player(
@@ -37,7 +79,7 @@ class PlatformerStage extends StageBase {
       {
         platforms: this.platforms,
         powerups: this.powerups,
-        stageMinimumY: this.stageMinimumY,
+        minimumStageY: this.minimumStageY,
         enemies: this.enemies
       }
     );
