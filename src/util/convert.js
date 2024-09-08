@@ -4,7 +4,7 @@
 /**
  * 
  * @param {number} deg 
- * @returns
+ * @returns {number}
  */
 function degreesToRadians(deg) {
   return deg * (Math.PI/180)
@@ -14,7 +14,7 @@ function degreesToRadians(deg) {
  * 
  * @param {number} rad 
  * @param {boolean} clockwise 
- * @returns 
+ * @returns {Vector2}
  */
 function radiansToVector2(rad, clockwise=false) {
     
@@ -30,8 +30,29 @@ function radiansToVector2(rad, clockwise=false) {
 /**
  * 
  * @param {number} deg 
- * @returns 
+ * @returns {Vector2}
  */
 function degreesToVector2(deg) {
     return radiansToVector2( degreesToRadians(deg) ); 
+}
+
+/**
+ * 
+ * @param {Vector2} xPos 
+ * @param {Vector2} yPos 
+ * @param {boolean} degress
+ * 
+ * @returns {number}
+ */
+function pointsToAngle(p1, p2, degrees=true) {
+    
+    // angle in radians
+    let rad = Math.atan2(p2.y - p1.y, p2.x - p1.x);
+
+    if (!degrees) {
+        return rad;
+    } else {
+        // angle in degrees
+        return rad * 180 / Math.PI;
+    }
 }
