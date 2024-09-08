@@ -2,13 +2,11 @@
  * Contains state management logic for controlling game flow
  */
 
-
 class GameStateManager {
   ///////////////////////////////////////////////////////////////////////////////
   // Ctor
   ///////////////////////////////////////////////////////////////////////////////
   constructor() {
-
     // Global game state
     this.gameState = new GameState();
     this.CAN_PLAY = true;
@@ -36,14 +34,6 @@ class GameStateManager {
   }
 
   /**
-   * Check whether the game state is on the intro stage
-   * @returns true if intro stage is active, otherwise false
-   */
-  isIntroStage() {
-    return this.gameState.isIntro();
-  }
-
-  /**
    * Check whether player has failed the stage
    * @returns true if the current level has been failed, false otherwise
    */
@@ -52,7 +42,7 @@ class GameStateManager {
       this.gameState.isContinueScreen() &&
       this.gameState.getCurrentStage().hasFailed();
 
-    return this.gameState.getLivesLeft() == 0 || hasQuit;
+    return this.gameState.livesLeft == 0 || hasQuit;
   }
 
   /**
@@ -63,8 +53,7 @@ class GameStateManager {
     return this.getCurrentStage().hasFailed();
   }
 
-  levelWasWon()
-  {
+  levelWasWon() {
     return this.getCurrentStage().hasWon();
   }
 
@@ -76,38 +65,38 @@ class GameStateManager {
     return this.gameState.isElevator();
   }
 
-  isContinueScreen()
-  {
+  isContinueScreen() {
     return this.gameState.isContinueScreen();
   }
 
   ///////////////////////////////////////////////////////////////////////////////
   // Manage Game State
   ///////////////////////////////////////////////////////////////////////////////
+
+  // Show the intro stage
   initIntro() {
     this.gameState.initIntro();
   }
 
-  completeIntro() {
-    this.gameState.completeIntro();
-  }
-
-  goToElevator() {
+  // Show the elevator stage
+  returnToElevator() {
     this.gameState.goToElevator();
   }
 
+  // Show the provided level
   startNewLevel(newLevel) {
     this.gameState.goToLevel(newLevel);
   }
 
+  // Show the continue stage
   goToContinueScreen() {
     if (!this.isGameOver()) {
       this.gameState.goToContinueScreen();
-    } 
+    }
   }
 
-  goToGameOverScreen()
-  {
+  // Show the game over screen
+  goToGameOverScreen() {
     this.CAN_PLAY = false;
     var gameOver = new GameOverStage();
 
@@ -115,11 +104,18 @@ class GameStateManager {
   }
 
   /**
-   * mark current 
-   * level as succeeded, to unlock next elevator button
+   * If level was playable stage, mark as successfully completed.
+   * this will unlock the next elevator button
    */
-  markLevelComplete()
-  {
+  markLevelComplete() {
     this.gameState.markCurrentLevelComplete();
+  }
+
+  /**
+   * retrieve the result object of the current active stage
+   * @returns the stage's state.result object
+   */
+  getCurrentStageResult() {
+    return this.gameState.getCurrentStageResult();
   }
 }
