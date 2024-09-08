@@ -1,5 +1,5 @@
 // uncomment this line to reference LittleJS types -->
-// import { Color, vec2, drawTextScreen } from "../../../node_modules/littlejsengine/dist/littlejs.esm" 
+// import { Color, vec2, drawTextScreen, mousePos, mouseWasPressed } from "../../../node_modules/littlejsengine/dist/littlejs.esm" 
 
 class PlatformerStage extends StageBase {
   constructor() {
@@ -53,6 +53,12 @@ class PlatformerStage extends StageBase {
       this.teardown();
       this.fail();
       return;
+    }
+
+    if (mouseWasPressed(0)) {
+      // if (!this.player.hasDied) {
+        new HairBall(this.player.pos, pointsToAngle(this.player.pos, mousePos));
+      // }
     }
 
     if (this.player.hasWon()) {

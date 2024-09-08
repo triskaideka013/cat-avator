@@ -53,7 +53,6 @@ class Player extends RectObject {
 
   render() {
     super.render();
-    // this.moji = drawText("🐈", this.pos, 2);
     drawTile(this.pos, this.size, tile(0, vec2(18,14), 0), new Color(0,0,0,1), this.angle, this.mirror);
   }
 
