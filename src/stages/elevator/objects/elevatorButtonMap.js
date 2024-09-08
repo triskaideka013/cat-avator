@@ -6,17 +6,14 @@ class ElevatorButtonMap {
     this.completedLevels = completedLevels;
     this.buttons = [];
     this.isFirstAttempt = !completedLevels || completedLevels.length == 0;
-    console.log(this.completedLevels);
   }
 
   setButton(vector2) {
     var index = this.getMappedIndex(vector2);
-
     var enabled = this.getEnabledState(index);
     var completed = this.isCompletedState(index);
-
     var button = new ElevatorButton(vector2, index, enabled, completed);
-    console.log(button);
+
     this.buttons[index] = button;
   }
 
