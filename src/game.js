@@ -103,6 +103,11 @@ function resolveNextStage() {
     var platformer = new PlatformerStage();
     //transition to level
     stateManager.startNewLevel(platformer);
+    let scc = new ShipCapnCrew();
+    window["ship_capn_crew"] = {
+      "game": scc,
+      "roll": () => {scc.rollDice()},
+    }
   }
 
   // Playable level was Failed?
