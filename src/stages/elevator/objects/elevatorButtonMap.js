@@ -35,9 +35,8 @@ class ElevatorButtonMap {
       return newButtonIndex == 0;
     }
 
-    // if level completed, return false
-
-    if (this.isCompletedState(newButtonIndex)) return false;
+    // if level completed, allow player to replay
+    if (this.isCompletedState(newButtonIndex)) return true;
 
     var highestCompletedIndex = 0;
     var highestCompletedLevel = null;
@@ -50,9 +49,6 @@ class ElevatorButtonMap {
         highestCompletedLevel = b;
       }
     });
-
-    console.log("highest completed index", highestCompletedIndex);
-    console.log("highest completed level", highestCompletedLevel);
 
     // increment the enabled button if last stage was completed
     if (highestCompletedLevel && highestCompletedLevel.getState().isCompleted()) {
