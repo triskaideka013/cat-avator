@@ -4,14 +4,19 @@ class ContinueStage extends StageBase {
     this.lifeCount = lifeCount;
 
     this.messages = [
-      "The bell hath tolled for thee.",
-      "Don't fear the reaper.",
-      "Your strength has failed you.",
-      "Oh my. That was a cat-tastrophe.",
-      "What claw-ful luck you're having.",
-      "Try to keep a paw-sitive cat-itude.",
-      "Welp, that cat's not getting outta the bag again.",
-    ];
+      "the bell hath tolled for thee",
+      "can haz try again?",
+      // "don't fear the reaper",
+      "the reaper has been grim to ye",
+      "ur strenf has failed you",
+      "oh my! what a cat-tastrophe",
+      "claw-ful luck you're having",
+      "try to keep a paw-sitive attitude",
+      // "welp, the cat's not getting outta the bag again",
+      "welp, the cat's out of the bag",
+      "purrrrfect, you died",
+      "one fish, two fish, dead fish you fish",
+    ]
     this.currentMessage = null;
   }
 
