@@ -3,8 +3,9 @@
  * for any stage instance, and inject the powerup manager into each stage  
  */
 class StageLoader {
-  constructor() {
+  constructor(powerupManager) {
     this.levelMap = new Map();
+    this.powerupManager = powerupManager;
 
     /**
      * Defines the level to be loaded for each elevator floor.
@@ -101,7 +102,7 @@ class StageLoader {
     // register each level's builder method with the 
     // corresponding elevator button index
     for (let level of this.levelBuilderConfig) {
-      this.levelMap.set(level.index, level.builder(level.config));
+      this.levelMap.set(level.index, level.builder(level.config, this.powerupManager));
     }
   }
 
@@ -120,10 +121,11 @@ class StageLoader {
   /**
    * Creates a closure which returns an instance of platformer stage.
    * @param {*} config the mapped level config to provided to the stage
+   * @param {PowerupManager} powerupManager pass stageLoader's powerup manager to each stage
    * @returns an instance of PlatformerStage
    */
-  platformerBuilder(config) {
-    return () => new PlatformerStage(config);
+  platformerBuilder(config, powerupManager) {
+    return () => new PlatformerStage(config, powerupManager);
   }
 
   /**
@@ -131,7 +133,7 @@ class StageLoader {
    * @param {*} config the mapped level config to provided to the stage
    * @returns an instance of SimplePuzzleStage
    */
-  puzzleBuilder(config) {
-    return () => new SimplePuzzleStage(config);
+  puzzleBuilder(config, powerupManager) {
+    return () => new SimplePuzzleStage(config, powerupManager);
   }
 }

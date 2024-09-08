@@ -7,8 +7,10 @@ glEnable = false;
 
 // Tracks game state
 const stateManager = new GameStateManager();
+// Tracks powerups
+const powerupManager = new PowerupManager();
 // Handles loading playable levels
-const stageLoader = new StageLoader();
+const stageLoader = new StageLoader(powerupManager);
 
 ///////////////////////////////////////////////////////////////////////////////
 // Initial Game Setup
