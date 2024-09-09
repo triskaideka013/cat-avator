@@ -51,9 +51,9 @@ for (const src of assets) {
 // Compile
 
 Build(`${BUILD_FOLDER}/index.js`, sourceFiles, [
-  // closureCompilerStep,
-  // uglifyBuildStep,
-  // roadrollerBuildStep,
+  closureCompilerStep,
+  uglifyBuildStep,
+  roadrollerBuildStep,
   htmlBuildStep,
 ]);
 
