@@ -11,17 +11,21 @@ class HairBall extends EngineObject
    */
   constructor(pos, angle=45)
   {
-    super(pos, vec2(0.01, 0.01)); // set position, size=very smol
+    super(pos, vec2(0.01, 0.01)) // set position, size=very smol
     
-    this.velocity = (!!angle) ? degreesToVector2(angle) : vec2(-.25, 0); // set motion to
+    this.velocity = (!!angle) ? degreesToVector2(angle) : vec2(-.25, 0) // set motion to
 
-    this.powerup = new Sound([,,219,,,.11,1,,,.1,150,-0.01,.01,.1,-1,-0.2,,1.1,,.01,1]);
+    this.powerup = new Sound([,,219,,,.11,1,,,.1,150,-0.01,.01,.1,-1,-0.2,,1.1,,.01,1])
     this.powerup.play()
+
+    this.setCollision()
+    
+    this.elasticity = 1 // make it bouncey
   }
 
   update() {
     super.update()
-    drawText("🧶", this.pos, 1);
+    drawText("🧶", this.pos, 1)
   }
 
 }
