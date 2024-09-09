@@ -13,7 +13,7 @@ class ElevatorStage extends StageBase {
     this.buttonPanelOffsetY = 2.5;
     this.completeColor = rgb(0, 1, 0, 1);
     this.cameraOffset = vec2(0, -0.5);
-    this.backgroundColor = hsl(0, 0, 0.2);
+    this.backgroundColor = hsl(0, 0, 0);
     this.levelSize = vec2(2, 6);
 
     this.songPlaying = false;
