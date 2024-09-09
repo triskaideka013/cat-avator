@@ -14,15 +14,16 @@ class ElevatorButtonMap {
     var completed = this.isCompletedState(index);
     var button = new ElevatorButton(vector2, index, enabled, completed);
 
-    this.buttons[index] = button;
+    this.buttons[`x${vector2.x}y${vector2.y}`] = button;
   }
 
   getButton(vector2) {
-    var index = this.getMappedIndex(vector2);
+    let index = `x${vector2.x}y${vector2.y}`;
     return this.buttons[index];
   }
 
   getMappedIndex(vector2) {
+    
     return vector2.x + vector2.y * this.gridX;
   }
 
