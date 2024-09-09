@@ -7,20 +7,25 @@
 
 const DICE_SIDES = 6
 
+// TODO: remove debug drudgery
 class ShipCapnCrew {
 
-    constructor() {        
-        this.player1 = this.setupPlayer()
-        this.player1.ante = []
-        // this.player2 = this.setupPlayer() // computer
-        // this.player1turn = true
-        this.setupDice()
-        this.debug = true
-        this.gameover = false
-        this.gameoverFn = function() {}
+    constructor(ante=[]) {        
+        this.resetGame()
+        this.player1.ante = ante
+        this.gameoverFn = function() {} // keep gameover function cached
     }
 
     ///  SETUP ///
+
+    resetGame() {
+        this.player1 = this.setupPlayer()
+        this.player2// = this.setupPlayer() // computer player, might not be required for sake of reducing complexity
+        this.player1turn = true
+        this.setupDice()
+        this.debug = true
+        this.gameover = false
+    }
 
     /**
      * 
@@ -28,14 +33,14 @@ class ShipCapnCrew {
      */
     setupPlayer() {
         return {
-            diceArray: []
-            , shipCapnCrew: false
-            , hasLost: false
-            , ship: false
-            , capn: false
-            , crew: false
-            , rolls: 3
-            , score: 0
+            diceArray: [],
+            shipCapnCrew: false,
+            hasLost: false,
+            ship: false,
+            capn: false,
+            crew: false,
+            rolls: 3,
+            score: 0
         }
     }
 
@@ -59,17 +64,19 @@ class ShipCapnCrew {
      * roll available player dice and decrement no. rolls
      */
     rollDice() {
-        // this.player1turn && 
-        this.rollAvailable(this.player1)
-        // !this.player1turn && 
-        // this.rollAvailable(this.player2)
+        this.player1turn && this.rollAvailable(this.player1)
+        !this.player1turn && this.rollAvailable(this.player2)
     }
 
     rollAvailable(player) {
+        if (player.rolls <= 0) return
+
         player.rolls = player.rolls - 1
-        player.diceArray.forEach((d, i) => {
-            if (!d.held) d.roll(i)
+
+        player.diceArray.forEach(d => {
+            if (!d.held) d.roll()
         })
+        
         this.evalDice(player.diceArray)
     }
 
@@ -77,77 +84,93 @@ class ShipCapnCrew {
         let player = this.getPlayer()
         let didCollect = false
         let rolledValues = [], rolledIndices = []
-        let heldDiceScore = 0 // if they re-roll any "cargo" for a higher score, track the points of these dice
-
-        diceArray.forEach((d, i) => {
+        let heldDiceValue = 0 // if they keep some cargo when re-rolling for higher score
+        
+        let i = 0
+        let collectedDice = []
+        diceArray.forEach(d => {
             if (!d.held) {
                 // create parallel arrays with values of dice and their indices
                 rolledValues.push(d.value)
                 rolledIndices.push(i)
-            } else if (d.held && d.value < 4) {
-                heldDiceScore += d.value
+            } else if (d.held) {
+                if (d.value < 4 || // if dice value is not 6, 5, 4
+                    collectedDice.indexOf(d.value) !== -1) { // -- or we have already counted them
+                    heldDiceValue += d.value
+                } else {
+                    collectedDice.push(d.value) // 6, 5, 4
+                }
+                
             }
+            i+=1
+            if (this.debug) console.log(d)
         })
 
-        this.debug && console.log(rolledValues,'before')
-        
         // find ship, capn, crew
-        
+
         let iShip = rolledValues.indexOf(6)
+        let iCapn = rolledValues.indexOf(5)
+        let iCrew = rolledValues.indexOf(4)
+        let die
+
         if (!player.ship && iShip !== -1) {
             // ship!  collect dice
             player.ship = true
-            diceArray[rolledIndices[iShip]].held = true
+            die = diceArray[rolledIndices[iShip]] 
+            die.held = true
             rolledValues.splice(iShip, 1)
             didCollect = true
+            this.debug && console.log(die, 'collect ship')
         }
         
-        let iCapn = rolledValues.indexOf(5)
         if (!player.capn && iCapn !== -1 && player.ship) { // player must have ship to colect capn
             // capn!  collect dice
             player.capn = true
-            diceArray[rolledIndices[iCapn]].held = true
+            die = diceArray[rolledIndices[iCapn]]
+            die.held = true
             rolledValues.splice(iCapn, 1)
             didCollect = true
+            this.debug && console.log(die, 'collect capn')
         }
 
-        let iCrew = rolledValues.indexOf(4)
         if (!player.crew && iCrew !== -1 && player.capn) { // player must have capn to colect crew
             // crew!  collect dice
             player.crew = true
-            diceArray[rolledIndices[iCrew]].held = true
+            die = diceArray[rolledIndices[iCrew]]  
+            die.held = true
             rolledValues.splice(iCrew, 1)
             didCollect = true
+            this.debug && console.log(die, 'collect crew')
         }
 
-        this.debug && console.log(rolledValues,'before')
-        this.debug && console.log(didCollect,'did player collect ship/capn/crew?')
-
+        // win condition (you can still roll for more points if you win)
         player.shipCapnCrew = (player.ship && player.capn && player.crew)
         
-        // losing condition
-        if (player.rolls <= 0 && !player.shipCapnCrew) {
+        // lose condition
+        if (player.rolls <= 0 && !player.shipCapnCrew)
             player.hasLost = true
-            this.debug && console.log('out of rolls')
-        }
-        this.debug && console.log('rolls left', player.rolls)
-        this.debug && console.log('score', player.score)
-        this.debug && console.log('held score', heldDiceScore)
-        // score
-        if (!player.hasLost && player.shipCapnCrew && (rolledValues.length > 0 || heldDiceScore > 0)) {
-            player.score = 0
-            rolledValues?.map(val => {
-                player.score += val
-            })
-            player.score += heldDiceScore
-        }
-        this.debug && console.log('hasLost', player.hasLost)
-        this.debug && console.log('score', player.score)
-            
 
-        // winning, losing and re-rolling
+        // score = value of "crew" dice
+        if (!player.hasLost && player.shipCapnCrew && (rolledValues.length > 0 || heldDiceValue > 0)) {
+            player.score = 0
+            // from the current roll
+            rolledValues?.forEach(val => player.score += val)
+            // held from previous rolls
+            player.score += heldDiceValue
+        }
         let scoreMsg = `your score is ${player.score}`
 
+        this.debug && console.log({
+            "roll-values": rolledValues,
+            "rolls-left":player.rolls,
+            "score": player.score,
+            "collect": didCollect, 
+            "loser": player.hasLost,
+            "ship-capn-crew": player.shipCapnCrew,
+            "held-crew": heldDiceValue,
+        })
+
+        // winning, losing or re-rolling
         if (player.hasLost) {
 
             this.debug && console.log('loser!')
@@ -158,19 +181,21 @@ class ShipCapnCrew {
             let rollAgain = confirm(`${scoreMsg}...risk it?`)
 
             if (rollAgain) {
-                let freeDice = []
-                diceArray.forEach((d, i) => {
-                    if (!d.held) d.hold = confirm(`hold ${d.value}?`)
+                diceArray.map(d => {
+                    if (!d.held) {
+                        let held = confirm(`hold ${d.value}?`);
+                        d.held = held
+                    }
                 })
-                this.rollDice()
-                return
+                return this.rollDice()
             }
         }
 
         if (player.shipCapnCrew) {
-            this.debug && console.log('winner!')
-            this.debug && console.log(scoreMsg)
+            this.debug && console.log('winner!', scoreMsg)
             this.gameover = true
+        } else {
+            // this.takeTurns()
         }
 
         if (this.gameover) this.gameoverFn()
@@ -183,31 +208,22 @@ class ShipCapnCrew {
      * @returns {Object}
      */
     getPlayer() {
-        return this.player1
-            // this.player1turn ? 
-            // this.player1 : 
-            // this.player2
+        return this.player1turn ? this.player1 : this.player2
     }
 
-    // takeTurns() {
-    //     this.player1turn = !this.player1turn
-    // }
+    takeTurns() {
+        this.player1turn = !this.player1turn
+    }
 }
 
 class PlayerDice {
     constructor() {
         this.held = false
-        // this.sprite = new Dice()
     }
 
     roll(index) {
-        this.face = this.newFaceValue() // index in array
+        this.face = Math.floor(Math.random() * DICE_SIDES) // 0-5
         this.value = this.face + 1 // number on dice
-        console.log(this.value, `dice no. ${(index+1).toString()}: ${this.value}`)
-    }
-
-    newFaceValue() {
-        return  Math.floor(Math.random() * DICE_SIDES) // 0-5
     }
 
     getFaceValue() {
@@ -221,5 +237,3 @@ class PlayerDice {
         } else str = '?'
     }
 }
-
-// look ma, no semi-colons!

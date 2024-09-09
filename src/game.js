@@ -107,6 +107,7 @@ function resolveNextStage() {
     window["ship_capn_crew"] = {
       "game": scc,
       "roll": () => {scc.rollDice()},
+      "reset": () => {scc.resetGame()},
     }
   }
 
