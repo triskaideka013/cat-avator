@@ -5,7 +5,7 @@
  * @property {boolean} held
  */
 
-const DICE_SIDES = 6, BOXCARS = 12, MAX_ROLLS = 20
+const DICE_SIDES = 6, BOXCARS = 12, MAX_ROLLS = 3
 
 // TODO: remove debug drudgery
 class ShipCapnCrew {
