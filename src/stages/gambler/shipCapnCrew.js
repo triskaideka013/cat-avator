@@ -180,9 +180,9 @@ class ShipCapnCrew {
                 diceArray.forEach(function(d){
                     // allow re-roll of all dice that are not part of the ship-capn-crew set
                     d.held = false
-                    if (d.value === 6 && !hasShip) d.held = true;
-                    if (d.value === 5 && !hasCapn) d.held = true;
-                    if (d.value === 4 && !hasCrew) d.held = true;
+                    if (d.value === 6 && !hasShip) {d.held = true; hasShip = true};
+                    if (d.value === 5 && !hasCapn) {d.held = true; hasCapn = true};
+                    if (d.value === 4 && !hasCrew) {d.held = true; hasCrew = true};
                 })
                 diceArray.forEach(function(d){
                     // what are we holding?
