@@ -5,7 +5,7 @@
  * @property {boolean} held
  */
 
-const DICE_SIDES = 6
+const DICE_SIDES = 6, BOXCARS = 12, MAX_ROLLS = 20
 
 // TODO: remove debug drudgery
 class ShipCapnCrew {
@@ -39,7 +39,7 @@ class ShipCapnCrew {
             ship: false,
             capn: false,
             crew: false,
-            rolls: 3,
+            rolls: MAX_ROLLS,
             score: 0
         }
     }
@@ -69,7 +69,7 @@ class ShipCapnCrew {
     }
 
     rollAvailable(player) {
-        if (player.rolls <= 0) return
+        if (this.gameover || player.rolls <= 0) return
 
         player.rolls = player.rolls - 1
 
@@ -112,7 +112,7 @@ class ShipCapnCrew {
         let iCapn = rolledValues.indexOf(5)
         let iCrew = rolledValues.indexOf(4)
 
-        this.debug && console.log(rolledValues, 'rolled-before')
+        this.debug && console.log(rolledValues, 'rolled')
         if (!player.ship && iShip !== -1) {
             // ship!  collect dice
             player.ship = true 
@@ -137,7 +137,6 @@ class ShipCapnCrew {
             this.debug && console.log('collect crew')
         }
         rolledValues = diceArray.filter(function(d){ return !d.held }).map(function(d){ return d.value })
-        this.debug && console.log(rolledValues, 'rolled-after')
 
         // win condition (you can still roll for more points if you win)
         player.shipCapnCrew = (player.ship && player.capn && player.crew)
@@ -157,13 +156,12 @@ class ShipCapnCrew {
         let scoreMsg = `your score is ${player.score}`
 
         this.debug && console.log({
-            "rolls": player.rolls,
             "score": player.score,
             "collect": didCollect, 
             "loser": player.hasLost,
             "ship-capn-crew": player.shipCapnCrew,
         }) 
-        this.debug && console.log(rolledValues, "rolled")
+        this.debug && console.log(rolledValues, "rolled-after-collecting")
         this.debug && console.log(heldDiceValue, "held")
 
         // winning, losing or re-rolling
@@ -171,7 +169,8 @@ class ShipCapnCrew {
 
             this.loseGame()
 
-        } else if (player.shipCapnCrew && player.rolls >=1) {
+        } else if (player.shipCapnCrew && player.rolls >=1  // re-roll for higher score
+                && player.score !== BOXCARS) {  // unless they have the maximum already
             
             let rollAgain = confirm(`${scoreMsg}...risk it?`)
 
@@ -187,7 +186,12 @@ class ShipCapnCrew {
                 diceArray.forEach(function(d){
                     // what are we holding?
                     if (!d.held) {
-                        let held = confirm(`hold ${d.getValue()}?`);
+                        let held
+                        if (d.getValue() === DICE_SIDES) {
+                            held = true // hold the 6 for the player
+                        } else {
+                            held = confirm(`hold ${d.getValue()}?`);
+                        }
                         d.held = held
                     }
                 })
@@ -198,17 +202,21 @@ class ShipCapnCrew {
         if (player.shipCapnCrew) {
 
             let riskItAll = false
-            if (player.score === 12)
+
+            if (player.score === BOXCARS)
                 riskItAll = confirm(`risk it all? just don't roll a 1!`)
             
             if (riskItAll) {
                 
                 let d6 = new PlayerDice()
-                d6.roll()
-                if (d6.getValue() === 1) {
+                let roll = d6.roll().getValue()
+                
+                if (roll === 1) {
+                    this.debug && console.log(`arrr! 6 + 6 + ${roll} is 13...to davy jones's locker with ye!`)
                     player.hasLost = true
                 } else {
-                    player.score = 26
+                    this.debug && console.log(`yo-ho-ho! 6 + 6 + ${roll} does not 13 make...${roll} times the treasure!`)
+                    player.score *= roll
                 }
                 
             } else {
@@ -229,12 +237,12 @@ class ShipCapnCrew {
     }
 
     loseGame() {
-        this.debug && console.log('loser!')
+        this.debug && console.log('lose!')
         this.gameover = true
     }
 
     winGame() {
-        this.debug && console.log(`winner! score is ${this.getPlayer().score}`)
+        this.debug && console.log(`win! score is ${this.getPlayer().score}`)
         this.gameover = true
     }
 
@@ -244,6 +252,14 @@ class ShipCapnCrew {
      * 
      * @returns {Object}
      */
+    hasLost() {
+        return this.gameover && this.getPlayer().hasLost
+    }
+
+    hasWon() {
+        return this.gameover && this.getPlayer().shipCapnCrew && !this.hasLost()
+    }
+
     getPlayer() {
         return this.player1turn ? this.player1 : this.player2
     }
@@ -256,11 +272,18 @@ class ShipCapnCrew {
 class PlayerDice {
     constructor() {
         this.held = false
+        this.face = null
+        this.value = null
     }
 
-    roll(index) {
+    /**
+     * 
+     * @returns {PlayerDice} this, so method is chainable
+     */
+    roll() {
         this.face = Math.floor(Math.random() * DICE_SIDES) // 0-5
         this.value = this.face + 1 // number on dice
+        return this
     }
 
     getValue() {
@@ -269,7 +292,7 @@ class PlayerDice {
 
     getValueString() {
         let str
-        if (!!this.value) {
+        if (this.value !== null) {
             str =  this.value.toString()
         } else str = '?'
     }
