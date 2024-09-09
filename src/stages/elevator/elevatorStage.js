@@ -56,6 +56,7 @@ class ElevatorStage extends StageBase {
 
     if(PLATFORMER_SONG_PLAYING)
     {
+      PLATFORMER_SONG_PLAYING = false;
       PLATFORMER_SONG.stop();
     }
  
