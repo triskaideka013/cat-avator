@@ -1,5 +1,5 @@
 // uncomment this line to reference LittleJS types -->
-// import { Color, vec2, drawRect } from "../../../../node_modules/littlejsengine/dist/littlejs.esm" 
+// import { Color, vec2, drawRect } from "littlejsengine" 
 
 class Enemy extends RectObject {
   /**

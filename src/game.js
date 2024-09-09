@@ -1,3 +1,6 @@
+// uncomment this line to reference LittleJS types -->
+// import { engineInit } from "littlejsengine"
+
 "use strict";
 glEnable = false;
 
@@ -17,6 +20,13 @@ const stageLoader = new StageLoader(powerupManager);
 ///////////////////////////////////////////////////////////////////////////////
 function gameInit() {
   stateManager.initIntro();
+  // TODO: remove this
+  let scc = new ShipCapnCrew();
+    window["ship_capn_crew"] = {
+      "game": scc,
+      "roll": () => {scc.rollDice()},
+      "reset": () => {scc.resetGame()},
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -129,5 +139,5 @@ if (level != null) {
 ///////////////////////////////////////////////////////////////////////////////
 // Startup LittleJS Engine
 engineInit(gameInit, gameUpdate, gameUpdatePost, gameRender, gameRenderPost, [
-  "tiles.png",
+  "tiles.png"
 ]);
