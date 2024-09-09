@@ -3,15 +3,20 @@ class ElevatorStage extends StageBase {
   constructor(completedLevels) {
     super("elevator");
 
-    //Game state registers callback to invoke when level is selected
-    this.levelSelectedCallback = null;
-
     // buttons
-    this.disabledButtonColor = rgb(0.3, 0.3, 0.3);
-    this.enabledButtonColor = rgb(0.3, 0.8, 0.3);
-    this.buttonPanelOffsetX = 4.5;
-    this.buttonPanelOffsetY = 2.5;
-    this.completeColor = rgb(0, 1, 0, 1);
+    this.disabledButtonColor = new Color(.2, .2, .3);
+    this.enabledButtonColor = new Color(.3, .7, .3);
+    this.secondaryColor = new Color(.4, .5, .6);
+
+    // button position
+    this.buttonPanelOffsetX = 5;
+    this.buttonPanelOffsetY = 2.75;
+    this.panelRenderOffset = vec2(
+      Math.floor(this.buttonPanelOffsetX),
+      Math.floor(this.buttonPanelOffsetY)
+    );
+
+    // world setup
     this.cameraOffset = vec2(0, -0.5);
     this.backgroundColor = hsl(0, 0, 0);
     this.levelSize = vec2(2, 6);
@@ -143,16 +148,67 @@ class ElevatorStage extends StageBase {
 
   }
     
+    cameraScale = 150;
+
+    this.doors = {
+      left: {
+        x: -1.5,
+        y: 5.25,
+      },
+      right: {
+        x: 2,
+        y: 5.25,
+      },
+      w: 3.5,
+      h: 6.5,
+      bgColor: new Color(.8, 0, .1), 
+      panelColor: this.secondaryColor
+    };
+
+    this.doorAnimationInterval = null;
+    this.doorAnimationComplete = false;
+    this.actionAllowed = true;
   }
 
   gameUpdate() {
     if (!this.state.isActive()) return;
 
-    var button = this.tryGetButtonPressd();
+    var button = this.tryGetButtonPressed();
+    // var enabled = button?.getState()?.isEnabled() ?? false;
 
-    if (button && button.getState().isEnabled()) {
-      // pass result payload to stage state 
-      this.state.setResult(button);
+    if (button && this.actionAllowed) {
+      var enabled = button.getState().isEnabled();
+
+      if (enabled) {
+        // pass result payload to stage state
+        this.state.setResult(button);
+
+        console.log(button);
+
+        this.actionAllowed = false;
+
+        this.doorAnimationInterval = setInterval(
+          (stage) => {
+            var increment = 0.1;
+
+            stage.doors.w -= increment;
+            stage.doors.left.x -= increment / 2;
+            stage.doors.right.x += increment / 2;
+
+            stage.doors.bgColor = stage.doors.bgColor.mutate(.1, .2);
+            
+            if (stage.doors.w <= 0) {
+              clearInterval(stage.doorAnimationInterval);
+              stage.doorAnimationComplete = true;
+            }
+          },
+          50,
+          this
+        );
+      }
+    }
+
+    if (this.doorAnimationComplete) {
       this.complete();
 
       // start a funky beat
@@ -169,60 +225,89 @@ class ElevatorStage extends StageBase {
 
   }
 
-  gameRender() {
-  }
+  gameRender() {}
 
   gameRenderPost() {
     if (!this.state.isActive()) return;
-    // draw to overlay canvas for hud rendering
-    drawTextScreen("The Elevator Stage", vec2(mainCanvasSize.x / 2, 70), 80);
-
-    // draw the blocks
+    // button panel background
+    this.renderButtonPanelBg();
+    // draw the elevator buttons
     const pos = vec2();
-
     for (pos.x = this.levelSize.x; pos.x--; ) {
       for (pos.y = this.levelSize.y; pos.y--; ) {
-        // adjust button position
-
-        const drawPos = pos.add(
-          vec2(this.buttonPanelOffsetX, this.buttonPanelOffsetY)
-        );
-
-        const button = this.buttonMap.getButton(pos);
-
-        if (button) {
-          // fetch the mapped index for position, use as button number
-          var buttonNumber = button.getIndex() + 1;
-
-          // render button numbers;
-          drawText(buttonNumber.toString(), drawPos, 0.2);
-
-          // determine button color
-          const isEnabled = button.getState().isEnabled();
-
-          const color = isEnabled
-            ? this.enabledButtonColor
-            : this.disabledButtonColor;
-
-          // draw background
-          drawRect(drawPos, vec2(0.9), color);
-        }
+        this.renderButton(pos);
       }
+    }
+
+    // draw the elevator doors
+    this.renderDoors();
+    
+  }
+
+  renderButton(pos) {
+    const drawPos = pos.add(
+      vec2(this.buttonPanelOffsetX, this.buttonPanelOffsetY)
+    );
+
+    const button = this.buttonMap.getButton(pos);
+
+    if (button) {
+      // fetch the mapped index for position, use as button number
+      var buttonNumber = button.getIndex() + 1;
+
+      // render button numbers;
+      drawText(buttonNumber.toString(), drawPos, 0.2);
+
+      // determine button color
+      const isEnabled = button.getState().isEnabled();
+
+      const color = isEnabled
+        ? this.enabledButtonColor
+        : this.disabledButtonColor;
+
+      // draw background
+      drawRect(drawPos, vec2(0.9), color);
     }
   }
 
-  tryGetButtonPressd() {
+  renderDoors() {
+    // background
+    drawRect(
+      vec2(0.25, 5.25), 
+      vec2(7, 6.5), 
+      this.doors.bgColor
+    )
+    // left
+    drawRect(
+      vec2(this.doors.left.x, this.doors.right.y),
+      vec2(this.doors.w, this.doors.h),
+      this.doors.panelColor
+    );
+    // right
+    drawRect(
+      vec2(this.doors.right.x, this.doors.right.y),
+      vec2(this.doors.w, this.doors.h),
+      this.doors.panelColor
+    );
+  }
+
+  renderButtonPanelBg()
+  {
+    drawRect(
+      vec2(5.5, 5.25), 
+      vec2(2.5, 6), 
+      new Color(.4, .5, .6)
+    )
+    
+  }
+
+  tryGetButtonPressed() {
     if (!mouseWasPressed(0)) return false;
 
     //raw mousePos
     const mouseTilePos = mousePos.floor();
     // account for render position of the panel buttons
-    const renderOffset = vec2(
-      Math.floor(this.buttonPanelOffsetX),
-      Math.floor(this.buttonPanelOffsetY)
-    );
-
-    const adjustedMousePos = mouseTilePos.subtract(renderOffset);
+    const adjustedMousePos = mouseTilePos.subtract(this.panelRenderOffset);
 
     // check for corresponding button
     var button = this.buttonMap.getButton(adjustedMousePos);

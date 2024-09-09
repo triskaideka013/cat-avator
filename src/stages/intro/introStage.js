@@ -2,97 +2,96 @@
 class IntroStage extends StageBase {
   constructor() {
     super("intro");
-    this.timer = 0;
+    this.rng = new RandomGenerator(100101);
   }
 
   init() {
     super.init();
-    console.log(textureInfos);
-    this.bgTextureInfo = textureInfos[1];
-    this.btnDefault = textureInfos[2];
-    this.btnPressed = textureInfos[2];
+    // cameraScale = 1;
+    this.textColor = new Color(0.7, 0.7, 0.7, 1);
+    this.textSize = 40;
+    this.textOffsetY = 60;
+    this.textOffsetX = mainCanvasSize.x / 2;
+    this.lineHeight = 50;
 
-    console.log(this.bgTextureInfo)
-    this.levelSize = vec2(1,2);
-    cameraScale = 1;
+    this.textMap = [
+      "The story begins when our weary traveling hero",
+      "seeks shelter for the evening at a Totally Normal Hotel™️", 
+      "",
+      "It turns out this hotel is anything BUT normal, and our hero finds",
+      "themselves trapped by the nefarious treiskaídeka-ites.",
+      "",
+      "Now, you must challenge the denizens of each floor",
+      "and find a way to escape before your nine lives are up.",
+    ];
 
-    this.currentButton = this.btnDefault;
+    this.buttonPos = vec2(0, -4);
+    this.buttonSize = vec2(4, 2);
+
+    this.startButton = new SimpleButton(
+      this.buttonPos,
+      this.buttonSize,
+      new Color(0.7, 0.3, 0.3, 1)
+    );
+    this.startButton.setText("Start", 1, new Color(0, 0, 0, 1));
+
+    // kitty sprite 
+    this.kittyPos = this.getRandomPos();
+    this.kittyAngle = this.rng.int(360);
+    this.kittySize = this.getRandomSize();
+    this.kittyMirror = false;
+
+    this.kittyInterval = setInterval((intro)=>{
+      intro.kittyPos = intro.getRandomPos();
+      intro.kittyAngle = intro.rng.int(360);
+      intro.kittySize = intro.getRandomSize();
+      intro.kittyMirror = !intro.kittyMirror;
+    }, 1000, this);
   }
 
   gameUpdate() {
     if (!this.state.isActive()) return;
 
-    this.timer += 5;
-
-    // if (this.timer > 200) {
-    //   this.complete();
-    // }
+    if(this.startButton.wasClicked())
+    {
+      clearInterval(this.kittyInterval);
+      this.complete();
+    }
   }
 
   gameRender() {
     if (!this.state.isActive()) return;
-    super.gameRender();
-    
-    // draw to overlay canvas for hud rendering
-    // drawTextScreen(
-    //   "Cat-avator... of Doom?",
-    //   vec2(mainCanvasSize.x / 2, 70),
-    //   80
-    // );
-    var time = this.timer;
-    // drawTextScreen(
-    //   `Mock Loading ${Math.round(time)}%`,
-    //   vec2(mainCanvasSize.x / 2, 150),
-    //   80
-    // );
   }
 
   gameRenderPost() {
-    //drawRect(vec2(0,0), vec2(1,2), this.textureInfo);
-    drawTile(vec2(0), vec2(mainCanvasSize.x, mainCanvasSize.y), tile(vec2(0), this.bgTextureInfo.size, 1), new Color(0,0,0,.6), 0, false);
-    //hsl(0, 0, 0.2);
+    if (!this.state.isActive()) return;
 
-    drawTextScreen(
-      `The story begins...`,
-      vec2(mainCanvasSize.x / 2, 80),
-      60,
-      new Color(0.7,0.7,0.7,1)
-    );
+    let lineCount = 0;
+    for (let text of this.textMap) {
+      this.renderText(text, lineCount);
+      lineCount++;
+    }
 
-    drawTextScreen(
-      `In a seemingly innocent hotel, which was in fact,`,
-      vec2(mainCanvasSize.x / 2, 180),
-      40, 
-      new Color(0.7,0.7,0.7,1)
-    );
-    drawTextScreen(
-      `not so innocent after all.`,
-      vec2(mainCanvasSize.x / 2, 240),
-      40, 
-      new Color(0.7,0.7,0.7,1)
-    );
+    this.startButton.render();
 
-    drawTextScreen(
-      `Trapped by the nefarious treiskaídeka-ites,`,
-      vec2(mainCanvasSize.x / 2, 340),
-      40,
-      new Color(0.7,0.7,0.7,1)
-    );
+    // kitty
+    drawTile(this.kittyPos, this.kittySize, tile(0, vec2(18,14), 0), new Color(0,0,0,0.3), this.kittyAngle, this.kittyMirror);
+  }
 
-    drawTextScreen(
-      `our hero must challenge the denizens of each floor`,
-      vec2(mainCanvasSize.x / 2, 400),
-      40, 
-      new Color(0.7,0.7,0.7,1)
-    );
+  renderText(text, lineNum) {
+    var offsetY = this.textOffsetY + this.lineHeight * lineNum;
+    var vec = vec2(this.textOffsetX, offsetY);
+    drawTextScreen(text, vec, this.textSize, this.textColor);
+  }
 
-    drawTextScreen(
-      `and find a way to escape.`,
-      vec2(mainCanvasSize.x / 2, 460),
-      40, 
-      new Color(0.7,0.7,0.7,1)
-    );
+  getRandomPos()
+  {
+    return vec2(this.rng.int(10, -10), this.rng.int(6, -6));
+  }
 
-    drawRect(vec2(0), vec2(100,100), new Color(0.7,0.7,0.7,1));
+  getRandomSize()
+  {
+    const val = this.rng.int(4, 12);
+    return vec2(val, val);
   }
 }

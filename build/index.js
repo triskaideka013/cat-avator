@@ -6030,20 +6030,30 @@ class ElevatorStage extends StageBase {
   constructor(completedLevels) {
     super("elevator");
 
-    //Game state registers callback to invoke when level is selected
-    this.levelSelectedCallback = null;
-
     // buttons
-    this.disabledButtonColor = rgb(0.3, 0.3, 0.3);
-    this.enabledButtonColor = rgb(0.3, 0.8, 0.3);
-    this.buttonPanelOffsetX = 4.5;
-    this.buttonPanelOffsetY = 2.5;
-    this.completeColor = rgb(0, 1, 0, 1);
+    this.disabledButtonColor = new Color(.2, .2, .3);
+    this.enabledButtonColor = new Color(.3, .7, .3);
+    this.secondaryColor = new Color(.4, .5, .6);
+
+    // button position
+    this.buttonPanelOffsetX = 5;
+    this.buttonPanelOffsetY = 2.75;
+    this.panelRenderOffset = vec2(
+      Math.floor(this.buttonPanelOffsetX),
+      Math.floor(this.buttonPanelOffsetY)
+    );
+
+    // world setup
     this.cameraOffset = vec2(0, -0.5);
     this.backgroundColor = hsl(0, 0, 0);
     this.levelSize = vec2(2, 6);
 
-    this.buttonMap = new ElevatorButtonMap(this.levelSize.x, this.levelSize.y, completedLevels);
+    // button placement
+    this.buttonMap = new ElevatorButtonMap(
+      this.levelSize.x,
+      this.levelSize.y,
+      completedLevels
+    );
 
     // initialize button data
     const position = new vec2();
@@ -6072,76 +6082,154 @@ class ElevatorStage extends StageBase {
     mainCanvas.style.background = this.backgroundColor;
     // setup game
     cameraPos = this.levelSize.scale(1).add(this.cameraOffset);
-    cameraScale = 900 / this.levelSize.y;
+    cameraScale = 150;
+
+    this.doors = {
+      left: {
+        x: -1.5,
+        y: 5.25,
+      },
+      right: {
+        x: 2,
+        y: 5.25,
+      },
+      w: 3.5,
+      h: 6.5,
+      bgColor: new Color(.8, 0, .1), 
+      panelColor: this.secondaryColor
+    };
+
+    this.doorAnimationInterval = null;
+    this.doorAnimationComplete = false;
+    this.actionAllowed = true;
   }
 
   gameUpdate() {
     if (!this.state.isActive()) return;
 
-    var button = this.tryGetButtonPressd();
+    var button = this.tryGetButtonPressed();
+    // var enabled = button?.getState()?.isEnabled() ?? false;
 
-    if (button && button.getState().isEnabled()) {
-      // pass result payload to stage state 
-      this.state.setResult(button);
+    if (button && this.actionAllowed) {
+      var enabled = button.getState().isEnabled();
+
+      if (enabled) {
+        // pass result payload to stage state
+        this.state.setResult(button);
+
+        console.log(button);
+
+        this.actionAllowed = false;
+
+        this.doorAnimationInterval = setInterval(
+          (stage) => {
+            var increment = 0.1;
+
+            stage.doors.w -= increment;
+            stage.doors.left.x -= increment / 2;
+            stage.doors.right.x += increment / 2;
+
+            stage.doors.bgColor = stage.doors.bgColor.mutate(.1, .2);
+            
+            if (stage.doors.w <= 0) {
+              clearInterval(stage.doorAnimationInterval);
+              stage.doorAnimationComplete = true;
+            }
+          },
+          50,
+          this
+        );
+      }
+    }
+
+    if (this.doorAnimationComplete) {
       this.complete();
-
     }
   }
 
-  gameRender() {
-  }
+  gameRender() {}
 
   gameRenderPost() {
     if (!this.state.isActive()) return;
-    // draw to overlay canvas for hud rendering
-    drawTextScreen("The Elevator Stage", vec2(mainCanvasSize.x / 2, 70), 80);
-
-    // draw the blocks
+    // button panel background
+    this.renderButtonPanelBg();
+    // draw the elevator buttons
     const pos = vec2();
-
     for (pos.x = this.levelSize.x; pos.x--; ) {
       for (pos.y = this.levelSize.y; pos.y--; ) {
-        // adjust button position
-
-        const drawPos = pos.add(
-          vec2(this.buttonPanelOffsetX, this.buttonPanelOffsetY)
-        );
-
-        const button = this.buttonMap.getButton(pos);
-
-        if (button) {
-          // fetch the mapped index for position, use as button number
-          var buttonNumber = button.getIndex() + 1;
-
-          // render button numbers;
-          drawText(buttonNumber.toString(), drawPos, 0.2);
-
-          // determine button color
-          const isEnabled = button.getState().isEnabled();
-
-          const color = isEnabled
-            ? this.enabledButtonColor
-            : this.disabledButtonColor;
-
-          // draw background
-          drawRect(drawPos, vec2(0.9), color);
-        }
+        this.renderButton(pos);
       }
+    }
+
+    // draw the elevator doors
+    this.renderDoors();
+    
+  }
+
+  renderButton(pos) {
+    const drawPos = pos.add(
+      vec2(this.buttonPanelOffsetX, this.buttonPanelOffsetY)
+    );
+
+    const button = this.buttonMap.getButton(pos);
+
+    if (button) {
+      // fetch the mapped index for position, use as button number
+      var buttonNumber = button.getIndex() + 1;
+
+      // render button numbers;
+      drawText(buttonNumber.toString(), drawPos, 0.2);
+
+      // determine button color
+      const isEnabled = button.getState().isEnabled();
+
+      const color = isEnabled
+        ? this.enabledButtonColor
+        : this.disabledButtonColor;
+
+      // draw background
+      drawRect(drawPos, vec2(0.9), color);
     }
   }
 
-  tryGetButtonPressd() {
+  renderDoors() {
+    // background
+    drawRect(
+      vec2(0.25, 5.25), 
+      vec2(7, 6.5), 
+      this.doors.bgColor
+    )
+    // left
+    drawRect(
+      vec2(this.doors.left.x, this.doors.right.y),
+      vec2(this.doors.w, this.doors.h),
+      this.doors.panelColor
+    );
+    // right
+    drawRect(
+      vec2(this.doors.right.x, this.doors.right.y),
+      vec2(this.doors.w, this.doors.h),
+      this.doors.panelColor
+    );
+  }
+
+  renderButtonPanelBg()
+  {
+    drawRect(
+      vec2(5.5, 5.25), 
+      vec2(2.5, 6), 
+      new Color(.4, .5, .6)
+    )
+    
+  }
+
+  tryGetButtonPressed() {
     if (!mouseWasPressed(0)) return false;
 
     //raw mousePos
     const mouseTilePos = mousePos.floor();
     // account for render position of the panel buttons
-    const renderOffset = vec2(
-      Math.floor(this.buttonPanelOffsetX),
-      Math.floor(this.buttonPanelOffsetY)
-    );
-
-    const adjustedMousePos = mouseTilePos.subtract(renderOffset);
+    const adjustedMousePos = mouseTilePos.subtract(this.panelRenderOffset);
 
     // check for corresponding button
     var button = this.buttonMap.getButton(adjustedMousePos);
@@ -6366,10 +6454,11 @@ class GameOverStage extends StageBase
         drawTextScreen(`Your story continues... at a nice farm upstate.`, vec2(mainCanvasSize.x / 2, 200), 60);
     }
 }
+
 class IntroStage extends StageBase {
   constructor() {
     super("intro");
-    this.timer = 0;
+    this.rng = new RandomGenerator(100101);
   }
 
   init() {
@@ -6385,11 +6474,11 @@ class IntroStage extends StageBase {
       "The story begins when our weary traveling hero",
       "seeks shelter for the evening at a Totally Normal Hotel™️", 
       "",
-      "However, this hotel is anything BUT normal, and our hero finds",
+      "It turns out this hotel is anything BUT normal, and our hero finds",
       "themselves trapped by the nefarious treiskaídeka-ites.",
       "",
-      "Our hero must challenge the denizens of each floor",
-      "and find a way to escape before their nine lives are up",
+      "Now, you must challenge the denizens of each floor",
+      "and find a way to escape before your nine lives are up.",
     ];
 
     this.buttonPos = vec2(0, -4);
@@ -6401,6 +6490,19 @@ class IntroStage extends StageBase {
       new Color(0.7, 0.3, 0.3, 1)
     );
     this.startButton.setText("Start", 1, new Color(0, 0, 0, 1));
+
+    // kitty sprite 
+    this.kittyPos = this.getRandomPos();
+    this.kittyAngle = this.rng.int(360);
+    this.kittySize = this.getRandomSize();
+    this.kittyMirror = false;
+
+    this.kittyInterval = setInterval((intro)=>{
+      intro.kittyPos = intro.getRandomPos();
+      intro.kittyAngle = intro.rng.int(360);
+      intro.kittySize = intro.getRandomSize();
+      intro.kittyMirror = !intro.kittyMirror;
+    }, 1000, this);
   }
 
   gameUpdate() {
@@ -6408,6 +6510,7 @@ class IntroStage extends StageBase {
 
     if(this.startButton.wasClicked())
     {
+      clearInterval(this.kittyInterval);
       this.complete();
     }
   }
@@ -6426,6 +6529,9 @@ class IntroStage extends StageBase {
     }
 
     this.startButton.render();
+
+    // kitty
+    drawTile(this.kittyPos, this.kittySize, tile(0, vec2(18,14), 0), new Color(0,0,0,0.3), this.kittyAngle, this.kittyMirror);
   }
 
   renderText(text, lineNum) {
@@ -6434,26 +6540,15 @@ class IntroStage extends StageBase {
     drawTextScreen(text, vec, this.textSize, this.textColor);
   }
 
-  // renderButton()
-  // {
-  //   drawText("Start", this.buttonPos, 1, new Color(0, 0, 0, 1));
-  //   drawRect(this.buttonPos, vec2(4, 2), new Color(0.7, 0.3, 0.3, 1));
-  // }
+  getRandomPos()
+  {
+    return vec2(this.rng.int(10, -10), this.rng.int(6, -6));
+  }
 
-  tryGetButtonPress() {
-    if (!mouseWasPressed(0)) return false;
-
-    const mouseTilePos = mousePos.floor();
-
-    var mouseAbsX = Math.abs(mouseTilePos.x);
-    var mouseAbsY = Math.abs(mouseTilePos.y);
-
-    var devX = this.buttonSize.x / 2;
-    var devY = this.buttonSize.y / 2;
-
-    var isClicked = mouseAbsX <= devX && mouseAbsY <= devY;
-
-    console.log("clicked", isClicked);
+  getRandomSize()
+  {
+    const val = this.rng.int(4, 12);
+    return vec2(val, val);
   }
 }
 
@@ -6776,39 +6871,10 @@ const color = {
   black: [0, 0, 0]
 };
 
-// level config
-const defaultLevelConfig = {
-  platforms: [
-    {x: -30, y: 3, width: 10, height: 1, color: color.yellow},
-    {x: 10, y: 3, width: 10, height: 1, color: color.red},
-    {x: 20, y: 8, width: 10, height: 1, color: color.green},
-    {x: 30, y: 14, width: 10, height: 1, color: color.aqua},
-    {x: 40, y: 8, width: 10, height: 1, color: color.yellow},
-    {x: 50, y: 3, width: 10, height: 1, color: color.fuchsia},
-    {x: 70, y: 3, width: 5, height: 1, color: color.aqua},
-    {x: 90, y: 8, width: 5, height: 1, color: color.red},
-    {x: 95, y: 25, width: 5, height: 1, color: color.black},
-    {x: 110, y: 2, width: 20, height: 1, color: color.green},
-    {x: 140, y: 2, width: 5, height: 1, color: color.red},
-    {x: 180, y: 2, width: 5, height: 1, color: color.aqua},
-    {x: 240, y: 2, width: 5, height: 1, color: color.aqua},
-    {x: 240, y: -50, width: 5, height: 1, color: color.aqua},
-    {x: -50, y: 32, width: 300, height: 1, color: color.black}
-  ],
-  powerups: [
-    {x: -30, y: 5},
-    {x: 6, y: 5},
-    {x: 140, y: 5},
-    {x: 180, y: 7},
-    {x: 100, y: 30},
-    {x: 240, y: 4},
-    {x: 240, y: -48}
-  ],
-  enemies: [2, 5]
-};
+// Level Config now defined in src/stages/stageLoader.js
 
 class PlatformerStage extends StageBase {
-  constructor(levelConfig = defaultLevelConfig) {
+  constructor(levelConfig) {
     super("platformer");
     this.platforms = [];
     this.powerups = [];
@@ -6953,7 +7019,7 @@ class SimplePuzzleStage extends StageBase {
 
 /**
  * Manage the loading of playable levels, provide level configuration
- * for any stage instance, and inject the powerup manager into each stage  
+ * for any stage instance, and inject the powerup manager into each stage
  */
 class StageLoader {
   constructor(powerupManager) {
@@ -6965,104 +7031,84 @@ class StageLoader {
      * Corresponding configuration object will be provided
      * to the level's constructor when the builder method is invoked.
      */
+    var platformDefaults = this.defaultPlatformLevelConfig();
     this.levelBuilderConfig = [
       {
         index: 0,
         builder: this.platformerBuilder,
-        config: {
-          level: 1,
-        },
+        config: platformDefaults,
       },
       {
         index: 1,
         builder: this.puzzleBuilder,
-        config: {
-          level: 2,
-        },
+        config: platformDefaults,
       },
       {
         index: 2,
         builder: this.platformerBuilder,
-        config: {
-          level: 3,
-        },
+        config: platformDefaults,
       },
       {
         index: 3,
         builder: this.platformerBuilder,
-        config: {
-          level: 4,
-        },
+        config: platformDefaults,
       },
       {
         index: 4,
         builder: this.platformerBuilder,
-        config: {
-          level: 5,
-        },
+        config: platformDefaults,
       },
       {
         index: 5,
         builder: this.platformerBuilder,
-        config: {
-          level: 6,
-        },
+        config: platformDefaults,
       },
       {
         index: 6,
         builder: this.platformerBuilder,
-        config: {
-          level: 7,
-        },
+        config: platformDefaults,
       },
       {
         index: 7,
         builder: this.platformerBuilder,
-        config: {
-          level: 8,
-        },
+        config: platformDefaults,
       },
       {
         index: 8,
         builder: this.platformerBuilder,
-        config: {
-          level: 9,
-        },
+        config: platformDefaults,
       },
       {
         index: 9,
         builder: this.platformerBuilder,
-        config: {
-          level: 10,
-        },
+        config: platformDefaults,
       },
       {
         index: 10,
         builder: this.platformerBuilder,
-        config: {
-          level: 11,
-        },
+        config: platformDefaults,
       },
       {
         index: 11,
         builder: this.platformerBuilder,
-        config: {
-          level: 12,
-        },
+        config: platformDefaults,
       },
     ];
 
-    // register each level's builder method with the 
+    // register each level's builder method with the
     // corresponding elevator button index
     for (let level of this.levelBuilderConfig) {
-      this.levelMap.set(level.index, level.builder(level.config, this.powerupManager));
+      this.levelMap.set(
+        level.index,
+        level.builder(level.config, this.powerupManager)
+      );
     }
   }
 
   /**
    * Retrieve the closure to construct an instance of
    * a playable level for the corresponding elevator floor's index
-   * 
+   *
    * @param {*} index the selected elevator button's mapped index
    * @returns a closure: () => GameStage that instantates the mapped level & passes
    * the corresdponding config object
@@ -7088,6 +7134,46 @@ class StageLoader {
    */
   puzzleBuilder(config, powerupManager) {
     return () => new SimplePuzzleStage(config, powerupManager);
+  }
+
+  /**
+   * default platformer configuration values
+   */
+
+  /**
+   * Provide deafult coniguration values for platform levels
+   * @returns
+   */
+  defaultPlatformLevelConfig() {
+    return {
+      platforms: [
+        { x: -30, y: 3, width: 10, height: 1, color: color.yellow },
+        { x: 10, y: 3, width: 10, height: 1, color: color.red },
+        { x: 20, y: 8, width: 10, height: 1, color: color.green },
+        { x: 30, y: 14, width: 10, height: 1, color: color.aqua },
+        { x: 40, y: 8, width: 10, height: 1, color: color.yellow },
+        { x: 50, y: 3, width: 10, height: 1, color: color.fuchsia },
+        { x: 70, y: 3, width: 5, height: 1, color: color.aqua },
+        { x: 90, y: 8, width: 5, height: 1, color: color.red },
+        { x: 95, y: 25, width: 5, height: 1, color: color.black },
+        { x: 110, y: 2, width: 20, height: 1, color: color.green },
+        { x: 140, y: 2, width: 5, height: 1, color: color.red },
+        { x: 180, y: 2, width: 5, height: 1, color: color.aqua },
+        { x: 240, y: 2, width: 5, height: 1, color: color.aqua },
+        { x: 240, y: -50, width: 5, height: 1, color: color.aqua },
+        { x: -50, y: 32, width: 300, height: 1, color: color.black },
+      ],
+      powerups: [
+        { x: -30, y: 5 },
+        { x: 6, y: 5 },
+        { x: 140, y: 5 },
+        { x: 180, y: 7 },
+        { x: 100, y: 30 },
+        { x: 240, y: 4 },
+        { x: 240, y: -48 },
+      ],
+      enemies: [2, 5],
+    };
   }
 }
 
