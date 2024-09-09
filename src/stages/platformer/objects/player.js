@@ -13,9 +13,9 @@
  */
 
 const RIGHT = 'R', LEFT = 'L';
-const MAX_FRAME = 13;
+const MAX_FRAME_PLAYER = 13;
 
-class Player extends RectObject {
+class Player extends EngineObject {
   /**
    * @param {vec2} pos
    * @param {PlayerInit} opts
@@ -51,12 +51,15 @@ class Player extends RectObject {
     this.frame = 0;
     this.failed = false;
     this.succeeded = false;
+    
+    this.speedDownLooper = 0;
   }
 
   
 
   render() {
     super.render();
+
     drawTile(this.pos, this.size, tile(this.frame, vec2(18,14), 0), new Color(0,0,0,1), this.angle, this.mirror);
   }
 
@@ -84,9 +87,16 @@ class Player extends RectObject {
     let direction = null;
     if (keyIsDown(KeyboardKeys.ArrowLeft) || keyIsDown(KeyboardKeys.ArrowRight)) {
       direction = keyIsDown(KeyboardKeys.ArrowLeft) ? LEFT : RIGHT;
-      this.frame++; // animate the walking!
-      if (this.frame === MAX_FRAME) {
-        this.frame = 0;
+
+      this.speedDownLooper++;
+      if (this.speedDownLooper % 2 === 0) {
+        this.frame++; // animate the walking!
+        if (this.frame === MAX_FRAME_PLAYER) {
+          this.frame = 0;
+        }
+      }
+      if (60 === this.speedDownLooper) {
+        this.speedDownLooper = 0
       }
       this.direction = direction;
     }
