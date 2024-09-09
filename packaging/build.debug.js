@@ -17,7 +17,7 @@ const BUILD_FOLDER = "build";
 ////////////////////////////////////////
 // Collect source files
 const sourceFiles = [];
-const sources = ["state", "stages", "game-objects", "util"];
+const sources = ["state", "stages", "game-objects", "util", "powerups"];
 
 sourceFiles.push("./vendor/littlejs/littlejs.js");
 

@@ -3,10 +3,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 const STARTING_LIVES = 9;
 
+///////////////////////////////////////////////////////////////////////////////
+// Represents the current state of the game
+///////////////////////////////////////////////////////////////////////////////
 class GameState {
-  ///////////////////////////////////////////////////////////////////////////////
-  // Ctor
-  ///////////////////////////////////////////////////////////////////////////////
   constructor() {
     // track active game phase
     this.introActive = false;
@@ -15,7 +15,7 @@ class GameState {
 
     // Track whichever state is currently active
     this.currentStage = null;
-    // track number of games succeeded
+    // track number of levels that have been won
     this.completedLevels = [];
     // track elevator button selection
     this.selectedElevatorButton = null;
@@ -26,7 +26,7 @@ class GameState {
   }
 
   ///////////////////////////////////////////////////////////////////////////////
-  // Getters: Check State
+  // Getters
 
   // Is game mode set to intro
   isIntro() {
@@ -38,20 +38,17 @@ class GameState {
     return this.elevatorActive;
   }
 
-  // Is game mode set to level
+  // Is game mode set to playable level
   isLevel() {
     return !this.elevatorActive;
   }
 
+  // Is game mode set to Continue screen
   isContinueScreen() {
     return this.continueStageActive;
   }
 
-  // Has the required number of levels been met
-  isBossUnlocked() {
-    return this.completedLevels == this.requiredLevelCount;
-  }
-
+  // Retrieve the currently active stage
   getCurrentStage() {
     return this.currentStage;
   }
@@ -59,25 +56,9 @@ class GameState {
   ///////////////////////////////////////////////////////////////////////////////
   // Manage Intro State
   ///////////////////////////////////////////////////////////////////////////////
-
   initIntro() {
     this.initStage(new IntroStage());
     this.introActive = true;
-  }
-
-  completeIntro() {
-    // close the intro stage
-    this.currentStage.complete();
-    this.introActive = false;
-  }
-
-  ///////////////////////////////////////////////////////////////////////////////
-  // Mark Level As Complete, return to elevator
-  ///////////////////////////////////////////////////////////////////////////////
-  completeStage() {
-    //TODO increment completed levels
-    // TODO add completed level to array provided to elevator stage to enable next stage buttons
-    this.goToElevator();
   }
 
   ///////////////////////////////////////////////////////////////////////////////
@@ -86,6 +67,8 @@ class GameState {
   goToElevator() {
     this.elevatorActive = true;
     this.continueStageActive = false;
+
+    this.markCurrentLevelComplete();
 
     var elevator = new ElevatorStage(this.completedLevels);
     this.initStage(elevator);
@@ -96,8 +79,11 @@ class GameState {
   ///////////////////////////////////////////////////////////////////////////////
   goToLevel(level) {
     // get the selected floor button from the elevator
-    this.selectedElevatorButton = this.getCurrentStage().getState().getResult();
+    this.setSelectedFloor();
+    // update state
     this.elevatorActive = false;
+    this.continueStageActive = false;
+    // load the level
     this.initStage(level);
   }
 
@@ -105,9 +91,13 @@ class GameState {
   // Player has Died.  Show lives, ask for continue
   ///////////////////////////////////////////////////////////////////////////////
   goToContinueScreen() {
+    // remove a life
     this.livesLeft--;
-
+    // toggle continue screen state
     this.continueStageActive = true;
+    // remove current floor selection
+    this.clearSelectedFloor();
+    // load continue screen
     this.initStage(new ContinueStage(this.livesLeft));
   }
 
@@ -119,17 +109,46 @@ class GameState {
     this.currentStage.init();
   }
 
-  getLivesLeft() {
-    return this.livesLeft;
-  }
+  ///////////////////////////////////////////////////////////////////////////////
+  // Helpers
+  ///////////////////////////////////////////////////////////////////////////////
 
-  markCurrentLevelComplete()
-  {
+  /**
+   * Check if current active level is represented
+   * by a corresponding elevator button.
+   * If so, mark the button's state as complete.
+   */
+  markCurrentLevelComplete() {
+    if (this.selectedElevatorButton == null) return;
+
     // mark level's button as complete
     this.selectedElevatorButton.state.complete();
     // add the selected level to array of completed levels
     this.completedLevels.push(this.selectedElevatorButton);
     // clear current selection
+    this.clearSelectedFloor();
+  }
+
+  /**
+   * gets the result object of game state's current stage
+   * @returns stage.state.result
+   */
+  getCurrentStageResult() {
+    return this.getCurrentStage().getState().getResult();
+  }
+
+  /**
+   * retrieve the completed elevator stage's result
+   * set as selected elevator button 
+   */
+  setSelectedFloor() {
+    this.selectedElevatorButton = this.getCurrentStageResult();
+  }
+
+  /**
+   * unset selected elevator button
+   */
+  clearSelectedFloor() {
     this.selectedElevatorButton = null;
   }
 }
