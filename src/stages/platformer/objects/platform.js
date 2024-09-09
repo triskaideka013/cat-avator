@@ -1,5 +1,5 @@
 // uncomment this line to reference LittleJS types -->
-// import { Color, vec2 } from "../../../../node_modules/littlejsengine/dist/littlejs.esm" 
+// import { Color, vec2 } from "littlejsengine"
 
 class Platform extends RectObject {
   /**

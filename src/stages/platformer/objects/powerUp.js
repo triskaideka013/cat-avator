@@ -1,5 +1,5 @@
 // uncomment this line to reference LittleJS types -->
-// import { Color, Vector2, drawText } from "../../../../node_modules/littlejsengine/dist/littlejs.esm" 
+// import { Color, Vector2, drawText } from "littlejsengine"
 
 class PowerUp extends RectObject {
 /**

@@ -1,5 +1,5 @@
 // uncomment this line to reference LittleJS types -->
-// import { engineInit } from "../node_modules/littlejsengine/dist/littlejs.esm"
+// import { engineInit } from "littlejsengine"
 
 "use strict";
 glEnable = false;

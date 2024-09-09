@@ -1,5 +1,5 @@
 // uncomment this line to reference LittleJS types -->
-// import { Vector2 } from "../../node_modules/littlejsengine/dist/littlejs.esm"
+// import { Vector2 } from "littlejsengine"
 
 /**
  * 

@@ -1,5 +1,5 @@
 // uncomment this line to reference LittleJS types -->
-// import { tile, drawTile, Color, vec2, keyWasPressed, keyIsDown, isOverlapping, update, drawText, RectObject } from "../../../../node_modules/littlejsengine/dist/littlejs.esm"
+// import { tile, drawTile, Color, vec2, keyWasPressed, keyIsDown, isOverlapping, update, drawText, RectObject } from "littlejsengine"
 
 // TODO: Refactor Player class.
 // Move some things out of the update method.
