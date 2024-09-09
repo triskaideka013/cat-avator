@@ -11,39 +11,10 @@ const color = {
   black: [0, 0, 0]
 };
 
-// level config
-const defaultLevelConfig = {
-  platforms: [
-    {x: -30, y: 3, width: 10, height: 1, color: color.yellow},
-    {x: 10, y: 3, width: 10, height: 1, color: color.red},
-    {x: 20, y: 8, width: 10, height: 1, color: color.green},
-    {x: 30, y: 14, width: 10, height: 1, color: color.aqua},
-    {x: 40, y: 8, width: 10, height: 1, color: color.yellow},
-    {x: 50, y: 3, width: 10, height: 1, color: color.fuchsia},
-    {x: 70, y: 3, width: 5, height: 1, color: color.aqua},
-    {x: 90, y: 8, width: 5, height: 1, color: color.red},
-    {x: 95, y: 25, width: 5, height: 1, color: color.black},
-    {x: 110, y: 2, width: 20, height: 1, color: color.green},
-    {x: 140, y: 2, width: 5, height: 1, color: color.red},
-    {x: 180, y: 2, width: 5, height: 1, color: color.aqua},
-    {x: 240, y: 2, width: 5, height: 1, color: color.aqua},
-    {x: 240, y: -50, width: 5, height: 1, color: color.aqua},
-    {x: -50, y: 32, width: 300, height: 1, color: color.black}
-  ],
-  powerups: [
-    {x: -30, y: 5},
-    {x: 6, y: 5},
-    {x: 140, y: 5},
-    {x: 180, y: 7},
-    {x: 100, y: 30},
-    {x: 240, y: 4},
-    {x: 240, y: -48}
-  ],
-  enemies: [2, 5]
-};
+// Level Config now defined in src/stages/stageLoader.js
 
 class PlatformerStage extends StageBase {
-  constructor(levelConfig = defaultLevelConfig) {
+  constructor(levelConfig) {
     super("platformer");
     this.platforms = [];
     this.powerups = [];

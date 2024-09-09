@@ -1,7 +1,10 @@
-class IntroStage extends StageBase {
+class SimplePuzzleStage extends StageBase {
   constructor() {
-    super("intro");
-    this.timer = 0;
+    super("puzzler");
+    this.timer = 5;
+    this.countDownInterval = setInterval(() => {
+      this.timer--;
+    }, 1000);
   }
 
   init() {
@@ -11,9 +14,8 @@ class IntroStage extends StageBase {
   gameUpdate() {
     if (!this.state.isActive()) return;
 
-    this.timer += 5;
-
-    if (this.timer > 200) {
+    if (this.timer <= 0) {
+      clearInterval(this.countDownInterval);
       this.complete();
     }
   }
@@ -23,16 +25,11 @@ class IntroStage extends StageBase {
     super.gameRender();
     // draw to overlay canvas for hud rendering
     drawTextScreen(
-      "Cat-avator... of Doom?",
+      `Puzzle Stage exiting in ${this.timer}s`,
       vec2(mainCanvasSize.x / 2, 70),
       80
     );
     var time = this.timer;
-    drawTextScreen(
-      `Mock Loading ${Math.round(time)}%`,
-      vec2(mainCanvasSize.x / 2, 150),
-      80
-    );
   }
 
   gameRenderPost() {}

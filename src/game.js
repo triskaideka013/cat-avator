@@ -8,23 +8,33 @@ glEnable = false;
 // State Management
 ///////////////////////////////////////////////////////////////////////////////
 
-/**
- * @type {GameStageManager}
- */
+// Tracks game state
 const stateManager = new GameStateManager();
+// Tracks powerups
+const powerupManager = new PowerupManager();
+// Handles loading playable levels
+const stageLoader = new StageLoader(powerupManager);
 
 ///////////////////////////////////////////////////////////////////////////////
 // Initial Game Setup
 ///////////////////////////////////////////////////////////////////////////////
-
 function gameInit() {
   stateManager.initIntro();
+  // TODO: remove this
+  let scc = new ShipCapnCrew();
+    window["ship_capn_crew"] = {
+      "game": scc,
+      "roll": () => {scc.rollDice()},
+      "reset": () => {scc.resetGame()},
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // Main Update Loop
 ///////////////////////////////////////////////////////////////////////////////
 
+/////////////////////////////////////////////
+// Logic Updates
 function gameUpdate() {
   // update the active stage
   stateManager.getCurrentStage().gameUpdate();
@@ -36,10 +46,8 @@ function gameUpdate() {
   resolveNextStage();
 }
 
-///////////////////////////////////////////////////////////////////////////////
 function gameUpdatePost() {
-  // called after physics and objects are updated
-  // setup camera and prepare for render
+
   var currentStage = stateManager.getCurrentStage();
 
   if (currentStage.gameUpdatePost) {
@@ -47,10 +55,9 @@ function gameUpdatePost() {
   }
 }
 
-///////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////
+// Rendering updates
 function gameRender() {
-  // called before objects are rendered
-  // draw any background effects that appear behind objects
   var currentStage = stateManager.getCurrentStage();
 
   if (currentStage.gameRender) {
@@ -58,7 +65,6 @@ function gameRender() {
   }
 }
 
-///////////////////////////////////////////////////////////////////////////////
 function gameRenderPost() {
   // called after objects are rendered
   // draw effects or hud that appear above all objects
@@ -80,58 +86,58 @@ function gameRenderPost() {
 function resolveNextStage() {
   if (!stateManager.CAN_PLAY) return;
 
-  // is game over?
+  ////////////////////////////////////
+  // Game Over
   if (stateManager.isGameOver()) {
     stateManager.goToGameOverScreen();
     return;
   }
 
-  // leaving the intro?
-  if (stateManager.isIntroStage()) {
-    // leave intro state
-    stateManager.completeIntro();
-    stateManager.goToElevator();
+  ////////////////////////////////////
+  // Elevator -> Playable Level
+  if (stateManager.isElevatorStage()) {
+    loadPlayableLevel();
     return;
   }
 
-  ///////////////////////////////////////////////////////////////////////////////
-  // Determine the next playable level to load here.
-  // Player has selected a level from the elevator.
-  ///////////////////////////////////////////////////////////////////////////////
-  if (stateManager.isElevatorStage()) {
-    // create a new level
-    var platformer = new PlatformerStage();
-    //transition to level
-    stateManager.startNewLevel(platformer);
-    let scc = new ShipCapnCrew();
-    window["ship_capn_crew"] = {
-      "game": scc,
-      "roll": () => {scc.rollDice()},
-      "reset": () => {scc.resetGame()},
-    }
-  }
-
-  // Playable level was Failed?
+  ////////////////////////////////////
+  // Playable Level -> Continue Screen
   if (stateManager.levelWasFailed()) {
     stateManager.goToContinueScreen();
     return;
   }
 
-  // Coming from continue screen?
-  if (stateManager.isContinueScreen()) {
-    // Return to elevator
-    stateManager.goToElevator();
-    return;
-  }
-
-  // Playable level was won?
+  ////////////////////////////////////
+  // Intro -> Elevator 
+  // OR
+  // Continue -> Elevator
+  // OR
+  // Playable Level -> Elevator
   if (stateManager.levelWasWon()) {
-    stateManager.markLevelComplete();
-    stateManager.goToElevator();
+    stateManager.returnToElevator();
     return;
   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+// Resolve & load playable level
+function loadPlayableLevel()
+{
+// get the currently selected level index
+var elevatorResult = stateManager.getCurrentStageResult();
+// retrieve the level builder function ()=> GameStage 
+var levelBuilder = stageLoader.getLevelBuilderByIndex(elevatorResult.index);
+// instantiate the level
+var level = levelBuilder();
+
+if (level != null) {
+  //transition to level
+  stateManager.startNewLevel(level);
+}
+}
+
+///////////////////////////////////////////////////////////////////////////////
 // Startup LittleJS Engine
-engineInit(gameInit, gameUpdate, gameUpdatePost, gameRender, gameRenderPost, ['tiles.png']);
+engineInit(gameInit, gameUpdate, gameUpdatePost, gameRender, gameRenderPost, [
+  "tiles.png",
+]);
