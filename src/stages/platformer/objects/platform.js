@@ -1,5 +1,5 @@
 // uncomment this line to reference LittleJS types -->
-// import { Color, vec2 } from "../../../../node_modules/littlejsengine/dist/littlejs.esm" 
+// import { Color, vec2 } from "littlejsengine"
 
 class Platform extends RectObject {
   /**
@@ -9,6 +9,9 @@ class Platform extends RectObject {
    * @param {Color} color 
    */
   constructor(position, size, color) {
-    super(position, size, color);
+    super(position, size, color)
+
+    this.setCollision()
+    this.mass = 0 // don't get blown away by projectiles
   }
 }

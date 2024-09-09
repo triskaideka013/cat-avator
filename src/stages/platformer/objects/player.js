@@ -1,5 +1,5 @@
 // uncomment this line to reference LittleJS types -->
-// import { tile, drawTile, Color, vec2, keyWasPressed, keyIsDown, isOverlapping, update, drawText } from "../../../../node_modules/littlejsengine/dist/littlejs.esm"
+// import { tile, drawTile, Color, vec2, keyWasPressed, keyIsDown, isOverlapping, update, drawText, RectObject } from "littlejsengine"
 
 // TODO: Refactor Player class.
 // Move some things out of the update method.
@@ -13,6 +13,7 @@
  */
 
 const RIGHT = 'R', LEFT = 'L';
+const MAX_FRAME = 13;
 
 class Player extends RectObject {
   /**
@@ -35,6 +36,7 @@ class Player extends RectObject {
     this.startPos = pos;
     this.pos = pos;
     this.size = size;
+    this.color = new Color(0,0,0,0); // set background transparent
 
     this.direction = RIGHT;
     this.angle = 0;
@@ -46,15 +48,16 @@ class Player extends RectObject {
 
     this.jumpCount = 0;
     this.powerupCounter = 0;
-
+    this.frame = 0;
     this.failed = false;
     this.succeeded = false;
   }
 
+  
+
   render() {
     super.render();
-    // this.moji = drawText("🐈", this.pos, 2);
-    drawTile(this.pos, this.size, tile(0, vec2(18,14), 0), new Color(0,0,0,1), this.angle, this.mirror);
+    drawTile(this.pos, this.size, tile(this.frame, vec2(18,14), 0), new Color(0,0,0,1), this.angle, this.mirror);
   }
 
   update() {
@@ -81,6 +84,10 @@ class Player extends RectObject {
     let direction = null;
     if (keyIsDown(KeyboardKeys.ArrowLeft) || keyIsDown(KeyboardKeys.ArrowRight)) {
       direction = keyIsDown(KeyboardKeys.ArrowLeft) ? LEFT : RIGHT;
+      this.frame++; // animate the walking!
+      if (this.frame === MAX_FRAME) {
+        this.frame = 0;
+      }
       this.direction = direction;
     }
     if (direction !== null) {

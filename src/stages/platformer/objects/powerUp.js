@@ -1,14 +1,22 @@
 // uncomment this line to reference LittleJS types -->
-// import { Color, vec2 } from "../../../../node_modules/littlejsengine/dist/littlejs.esm" 
+// import { Color, Vector2, drawText } from "littlejsengine"
 
 class PowerUp extends RectObject {
 /**
  * 
- * @param {vec2} position 
- * @param {vec2} size 
+ * @param {Vector2} pos 
+ * @param {Vector2} size 
  * @param {Color} color 
  */
-  constructor(position, size, color) {
-    super(position, size, color);
+  constructor(pos, size, color) {
+    super(pos, size, color);
+    this.pos = pos;
+    this.size = size;
+    this.color = color;
+  }
+
+  update() {
+    super.update();
+    drawText("🐟", this.pos, 1, this.color);
   }
 }
