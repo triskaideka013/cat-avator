@@ -13,7 +13,7 @@
  */
 
 const RIGHT = 'R', LEFT = 'L';
-const MAX_FRAME_PLAYER = 13;
+const MAX_FRAME_PLAYER = 2;
 
 class Player extends EngineObject {
   /**
@@ -89,7 +89,7 @@ class Player extends EngineObject {
       direction = keyIsDown(KeyboardKeys.ArrowLeft) ? LEFT : RIGHT;
 
       this.speedDownLooper++;
-      if (this.speedDownLooper % 2 === 0) {
+      if (this.speedDownLooper % 3 === 0) {
         this.frame++; // animate the walking!
         if (this.frame === MAX_FRAME_PLAYER) {
           this.frame = 0;

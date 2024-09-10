@@ -139,8 +139,19 @@ if (level != null) {
 ///////////////////////////////////////////////////////////////////////////////
 // Startup LittleJS Engine
 engineInit(gameInit, gameUpdate, gameUpdatePost, gameRender, gameRenderPost, [
-  "tiles.png",
+  "gato_18x14.png", // 2f[rames]
+  // platforms
   "burst.png",
   "gradient.png",
-  "grit.png"
+  "grit.png",
+  // for the gambler -->
+  "dice.png", // 6f
+  "rat_16x9-2frame.png",
+  "pirate_13x15.png", // 1f
+  // enemies
+  "blue_gato_18x14.png", // 2f
+  "purple_gato_18x14.png", // 2f
+  "green_gato_18x14.png",
+  "cat_idle_16x11.png", // 2f does not walk; might be a good jumper
+  
 ]);

@@ -1,6 +1,6 @@
 // uncomment this line to reference LittleJS types -->
 // import { Color, vec2, drawRect, drawTile, Vector2, RectObject } from "littlejsengine" 
-const MAX_FRAME_NPC = 13;
+const MAX_FRAME_NPC = 2;
 class NPCCat extends RectObject {
   /**
    * 
@@ -23,7 +23,8 @@ class NPCCat extends RectObject {
     const halfEnemyHeight = this.size.y / 2;
     // make sure the enemy is standing on top of the platform
     this.pos.y = platformTop + halfEnemyHeight;
-
+    // 7 -9 indexes for 3 colores de gato
+    this.catFrame = Math.ceil(Math.random()*3)+6;
     this.speedDownLooper = 0;
   }
   
@@ -41,7 +42,7 @@ class NPCCat extends RectObject {
       this.mirror = !this.mirror
     }
     this.speedDownLooper++;
-    if (this.speedDownLooper % 3 === 0) {
+    if (this.speedDownLooper % 4 === 0) {
       this.frame++; // animate the ambling!
       if (this.frame === MAX_FRAME_NPC) {
         this.frame = 0;
@@ -55,6 +56,6 @@ class NPCCat extends RectObject {
 
   render() {
 
-    drawTile(this.pos, this.size, tile(this.frame, vec2(18,14), 0), new Color(0,0,0,1), 0, this.mirror, this.tintColor)
+    drawTile(this.pos, this.size, tile(this.frame, vec2(18,14), this.catFrame), new Color(0,0,0,1), 0, this.mirror, this.tintColor)
   }
 }
