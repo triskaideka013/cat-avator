@@ -142,6 +142,7 @@ engineInit(gameInit, gameUpdate, gameUpdatePost, gameRender, gameRenderPost, [
   "gato_18x14.png", // 2 frame
   "purple_gato_18x14.png", // 2 frame
   "blue_gato_18x14.png", // 2 frame
+  "dice_16x16.png", // 6 frame
   "rat_16x19-2frame.png",
   "pirate_13x15.png", // 1 frame
   "cat_idle_16x11.png", // 2 frame, non walker. TODO: use as a jumper?
