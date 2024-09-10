@@ -1,17 +1,25 @@
 // uncomment this line to reference LittleJS types -->
-// import { Color, vec2 } from "littlejsengine"
+// import { Color, vec2, Vector2, drawTile, tile } from "littlejsengine"
 
 class Platform extends RectObject {
   /**
    * 
-   * @param {vec2} position 
-   * @param {vec2} size 
+   * @param {Vector2} position 
+   * @param {Vector2} size 
    * @param {Color} color 
    */
-  constructor(position, size, color) {
-    super(position, size, color)
+  constructor(pos, size, color) {
+    super(pos, size, color)
 
+    this.pos = pos;
+    this.size = size;
+    this.color = color;
+    
     this.setCollision()
     this.mass = 0 // don't get blown away by projectiles
+  }
+
+  render() {
+    drawTile(this.pos, this.size, tile(0, 16, 1), this.color) // 3 -> burst (green by default, good for grass)
   }
 }

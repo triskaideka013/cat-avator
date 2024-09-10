@@ -13,7 +13,7 @@
  */
 
 const RIGHT = 'R', LEFT = 'L';
-const MAX_FRAME = 13;
+const MAX_FRAME_PLAYER = 13;
 
 class Player extends RectObject {
   /**
@@ -51,12 +51,15 @@ class Player extends RectObject {
     this.frame = 0;
     this.failed = false;
     this.succeeded = false;
+
+    this.speedDownLooper = 0;
   }
 
-  
+
 
   render() {
     super.render();
+
     drawTile(this.pos, this.size, tile(this.frame, vec2(18,14), 0), new Color(0,0,0,1), this.angle, this.mirror);
   }
 
@@ -84,9 +87,16 @@ class Player extends RectObject {
     let direction = null;
     if (keyIsDown(KeyboardKeys.ArrowLeft) || keyIsDown(KeyboardKeys.ArrowRight)) {
       direction = keyIsDown(KeyboardKeys.ArrowLeft) ? LEFT : RIGHT;
-      this.frame++; // animate the walking!
-      if (this.frame === MAX_FRAME) {
-        this.frame = 0;
+
+      this.speedDownLooper++;
+      if (this.speedDownLooper % 2 === 0) {
+        this.frame++; // animate the walking!
+        if (this.frame === MAX_FRAME_PLAYER) {
+          this.frame = 0;
+        }
+      }
+      if (60 === this.speedDownLooper) {
+        this.speedDownLooper = 0
       }
       this.direction = direction;
     }
@@ -116,14 +126,52 @@ class Player extends RectObject {
 
     for (const platform of this.platforms) {
       if (isOverlapping(this.pos, this.size, platform.pos, platform.size)) {
-        if (this.velocity.y <= 0) {
-          this.pos.y = platform.pos.y + platform.size.y / 2 + this.size.y / 2;
+
+        const playerRect = this.getBoundingRect();
+        const platformRect = platform.getBoundingRect();
+
+        // vertical collision handling
+        // from the top
+        if (
+          this.velocity.y < 0
+          && playerRect.y > platformRect.top - 0.1
+          && playerRect.right > platformRect.left + 0.1
+          && playerRect.left < platformRect.right - 0.1
+        ) {
+          this.setPlayerBottom(platformRect.top);
           this.velocity.y = 0;
           this.isOnGround = true;
           this.jumpCount = 0;
-        } else {
-          this.pos.y = platform.pos.y - platform.size.y / 2 - this.size.y / 2;
+        // from the bottom
+        } else if (
+          this.velocity.y > 0
+          && playerRect.y < platformRect.bottom + 0.1
+          && playerRect.right > platformRect.left + 0.1
+          && playerRect.left < platformRect.right - 0.1
+        ) {
+          this.setPlayerTop(platformRect.bottom);
           this.velocity.y *= -1;
+        }
+
+        // horizontal collision handling
+        // from the left
+        if (
+          this.velocity.x > 0
+          && playerRect.x < platformRect.left - 0.1
+          && playerRect.bottom < platformRect.top - 0.1
+          && playerRect.top > platformRect.bottom + 0.1
+        ) {
+          this.setPlayerRight(platformRect.left);
+          this.velocity.x = 0;
+        // from the right
+        } else if (
+          this.velocity.x < 0
+          && playerRect.x > platformRect.right + 0.1
+          && playerRect.bottom < platformRect.top - 0.1
+          && playerRect.top > platformRect.bottom + 0.1
+        ) {
+          this.setPlayerLeft(platformRect.right);
+          this.velocity.x = 0;
         }
       }
     }
@@ -158,6 +206,22 @@ class Player extends RectObject {
     if (this.powerups.length === 0) {
       this.succeeded = true;
     }
+  }
+
+  setPlayerBottom(y) {
+    this.pos.y = y + this.size.y / 2;
+  }
+
+  setPlayerTop(y) {
+    this.pos.y = y - this.size.y / 2;
+  }
+
+  setPlayerLeft(x) {
+    this.pos.x = x + this.size.x / 2;
+  }
+
+  setPlayerRight(x) {
+    this.pos.x = x - this.size.x / 2;
   }
 
   getScore() {
