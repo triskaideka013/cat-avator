@@ -13,11 +13,12 @@ class StageLoader {
      * to the level's constructor when the builder method is invoked.
      */
     var platformDefaults = this.defaultPlatformLevelConfig();
+    var anotherPlatformLevelConfig = this.anotherPlatformLevelConfig();
     this.levelBuilderConfig = [
       {
         index: 0,
         builder: this.platformerBuilder,
-        config: platformDefaults,
+        config: anotherPlatformLevelConfig,
       },
       {
         index: 1,
@@ -122,7 +123,7 @@ class StageLoader {
    */
 
   /**
-   * Provide deafult coniguration values for platform levels
+   * Provide default configuration values for platform levels
    * @returns
    */
   defaultPlatformLevelConfig() {
@@ -154,6 +155,46 @@ class StageLoader {
         { x: 240, y: -48 },
       ],
       enemies: [2, 5],
+    };
+  }
+
+  /**
+   * Another platform level configuration
+   * Stairway Level
+   * @returns
+   */
+  anotherPlatformLevelConfig() {
+    return {
+      platforms: [
+        // steps
+        { x: 10, y: 3, width: 5, height: 1, color: color.red },
+        { x: 15, y: 6, width: 5, height: 1, color: color.red },
+        { x: 20, y: 9, width: 5, height: 1, color: color.red },
+        { x: 25, y: 12, width: 5, height: 1, color: color.red },
+        { x: 30, y: 15, width: 5, height: 1, color: color.red },
+        { x: 35, y: 18, width: 5, height: 1, color: color.red },
+        { x: 40, y: 21, width: 5, height: 1, color: color.red },
+        { x: 45, y: 24, width: 5, height: 1, color: color.red },
+        { x: 50, y: 27, width: 5, height: 1, color: color.red },
+        { x: 55, y: 30, width: 5, height: 1, color: color.red },
+        // left wall
+        { x: 7.5, y: 20.5, width: 1, height: 36, color: color.red },
+        // risers
+        { x: 12.5, y: 4.5, width: 1, height: 4, color: color.red },
+        { x: 17.5, y: 7.5, width: 1, height: 4, color: color.red },
+        { x: 22.5, y: 10.5, width: 1, height: 4, color: color.red },
+        { x: 27.5, y: 13.5, width: 1, height: 4, color: color.red },
+        { x: 32.5, y: 16.5, width: 1, height: 4, color: color.red },
+        { x: 37.5, y: 19.5, width: 1, height: 4, color: color.red },
+        { x: 42.5, y: 22.5, width: 1, height: 4, color: color.red },
+        { x: 47.5, y: 25.5, width: 1, height: 4, color: color.red },
+        { x: 52.5, y: 28.5, width: 1, height: 4, color: color.red },
+        { x: 57.5, y: 31.5, width: 1, height: 4, color: color.red }
+      ],
+      powerups: [
+        { x: 55, y: 33 }
+      ],
+      enemies: [1, 2, 3, 4, 5, 6, 7, 8]
     };
   }
 }
