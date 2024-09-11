@@ -12,13 +12,15 @@ class StageLoader {
      * Corresponding configuration object will be provided
      * to the level's constructor when the builder method is invoked.
      */
+    var simplePlatformerLevel1 = this.simplePlatformerLevel1Config();
+    var stairwayPlatformLevel = this.stairwayPlatformerLevelConfig();
     var platformDefaults = this.defaultPlatformLevelConfig();
-    var anotherPlatformLevelConfig = this.anotherPlatformLevelConfig();
+
     this.levelBuilderConfig = [
       {
         index: 0,
         builder: this.platformerBuilder,
-        config: anotherPlatformLevelConfig,
+        config: simplePlatformerLevel1,
       },
       {
         index: 1,
@@ -28,7 +30,7 @@ class StageLoader {
       {
         index: 2,
         builder: this.platformerBuilder,
-        config: platformDefaults,
+        config: stairwayPlatformLevel,
       },
       {
         index: 3,
@@ -163,7 +165,7 @@ class StageLoader {
    * Stairway Level
    * @returns
    */
-  anotherPlatformLevelConfig() {
+  stairwayPlatformerLevelConfig() {
     return {
       platforms: [
         // steps
@@ -195,6 +197,33 @@ class StageLoader {
         { x: 55, y: 33 }
       ],
       enemies: [1, 2, 3, 4, 5, 6, 7, 8]
+    };
+  }
+
+  /**
+   * A platformer level config
+   * @returns
+   */
+  simplePlatformerLevel1Config() {
+    return {
+      platforms: [
+        { x: 8, y: 8, width: 1, height: 1 },  // 0: wall
+        { x: 10, y: 3, width: 5, height: 1 },  // 1: platform
+        { x: 12.5, y: 3, width: 5, height: 1 },  // 2: wall
+
+        { x: 17.5, y: 6.5, width: 1, height: 8 },  // 3: wall
+        { x: 15, y: 3, width: 5, height: 1 },  // 4: platform
+
+        { x: 22.5, y: 7.5, width: 1, height: 10 },  // 5: wall
+        { x: 25, y: 3, width: 5, height: 1 },  // 6: platform
+
+        { x: 39.5, y: 3, width: 5, height: 1 },  // 7: platform
+        { x: 42, y: 5, width: 1, height: 5 },  // 8: wall
+      ],
+      powerups: [
+        { x: 42, y: 12 }
+      ],
+      enemies: [4, 6]
     };
   }
 }
