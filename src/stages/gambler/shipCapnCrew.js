@@ -13,14 +13,13 @@ class ShipCapnCrew {
         this.resetGame()
         this.player1.ante = ante
         this.gameoverFn = function() {} // keep gameover function cached
+        this.pirateText = "Let's Gamble, LANDLUBBER!"
     }
 
     ///  SETUP ///
 
     resetGame() {
-        this.player1 = this.setupPlayer()
-        this.player2// = this.setupPlayer() // computer player, might not be required for sake of reducing complexity
-        this.player1turn = true
+        this.player1 = this.setupPlayer();
         this.setupDice()
         this.gameover = false
         this.isTimedOut = false
@@ -44,20 +43,13 @@ class ShipCapnCrew {
     }
 
     setupDice() {
-        let players = [
-            this.player1
-            // , this.player2
-        ]
-        players.forEach(p => {
-            // create 5 dice
-            let i = 0
-            let offsetX = -36;
-            do {
-                p.diceArray.push(new PlayerDice(vec2(offsetX + (22 * i), 0), vec2(16)))
-                i++
-            } while (p.diceArray.length < 5)
-            
-        })
+        // create 5 dice
+        let i = 0
+        let offsetX = -36;
+        do {
+            this.player1.diceArray.push(new PlayerDice(vec2(offsetX + (22 * i), 0), vec2(16)))
+            i++
+        } while (p.diceArray.length < 5)
     }
 
     ///  PLAY GAME ///
@@ -68,24 +60,10 @@ class ShipCapnCrew {
     rollDice() {
         if (this.isTimedOut) return // no input if timed out awaiting confirmation
 
-        if (this.player1turn) {
-            if (this.player1.rolls > 0) {
-                
-                this.rollAvailable(this.player1)
-                
-            }
+        if (this.player1.rolls > 0) {
             
-        }
-            
-        if (!this.player1turn) {
-            if (this.player2.rolls > 0) {
-                
-                this.rollAvailable(this.player2)
-                
-            }
-            
-        }
-            
+            this.rollAvailable(this.player1)
+        }    
     }
 
     rollAvailable(player) {
@@ -101,11 +79,10 @@ class ShipCapnCrew {
     }
 
     evalDice(diceArray) {
-        let player = this.getPlayer()
+        let player = this.player1
         let didCollect = false
         let rolledValues = [], rolledIndices = []
         let heldDiceValue = 0 // if they keep some cargo when re-rolling for higher score
-        
         let i = 0
         let collectedDice = []
         diceArray.forEach(d => {
@@ -244,12 +221,13 @@ class ShipCapnCrew {
                 let roll = d6.roll().getValue()
                 
                 if (roll == 1) {
-                    console.log(`arrr! 6 + 6 + ${roll} is 13...to davy jones's locker with ye!`)
+                    this.pirateText = `ARRR! 6 + 6 + ${roll} is 13...to davy jones's locker with ye!`
                     player.hasLost = true
                 } else {
-                    console.log(`yo-ho-ho! 6 + 6 + ${roll} does not 13 make...${roll} times the treasure!`)
+                    this.pirateText = `YO-HO-HO! 6 + 6 + ${roll} does not 13 make...${roll} times the treasure!`
                     player.score *= roll
                 }
+                console.log(this.pirateText)
             } 
             
             this.gameover = true    
@@ -257,10 +235,9 @@ class ShipCapnCrew {
 
         if (this.gameover) {
 
-            if (player.shipCapnCrew)
-                console.log(`win! score is ${this.getPlayer().score}`);
-            else
-                console.log('lose!');
+            this.pirateText = (player.shipCapnCrew) ? `win! score is ${player.score}` : 'lose!'
+            
+            console.log(this.pirateText)
             
             this.gameoverFn()
         } 
@@ -268,24 +245,12 @@ class ShipCapnCrew {
 
     /// HELPERS ///
 
-    /**
-     * 
-     * @returns {Object}
-     */
     hasLost() {
-        return this.gameover && this.getPlayer().hasLost
+        return this.gameover && this.player1.hasLost
     }
 
     hasWon() {
-        return this.gameover && this.getPlayer().shipCapnCrew && !this.hasLost()
-    }
-
-    getPlayer() {
-        return this.player1turn ? this.player1 : this.player2
-    }
-
-    takeTurns() {
-        this.player1turn = !this.player1turn
+        return this.gameover && this.player1.shipCapnCrew && !this.hasLost()
     }
 }
 

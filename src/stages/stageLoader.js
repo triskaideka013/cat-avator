@@ -13,6 +13,8 @@ class StageLoader {
      * to the level's constructor when the builder method is invoked.
      */
     var platformDefaults = this.defaultPlatformLevelConfig();
+    var defaultGamblerConfig = this.gamblerLevelConfig(false);
+    var triskaedekaGamblerConfig = this.gamblerLevelConfig(true);
     this.levelBuilderConfig = [
       {
         index: 0,
@@ -21,8 +23,8 @@ class StageLoader {
       },
       {
         index: 1,
-        builder: this.puzzleBuilder,
-        config: platformDefaults,
+        builder: this.gamblerBuilder,
+        config: defaultGamblerConfig,
       },
       {
         index: 2,
@@ -71,8 +73,8 @@ class StageLoader {
       },
       {
         index: 11,
-        builder: this.platformerBuilder,
-        config: platformDefaults,
+        builder: this.gamblerBuilder,
+        config: triskaedekaGamblerConfig,
       },
     ];
 
@@ -109,12 +111,12 @@ class StageLoader {
   }
 
   /**
-   * Creates a closure which returns an instance of puzzle stage.
+   * Creates a closure which returns an instance of the gambler/dice stage.
    * @param {*} config the mapped level config to provided to the stage
-   * @returns an instance of SimplePuzzleStage
+   * @returns an instance of DiceeStage
    */
-  puzzleBuilder(config, powerupManager) {
-    return () => new SimplePuzzleStage(config, powerupManager);
+  gamblerBuilder(config, powerupManager) {
+    return () => new DiceStage(config, powerupManager);
   }
 
   /**
