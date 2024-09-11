@@ -14,6 +14,8 @@ class StageLoader {
      */
     var platformDefaults = this.defaultPlatformLevelConfig();
     var anotherPlatformLevelConfig = this.anotherPlatformLevelConfig();
+    var gamblerDefaults = this.gamblerLevelConfig(false);
+    var triskaedekaGamblerConfig = this.gamblerLevelConfig(true);
     this.levelBuilderConfig = [
       {
         index: 0,
@@ -22,8 +24,8 @@ class StageLoader {
       },
       {
         index: 1,
-        builder: this.puzzleBuilder,
-        config: platformDefaults,
+        builder: this.gamblerBuilder,
+        config: gamblerDefaults,
       },
       {
         index: 2,
@@ -72,8 +74,8 @@ class StageLoader {
       },
       {
         index: 11,
-        builder: this.platformerBuilder,
-        config: platformDefaults,
+        builder: this.gamblerBuilder,
+        config: triskaedekaGamblerConfig,
       },
     ];
 
@@ -116,6 +118,15 @@ class StageLoader {
    */
   puzzleBuilder(config, powerupManager) {
     return () => new SimplePuzzleStage(config, powerupManager);
+  }
+
+  /**
+   * Creates a closure which returns an instance of the gambler/dice stage.
+   * @param {*} config the mapped level config to provided to the stage
+   * @returns an instance of DiceeStage
+   */
+  gamblerBuilder(config, powerupManager) {
+    return () => new DiceStage(config, powerupManager);
   }
 
   /**
@@ -196,5 +207,20 @@ class StageLoader {
       ],
       enemies: [1, 2, 3, 4, 5, 6, 7, 8]
     };
+  }
+
+  /**
+   * default gambler configuration values
+   */
+
+  /**
+   * Provide default configuration values for gambler levels
+   * @param {boolean} riskItAll
+   * @returns {Object}
+   */
+  gamblerLevelConfig(riskItAll) {
+    return {
+      "riskItAll": riskItAll,
+    }
   }
 }

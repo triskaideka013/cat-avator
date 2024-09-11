@@ -20,13 +20,6 @@ const stageLoader = new StageLoader(powerupManager);
 ///////////////////////////////////////////////////////////////////////////////
 function gameInit() {
   stateManager.initIntro();
-  // TODO: remove this
-  let scc = new ShipCapnCrew();
-    window["ship_capn_crew"] = {
-      "game": scc,
-      "roll": () => {scc.rollDice()},
-      "reset": () => {scc.resetGame()},
-    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -140,7 +133,10 @@ if (level != null) {
 // Startup LittleJS Engine
 engineInit(gameInit, gameUpdate, gameUpdatePost, gameRender, gameRenderPost, [
   "tiles.png",
-  "burst.png",
-  "gradient.png",
-  "grit.png"
+  "grass.png", // 1 x 16
+  "gradient.png", // 1 x 16
+  "grit.png", // 1 x 16
+  "dice_16x16.png",
+  "pirate_13x15.png",
+  "rat_16x9.png",
 ]);
