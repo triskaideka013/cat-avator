@@ -158,4 +158,19 @@ class StageLoader {
       enemies: [2, 5],
     };
   }
+
+  /**
+   * default gambler configuration values
+   */
+
+  /**
+   * Provide default configuration values for gambler levels
+   * @param {boolean} riskItAll
+   * @returns {Object}
+   */
+  gamblerLevelConfig(riskItAll) {
+    return {
+      "riskItAll": riskItAll,
+    }
+  }
 }
