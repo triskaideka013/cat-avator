@@ -226,4 +226,16 @@ class StageLoader {
       enemies: [4, 6]
     };
   }
+
+  /**
+   * Helper function to create a platform object
+   * @param {number} left
+   * @param {number} right
+   * @param {number} bottom
+   * @param {number} top
+   * @returns {{ x: number, y: number, width: number, height: number }}
+   */
+  plat(left, right, bottom, top) {
+    return { x: (left + right) / 2, y: (bottom + top) / 2, width: right - left, height: top - bottom}
+  }
 }
