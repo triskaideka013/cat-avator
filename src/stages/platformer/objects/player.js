@@ -127,29 +127,22 @@ class Player extends RectObject {
     for (const platform of this.platforms) {
       if (isOverlapping(this.pos, this.size, platform.pos, platform.size)) {
 
-        const playerRect = this.getBoundingRect();
-        const platformRect = platform.getBoundingRect();
-
         // vertical collision handling
         // from the top
         if (
           this.velocity.y < 0
-          && playerRect.y > platformRect.top - 0.1
-          && playerRect.right > platformRect.left + 0.1
-          && playerRect.left < platformRect.right - 0.1
+          && this.collidesTop(platform)
         ) {
-          this.setPlayerBottom(platformRect.top);
+          this.setPlayerBottom(platform.top);
           this.velocity.y = 0;
           this.isOnGround = true;
           this.jumpCount = 0;
         // from the bottom
         } else if (
           this.velocity.y > 0
-          && playerRect.y < platformRect.bottom + 0.1
-          && playerRect.right > platformRect.left + 0.1
-          && playerRect.left < platformRect.right - 0.1
+          && this.collidesBottom(platform)
         ) {
-          this.setPlayerTop(platformRect.bottom);
+          this.setPlayerTop(platform.bottom);
           this.velocity.y *= -1;
         }
 
@@ -157,20 +150,16 @@ class Player extends RectObject {
         // from the left
         if (
           this.velocity.x > 0
-          && playerRect.x < platformRect.left - 0.1
-          && playerRect.bottom < platformRect.top - 0.1
-          && playerRect.top > platformRect.bottom + 0.1
+          && this.collidesLeft(platform)
         ) {
-          this.setPlayerRight(platformRect.left);
+          this.setPlayerRight(platform.left);
           this.velocity.x = 0;
         // from the right
         } else if (
           this.velocity.x < 0
-          && playerRect.x > platformRect.right + 0.1
-          && playerRect.bottom < platformRect.top - 0.1
-          && playerRect.top > platformRect.bottom + 0.1
+          && this.collidesRight(platform)
         ) {
-          this.setPlayerLeft(platformRect.right);
+          this.setPlayerLeft(platform.right);
           this.velocity.x = 0;
         }
       }
