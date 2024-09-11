@@ -121,6 +121,18 @@ class StageLoader {
   }
 
   /**
+   * Helper function to create a platform data object
+   * @param {number} left
+   * @param {number} right
+   * @param {number} bottom
+   * @param {number} top
+   * @returns {{ x: number, y: number, width: number, height: number }}
+   */
+  plat(left, right, bottom, top) {
+    return { x: (left + right) / 2, y: (bottom + top) / 2, width: right - left, height: top - bottom}
+  }
+
+  /**
    * default platformer configuration values
    */
 
@@ -207,35 +219,22 @@ class StageLoader {
   simplePlatformerLevel1Config() {
     return {
       platforms: [
-        { x: 8, y: 8, width: 1, height: 1 },  // 0: wall
-        { x: 10, y: 3, width: 5, height: 1 },  // 1: platform
-        { x: 12.5, y: 3, width: 5, height: 1 },  // 2: wall
+        this.plat(7.5, 8.5, 7.5, 8.5),        // 0: wall
+        this.plat(7.5, 12.5, 2.5, 3.5),       // 1: platform
+        this.plat(10, 15, 2.5, 3.5),          // 2: wall
+        this.plat(17, 18, 2.5, 10.5),         // 3: wall
+        this.plat(12.5, 17.5, 2.5, 3.5),      // 4: platform
 
-        { x: 17.5, y: 6.5, width: 1, height: 8 },  // 3: wall
-        { x: 15, y: 3, width: 5, height: 1 },  // 4: platform
+        this.plat(22, 23, 2.5, 13.5),         // 5: wall
+        this.plat(22.5, 27.5, 2.5, 3.5),      // 6: platform
 
-        { x: 22.5, y: 7.5, width: 1, height: 10 },  // 5: wall
-        { x: 25, y: 3, width: 5, height: 1 },  // 6: platform
-
-        { x: 39.5, y: 3, width: 5, height: 1 },  // 7: platform
-        { x: 42, y: 5, width: 1, height: 5 },  // 8: wall
+        this.plat(37, 42, 2.5, 3.5),          // 7: platform
+        this.plat(41.5, 42.5, 2.5, 7.5)       // 8: wall
       ],
       powerups: [
         { x: 42, y: 12 }
       ],
       enemies: [4, 6]
     };
-  }
-
-  /**
-   * Helper function to create a platform object
-   * @param {number} left
-   * @param {number} right
-   * @param {number} bottom
-   * @param {number} top
-   * @returns {{ x: number, y: number, width: number, height: number }}
-   */
-  plat(left, right, bottom, top) {
-    return { x: (left + right) / 2, y: (bottom + top) / 2, width: right - left, height: top - bottom}
   }
 }
