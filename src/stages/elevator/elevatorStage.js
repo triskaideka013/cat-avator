@@ -1,6 +1,12 @@
 class ElevatorStage extends StageBase {
   constructor(completedLevels) {
-    super("elevator");
+    super();
+
+    this.isFinalFloor = completedLevels && completedLevels.length == 12;
+
+    if (window["playerIsACheater"] == true) {
+      this.isFinalFloor = true;
+    }
 
     // buttons
     this.disabledButtonColor = new Color(.2, .2, .3);
@@ -20,9 +26,13 @@ class ElevatorStage extends StageBase {
     this.backgroundColor = hsl(0, 0, 0);
     this.levelSize = vec2(2, 6);
 
-    this.songPlaying = false;
-
-    this.buttonMap = new ElevatorButtonMap(this.levelSize.x, this.levelSize.y, completedLevels);
+    // register buttons positions for click detection
+    this.buttonMap = new ElevatorButtonMap(
+      this.levelSize.x,
+      this.levelSize.y,
+      completedLevels, 
+      this.isFinalFloor
+    );
 
     // initialize button data
     const position = new vec2();

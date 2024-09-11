@@ -22,6 +22,7 @@ class StageLoader {
         index: 0,
         builder: this.platformerBuilder,
         config: simplePlatformerLevel1,
+
       },
       {
         index: 1,
@@ -138,7 +139,7 @@ class StageLoader {
    */
 
   /**
-   * Provide default configuration values for platform levels
+   * Provide deafult coniguration values for platform levels
    * @returns
    */
   defaultPlatformLevelConfig() {

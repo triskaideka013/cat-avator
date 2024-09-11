@@ -1,11 +1,12 @@
 class ElevatorButtonMap {
-  constructor(gridX, gridY, completedLevels) {
+  constructor(gridX, gridY, completedLevels, playerIsACheater) {
     this.gridX = gridX;
     this.gridY = gridY;
 
     this.completedLevels = completedLevels;
     this.buttons = [];
     this.isFirstAttempt = !completedLevels || completedLevels.length == 0;
+    this.playerIsACheater = playerIsACheater;
   }
 
   setButton(vector2) {
@@ -28,6 +29,12 @@ class ElevatorButtonMap {
   }
 
   getEnabledState(newButtonIndex) {
+
+    if(this.playerIsACheater && newButtonIndex == 12)
+    {
+      return true;
+    }
+
     // default to first floor unlocked
     if (this.isFirstAttempt) {
       return newButtonIndex == 0;
