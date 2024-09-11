@@ -20,6 +20,6 @@ class Platform extends RectObject {
   }
 
   render() {
-    drawTile(this.pos, this.size, tile(0, 16, 1), this.color) // 3 -> burst (green by default, good for grass)
+    drawTile(this.pos, this.size, tile(0, vec2(1,16), 1), this.color) // 3 -> burst (green by default, good for grass)
   }
 }
