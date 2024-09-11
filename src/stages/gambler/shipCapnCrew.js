@@ -6,8 +6,6 @@
  * @property {boolean} held
  */
 
-const DICE_SIDES = 6, BOXCARS = 12, MAX_ROLLS = 3
-
 // TODO: remove debug drudgery
 class ShipCapnCrew {
 
@@ -24,7 +22,6 @@ class ShipCapnCrew {
         this.player2// = this.setupPlayer() // computer player, might not be required for sake of reducing complexity
         this.player1turn = true
         this.setupDice()
-        this.debug = true
         this.gameover = false
         this.isTimedOut = false
     }
@@ -41,7 +38,7 @@ class ShipCapnCrew {
             ship: false,
             capn: false,
             crew: false,
-            rolls: MAX_ROLLS,
+            rolls: 3,
             score: 0
         }
     }
@@ -56,7 +53,7 @@ class ShipCapnCrew {
             let i = 0
             let offsetX = -36;
             do {
-                p.diceArray.push(new PlayerDice(vec2(offsetX + (22 * i), 0),vec2(16)))
+                p.diceArray.push(new PlayerDice(vec2(offsetX + (22 * i), 0), vec2(16)))
                 i++
             } while (p.diceArray.length < 5)
             
@@ -126,7 +123,6 @@ class ShipCapnCrew {
                 
             }
             i+=1
-            if (this.debug) console.log(d)
         })
 
         // find ship, capn, crew
@@ -135,29 +131,23 @@ class ShipCapnCrew {
         let iCapn = rolledValues.indexOf(5)
         let iCrew = rolledValues.indexOf(4)
 
-        this.debug && console.log(rolledValues, 'rolled')
         if (!player.ship && iShip !== -1) {
             // ship!  collect dice
             player.ship = true 
             diceArray[rolledIndices[iShip]].held = true
             didCollect = true
-            this.debug && console.log('collect ship')
-        }
-        
+        } 
         if (!player.capn && iCapn !== -1 && player.ship) { // player must have ship to colect capn
             // capn!  collect dice
             player.capn = true
             diceArray[rolledIndices[iCapn]].held = true
             didCollect = true
-            this.debug && console.log('collect capn')
         }
-
         if (!player.crew && iCrew !== -1 && player.capn) { // player must have capn to colect crew
             // crew!  collect dice
             player.crew = true
             diceArray[rolledIndices[iCrew]].held = true
             didCollect = true
-            this.debug && console.log('collect crew')
         }
         rolledValues = diceArray.filter(function(d){ return !d.held }).map(function(d){ return d.value })
 
@@ -178,15 +168,14 @@ class ShipCapnCrew {
         }
         let scoreMsg = `your score is ${player.score}`
 
-        this.debug && console.log({
+        console.log({
             "score": player.score,
             "collect": didCollect, 
             "loser": player.hasLost,
             "ship-capn-crew": player.shipCapnCrew,
         }) 
-        this.debug && console.log(rolledValues, "rolled-after-collecting")
-        this.debug && console.log(heldDiceValue, "held")
-        this.debug && console.log(player.rolls, "rolls-remaining")
+        console.log(rolledValues, "rolled-after-collecting")
+        console.log(heldDiceValue, "held")
 
         // winning, losing or re-rolling
         if (player.hasLost) {
@@ -197,7 +186,7 @@ class ShipCapnCrew {
         } else if (player.shipCapnCrew) {
         
             if (player.rolls >= 1  // re-roll for higher score
-                && player.score !== BOXCARS) {  // unless they have the maximum already)
+                && player.score != 12) {  // unless they have the maximum already)
                 
                 this.isTimedOut = true; // set a flag so we can ignore user input until confirmation
                 setTimeout(()=> {
@@ -210,15 +199,15 @@ class ShipCapnCrew {
                         diceArray.forEach(function(d){
                             // allow re-roll of all dice that are not part of the ship-capn-crew set
                             d.held = false
-                            if (d.value === 6 && !hasShip) {d.held = true; hasShip = true};
-                            if (d.value === 5 && !hasCapn) {d.held = true; hasCapn = true};
-                            if (d.value === 4 && !hasCrew) {d.held = true; hasCrew = true};
+                            if (d.value == 6 && !hasShip) {d.held = true; hasShip = true};
+                            if (d.value == 5 && !hasCapn) {d.held = true; hasCapn = true};
+                            if (d.value == 4 && !hasCrew) {d.held = true; hasCrew = true};
                         })
                         diceArray.forEach(function(d){
                             // what are we holding?
                             if (!d.held) {
                                 let held
-                                if (d.getValue() === DICE_SIDES) {
+                                if (d.getValue() == 6) {
                                     held = true // hold the 6 for the player
                                 } else {
                                     held = confirm(`hold ${d.getValue()}?`);
@@ -246,7 +235,7 @@ class ShipCapnCrew {
         if (player.shipCapnCrew) {
 
             let riskItAll = false
-            if (player.score === BOXCARS)
+            if (player.score == 12)
                 riskItAll = confirm(`risk it all? just don't roll a 1!`)
             
             if (riskItAll) {
@@ -254,27 +243,25 @@ class ShipCapnCrew {
                 let d6 = new PlayerDice(0,vec2(16))
                 let roll = d6.roll().getValue()
                 
-                if (roll === 1) {
-                    this.debug && console.log(`arrr! 6 + 6 + ${roll} is 13...to davy jones's locker with ye!`)
+                if (roll == 1) {
+                    console.log(`arrr! 6 + 6 + ${roll} is 13...to davy jones's locker with ye!`)
                     player.hasLost = true
                 } else {
-                    this.debug && console.log(`yo-ho-ho! 6 + 6 + ${roll} does not 13 make...${roll} times the treasure!`)
+                    console.log(`yo-ho-ho! 6 + 6 + ${roll} does not 13 make...${roll} times the treasure!`)
                     player.score *= roll
                 }
-                
             } 
             
             this.gameover = true    
-
-        } else {
-            // this.takeTurns()
         }
 
         if (this.gameover) {
-            this.debug && console.log(player.shipCapnCrew ? 'win!' : 'lose!')
-            if (player.shipCapnCrew) {
-                this.debug && console.log(`score is ${this.getPlayer().score}`)
-            }
+
+            if (player.shipCapnCrew)
+                console.log(`win! score is ${this.getPlayer().score}`);
+            else
+                console.log('lose!');
+            
             this.gameoverFn()
         } 
     }
@@ -322,7 +309,7 @@ class PlayerDice extends EngineObject {
      * @returns {PlayerDice} this, so method is chainable
      */
     roll() {
-        this.frame = Math.floor(Math.random() * DICE_SIDES) // 0-5
+        this.frame = Math.floor(Math.random() * 6) // 0-5
         this.value = this.frame + 1 // number on dice
         return this
     }

@@ -14,7 +14,7 @@ class StageLoader {
      */
     var platformDefaults = this.defaultPlatformLevelConfig();
     var anotherPlatformLevelConfig = this.anotherPlatformLevelConfig();
-    var gamblerDefaults = this.gamblerLevelConfig(false);
+    var defaultGamblerConfig = this.gamblerLevelConfig(false);
     var triskaedekaGamblerConfig = this.gamblerLevelConfig(true);
     this.levelBuilderConfig = [
       {
@@ -25,7 +25,7 @@ class StageLoader {
       {
         index: 1,
         builder: this.gamblerBuilder,
-        config: gamblerDefaults,
+        config: defaultGamblerConfig,
       },
       {
         index: 2,
