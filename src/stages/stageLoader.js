@@ -26,31 +26,26 @@ class StageLoader {
       },
       {
         index: 1,
-        builder: this.puzzleBuilder,
-        config: simplePlatformerLevel1,
-      },
-      {
-        index: 2,
         builder: this.platformerBuilder,
         config: simplePlatformerLevel2,
       },
       {
-        index: 3,
+        index: 2,
         builder: this.platformerBuilder,
         config: stairwayPlatformerLevel,
       },
       {
-        index: 4,
+        index: 3,
         builder: this.platformerBuilder,
         config: simplePlatformerLevel3,
       },
       {
-        index: 5,
+        index: 4,
         builder: this.platformerBuilder,
         config: simplePlatformerLevel4,
       },
       {
-        index: 6,
+        index: 5,
         builder: this.platformerBuilder,
         config: {
           ...simplePlatformerLevel1,
@@ -58,7 +53,7 @@ class StageLoader {
         }
       },
       {
-        index: 7,
+        index: 6,
         builder: this.platformerBuilder,
         config: {
           ...simplePlatformerLevel2,
@@ -66,7 +61,7 @@ class StageLoader {
         }
       },
       {
-        index: 8,
+        index: 7,
         builder: this.platformerBuilder,
         config: {
           ...stairwayPlatformerLevel,
@@ -74,7 +69,7 @@ class StageLoader {
         }
       },
       {
-        index: 9,
+        index: 8,
         builder: this.platformerBuilder,
         config: {
           ...simplePlatformerLevel3,
@@ -82,7 +77,7 @@ class StageLoader {
         }
       },
       {
-        index: 10,
+        index: 9,
         builder: this.platformerBuilder,
         config: {
           ...simplePlatformerLevel4,
@@ -90,12 +85,17 @@ class StageLoader {
         }
       },
       {
-        index: 11,
+        index: 10,
         builder: this.platformerBuilder,
         config: {
           ...simplePlatformerLevel3,
           enemySpeeds: Array(simplePlatformerLevel3.enemies.length).fill().map((_, i) => vec2(6 / 60, 4 / 60))
         }
+      },
+      {
+        index: 11,
+        builder: this.gamblerBuilder,
+        // config: defaultGamblerConfig,
       },
       {
         index: 12,
@@ -137,12 +137,12 @@ class StageLoader {
   }
 
   /**
-   * Creates a closure which returns an instance of puzzle stage.
+   * Creates a closure which returns an instance of the gambler/dice stage.
    * @param {*} config the mapped level config to provided to the stage
-   * @returns an instance of SimplePuzzleStage
+   * @returns an instance of DiceeStage
    */
-  puzzleBuilder(config, powerupManager) {
-    return () => new SimplePuzzleStage(config, powerupManager);
+  gamblerBuilder(config, powerupManager) {
+    return () => new DiceStage(config, powerupManager);
   }
 
   bossBuilder(config, powerupManager){

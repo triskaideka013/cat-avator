@@ -1,6 +1,6 @@
 // uncomment this line to reference LittleJS types -->
-// import { Color, vec2, drawRect, drawTile, Vector2, RectObject } from "littlejsengine"
-const MAX_FRAME_NPC = 13;
+// import { Color, vec2, drawRect, drawTile, Vector2, RectObject } from "littlejsengine" 
+const MAX_FRAME_NPC = 2;
 class NPCCat extends RectObject {
   /**
    *
@@ -13,18 +13,17 @@ class NPCCat extends RectObject {
   constructor(pos, size, tintColor, platform, speed=vec2(2 / 60, 0), mirror=true) {
     super(pos, size);
     this.color = new Color(0,0,0,0); // transparent background
-    // this.size = size;
-    // this.pos = pos;
     this.tintColor = tintColor
     this.platform = platform;
     this.frame = 0;
+    this.mirror = mirror
+    this.imageIndex = 6
     this.speed = speed;
     this.direction = vec2(1, 1);
     const platformTop = this.platform.pos.y + this.platform.size.y / 2;
     const halfEnemyHeight = this.size.y / 2;
     // make sure the enemy is standing on top of the platform
-    this.pos.y = platformTop + halfEnemyHeight;
-
+    this.pos.y = platformTop;// + halfEnemyHeight;
     this.speedDownLooper = 0;
   }
 
@@ -49,7 +48,7 @@ class NPCCat extends RectObject {
     this.speedDownLooper++;
     if (this.speedDownLooper % 3 === 0) {
       this.frame++; // animate the ambling!
-      if (this.frame === MAX_FRAME_NPC) {
+      if (this.frame == MAX_FRAME_NPC) {
         this.frame = 0;
       }
     }
@@ -61,6 +60,6 @@ class NPCCat extends RectObject {
 
   render() {
 
-    drawTile(this.pos, this.size, tile(this.frame, vec2(18,14), 0), new Color(0,0,0,1), 0, this.mirror, this.tintColor)
+    drawTile(this.pos, this.size, tile(this.frame, vec2(16,19), this.imageIndex), new Color(0,0,0,1), 0, this.mirror, this.tintColor)
   }
 }
