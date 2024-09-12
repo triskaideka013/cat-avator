@@ -23,6 +23,10 @@ class StageLoader {
         index: 0,
         builder: this.platformerBuilder,
         config: simplePlatformerLevel1,
+        config: {
+          ...stairwayPlatformerLevel,
+          enemySpeeds: Array(stairwayPlatformerLevel.enemies.length).fill().map((_, i) => vec2(0, 6 / 60))
+        }
       },
       {
         index: 1,
