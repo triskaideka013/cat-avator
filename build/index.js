@@ -6015,7 +6015,7 @@ class StageBase {
     gameRenderPost() {}
 
     /**
-     * retrieve the current StageStage object.
+     * retrieve the current StageState object.
      * Do not override.
      * @returns
      */
@@ -6558,14 +6558,14 @@ class DiceStage extends StageBase {
       this.levelSelectedCallback = null;
       this.backgroundColor = hsl(degreesToRadians(133), .65, .15);
       this.cameraOffset = vec2(0, -0.5);
-      // this.casinoColor = new Color(0, 153, 0, 1);
       this.levelSize = vec2(2, 6);
+      powerupManager.setYarnBalls(25)
       if (powerupManager.getYarnBallCount() > 0) {
         this.pirateText = "Ahoy, matey!\n\nI need a SHIP (6), CAPN (5) and CREW (4).\n\nLet's gamble for treasure, LANDLUBBER!";
       } else {
         this.pirateText = "Me hearty, you've nothing to BET me!\n\nI sure do like YARN BALLS though...";
       }
-      
+
       this.powerupManager = powerupManager
     }
   
@@ -6579,7 +6579,7 @@ class DiceStage extends StageBase {
       // adjust camera scale
       cameraScale = 8;
 
-      new PirateMouse(vec2(6,30));
+      this.pirate = new PirateMouse(vec2(6,30));
 
       if (powerupManager.getYarnBallCount() > 0) {
         // init dice game!
@@ -6593,71 +6593,79 @@ class DiceStage extends StageBase {
       if (!this.state.isActive() || this.isTimedOut) return;
   
       if (mouseWasPressed(0)) {
-        if(powerupManager.getYarnBallCount() == 0) {
+
+        if(powerupManager.getYarnBallCount() == 0) { // let them see text on screen, but then exit level without losing lives so they can collect yarn 
           return this.quit()
         }
+
         this.isTimedOut = true;
         this.game.rollDice();
         setTimeout(() => {
 
           if (this.game.gameover) {
 
+            this.pirateText = this.game.pirateText;
+
             if (this.game.player1.shipCapnCrew) {
+              console.log('adding?', this.powerupManager.getYarnBallCount())
               this.powerupManager.addYarnBalls(this.game.player1.score)
+              console.log('adding?', this.powerupManager.getYarnBallCount())
               this.complete();
             } else {
               
               if (this.game.triskaideka) {
-                this.powerupManager.setYarnBalls(0);
+                // this.powerupManager.setYarnBalls(0); // notso hard-core ending
                 this.instaKill();
               } else {
+                console.log('schlepping?', this.powerupManager.getYarnBallCount())
                 this.powerupManager.removeYarnBall();
+                console.log('schlepping?', this.powerupManager.getYarnBallCount())
                 this.fail();
               }
-            }
-            this.pirateText = this.game.pirateText;
-            
+            }  
+
           }
 
           this.isTimedOut = false;
         }, 1000);
+
       }
     }
   
     gameRenderPost() {
       if (!this.state.isActive()) return;
 
-      // draw to overlay canvas for hud rendering
+      ///
+      ///  Parlor HUD
+      ///
+
+      ///  <pirate-talk>
       drawTextScreen(this.pirateText, vec2(mainCanvasSize.x / 2, 40), 64);
 
+      ///  <bet>
       drawRect(vec2((mainCanvasSize.x / 16) - 165 , 35), vec2(25), anteBGColor);
-      
       drawTextScreen("🧶", vec2((mainCanvasSize.x / 2)-430, 450), 96);
       drawTextScreen("Player's Bet", vec2((mainCanvasSize.x / 2)-428, 585), 32);
+
+      ///  <score>
       if (!!this.game?.player1?.rolls >= 1) {
         drawTextScreen(`Score: ${this.game.player1.score}\n\nNo. rolls: ${this.game.player1.rolls}`, vec2((mainCanvasSize.x / 2)+500, 450), 48, textColor, 0, textColor, 'right');
       } else if (this.game?.player1?.score >= 0) {
         drawTextScreen(`Score: ${this.game.player1.score}`, vec2((mainCanvasSize.x / 2)+500, 450), 48, textColor, 0, textColor, 'right');
       }
     }
-  
-    tryGetDicePressd() {
-      if (!mouseWasPressed(0)) return false;
-  
-      //raw mousePos
-      const mouseTilePos = mousePos.floor();
-      // account for render position of the panel buttons
-      const renderOffset = vec2(
-        Math.floor(this.buttonPanelOffsetX),
-        Math.floor(this.buttonPanelOffsetY)
-      );
-  
-      const adjustedMousePos = mouseTilePos.subtract(renderOffset);
-  
-      // check for corresponding button
-      var dice = this.diceMap.getDice(adjustedMousePos);
-  
-      return dice ?? false;
+
+    teardown() {
+      super.teardown()
+
+      this.pirate.destroy()
+
+      if (!!this.game) {
+
+        this.game.player1.diceArray.forEach(d => d.destroy())
+
+        delete this.game
+      }
     }
   }
   
@@ -6766,7 +6774,7 @@ class DiceState
  * @property {boolean} held
  */
 const heldDiceBGColor = hsl(degreesToRadians(72),1,.65) // 80 light green
-const pointDiceBGColor = hsl(degreesToRadians(115),.5,.5)
+const gameDiceBGColor = hsl(degreesToRadians(115),.5,.5)
 
 // TODO: remove debug drudgery
 class ShipCapnCrew {
@@ -6957,7 +6965,7 @@ class ShipCapnCrew {
                                 d.held = held
                             }
                         })
-                        return this.rollDice();
+                        return //this.rollDice();
                     }
 
                     this.endGame(player)
@@ -6993,7 +7001,7 @@ class ShipCapnCrew {
                         let roll = d6.roll().getValue()
                         d6.held = true
                         player.diceArray.forEach(d => {
-                            if (!d.pointDice && d.value == 6) {
+                            if (!d.gameDice) {
                                 d.held = true
                             }
                         })
@@ -7010,6 +7018,7 @@ class ShipCapnCrew {
                         this.gameover = true  
 
                     } else {
+
                         this.gameover = true   
 
                         this.classicEnding()                
@@ -7017,18 +7026,21 @@ class ShipCapnCrew {
 
                 }, 500)
 
+            } else {
+                this.gameover = true
             }
-
         }
-        
         this.classicEnding()
     }
 
     classicEnding() {
-        if (this.gameover) {
-         
-            this.pirateText = (this.player1.shipCapnCrew) ? "\nSQUEEEK!\n\nYou are a WINNER...take your PRIZE!!" : "\n\nYOU LOST.  I'll be taking that!"
-        }
+
+        if (this.player1.shipCapnCrew) this.player1.diceArray.forEach(d => { // highlight all dice used for score
+            if (!d.gameDice)
+                d.held = true
+        })
+        
+        this.pirateText = (this.player1.shipCapnCrew) ? "\nSQUEEEK!\n\nYou are a WINNER...take your PRIZE!!" : "\n\nYOU LOST.  I'll be taking that!"
     }
 }
 
@@ -7042,7 +7054,7 @@ class PlayerDice extends EngineObject {
         this.size = size
 
         this.held = false
-        this.pointDice = false
+        this.gameDice = false
         this.value = 0
         this.frame = null
         this.angle = degreesToRadians(Math.floor(Math.random()*4)*90)
@@ -7064,12 +7076,12 @@ class PlayerDice extends EngineObject {
 
     collect() {
         this.held = true
-        this.pointDice = true
+        this.gameDice = true
     }
 
     // reset() {
     //     this.held = false
-    //     this.pointDice = false
+    //     this.gameDice = false
     //     this.value = 0
     //     this.frame = null
     // }
@@ -7080,7 +7092,7 @@ class PlayerDice extends EngineObject {
         if (this.value > 0) {
 
             if (this.held) // rectangle behind dice to show they are held?
-                drawRect(this.pos, vec2(this.size.x*1.25), this.pointDice ? pointDiceBGColor : heldDiceBGColor);
+                drawRect(this.pos, vec2(this.size.x*1.25), this.gameDice ? gameDiceBGColor : heldDiceBGColor);
             
             drawTile(this.pos, this.size, tile(this.frame, vec2(16,16), 4), new Color(0,0,0,1), this.angle)
         } else {
@@ -7968,7 +7980,7 @@ class StageLoader {
 
     this.levelBuilderConfig = [
       {
-        index: 0,
+        index: 11,
         builder: this.platformerBuilder,
         config: simplePlatformerLevel1,
       },
@@ -8041,7 +8053,7 @@ class StageLoader {
         }
       },
       {
-        index: 11,
+        index: 0,
         builder: this.gamblerBuilder,
         // config: defaultGamblerConfig,
       },

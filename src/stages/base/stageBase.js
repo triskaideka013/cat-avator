@@ -49,7 +49,7 @@ class StageBase {
     gameRenderPost() {}
 
     /**
-     * retrieve the current StageStage object.
+     * retrieve the current StageState object.
      * Do not override.
      * @returns
      */
