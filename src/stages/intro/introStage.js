@@ -21,10 +21,12 @@ class IntroStage extends StageBase {
     ];
 
     this.helpTextMap = [
-      "Shoot 🧶: Spacebar | Left-Click",
+      "Shoot🧶: Spacebar | Click",
       "Jump: Up Arrow | W",
-      "Move Left/Right: L/R Arrow | A/D",
-      "Objective:  Don't die."
+      "Move: L/R Arrow | A/D",
+      "Win con: collect 🐟   ",
+      "Enemies: Shoot or stomp", 
+      "Objective: Don't die", 
     ];
 
     this.activeText = this.textMap;
@@ -102,9 +104,7 @@ class IntroStage extends StageBase {
       this.kittyMirror
     );
 
-    if (this.controls.isVisible()) {
-      this.controls.render();
-    } else {
+  
       let lineCount = 0;
       for (let text of this.activeText) {
         this.renderText(text, lineCount);
@@ -113,11 +113,11 @@ class IntroStage extends StageBase {
 
       this.startButton.render();
       this.controlsButton.render();
-    }
+    
   }
 
   renderText(text, lineNum) {
-    var offsetY = 110 * lineNum;
+    var offsetY = 60 + (50 * lineNum);
     var offsetX = mainCanvasSize.x / 2;
     drawTextScreen(text, vec2(offsetX, offsetY), 40, new Color(0.7, 0.7, 0.7, 1));
   }
