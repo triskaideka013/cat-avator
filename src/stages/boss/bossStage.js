@@ -45,8 +45,6 @@ class BossStage extends StageBase {
     this.player.update();
     this.boss.update();
 
-    this.floor.updatePosition(vec2(this.player.pos.x, 3));
-
     for (let platform of this.platforms) {
       var playerTouchPlatform = this.player.overlapsObject(
         platform.pos,
