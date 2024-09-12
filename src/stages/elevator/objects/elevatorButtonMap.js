@@ -15,6 +15,7 @@ class ElevatorButtonMap {
     var completed = this.isCompletedState(index);
     var button = new ElevatorButton(vector2, index, enabled, completed);
 
+    if(index < 13)
     this.buttons[`x${vector2.x}y${vector2.y}`] = button;
   }
 
@@ -56,7 +57,7 @@ class ElevatorButtonMap {
     });
 
     // increment the enabled button if last stage was completed
-    if (highestCompletedLevel && highestCompletedLevel.getState().isCompleted()) {
+    if (highestCompletedLevel && highestCompletedLevel.state.isCompleted()) {
       // is this the level after the highest completed?
       return newButtonIndex == highestCompletedIndex + 1;
     }
@@ -68,8 +69,6 @@ class ElevatorButtonMap {
   isCompletedState(newButtonIndex) {
     var found = this.completedLevels.find((b) => b.index == newButtonIndex);
 
-    if (!found?.state) return false;
-
-    return found.state.isCompleted();
+    return found && found.state.isCompleted();
   }
 }

@@ -18,7 +18,7 @@ class SimpleButton {
   setText(text, textSize, color) {
     this.buttonText = text;
     this.textSize = textSize;
-    this.color = color;
+    this.textColor = color;
   }
 
   setData(data)

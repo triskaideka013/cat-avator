@@ -15,20 +15,9 @@ class ElevatorButtonState
     {
         return this.completed;
     }
-
-    enable()
-    {
-        this.enabled = true;
-    }
-
-    disable()
-    {
-        this.enabled = false;
-    }
-
+    
     complete()
     {
         this.completed = true;
-        this.disable();
     }
 }
