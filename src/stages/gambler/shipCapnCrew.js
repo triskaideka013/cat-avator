@@ -239,7 +239,7 @@ class ShipCapnCrew {
                         })
                         
                         if (roll == 1) {
-                            this.pirateText = `\nARRR! 6 + 6 + ${roll} is 13...\n\nHow UNLUCKY! You lose it ALL!`
+                            this.pirateText = `\nARRR! 6 + 6 + 1 is 13...\n\nHow UNLUCKY! Time to walk the PLANK.`
                             player.hasLost = true
                             this.triskaideka = true
                         } else {

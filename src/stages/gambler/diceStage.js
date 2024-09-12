@@ -45,7 +45,7 @@ class DiceStage extends StageBase {
   
       if (mouseWasPressed(0)) {
         if(powerupManager.getYarnBallCount() == 0) {
-          return this.fail() // TODO: replace with stage end without life loss
+          return this.quit()
         }
         this.isTimedOut = true;
         this.game.rollDice();
@@ -59,12 +59,12 @@ class DiceStage extends StageBase {
             } else {
               
               if (this.game.triskaideka) {
-                this.powerupManager.setYarnBalls(0);   
+                this.powerupManager.setYarnBalls(0);
+                this.instaKill();
               } else {
                 this.powerupManager.removeYarnBall();
+                this.fail();
               }
-              
-              this.fail();
             }
             this.pirateText = this.game.pirateText;
             
