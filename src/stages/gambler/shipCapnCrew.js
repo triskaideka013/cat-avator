@@ -12,19 +12,16 @@ const pointDiceBGColor = hsl(degreesToRadians(115),.5,.5)
 class ShipCapnCrew {
 
     constructor(suddenDeath=false) {        
-        this.setupGame()
-        this.gameoverFn = function() {} // keep gameover function cached
+        this.player1 = this.setupPlayer()
+        this.setupDice()
+        this.gameover = false
+        this.isTimedOut = false
+        this.triskaideka = false
         this.suddenDeath = suddenDeath
     }
 
     ///  SETUP ///
 
-    setupGame() {
-        this.player1 = this.setupPlayer()
-        this.setupDice()
-        this.gameover = false
-        this.isTimedOut = false
-    }
 
     /**
      * 
@@ -242,15 +239,15 @@ class ShipCapnCrew {
                         })
                         
                         if (roll == 1) {
-                            this.pirateText = `\nARRR! 6 + 6 + ${roll} is 13...\n\nto davy jones's locker with ye!`
+                            this.pirateText = `\nARRR! 6 + 6 + ${roll} is 13...\n\nHow UNLUCKY! You lose it ALL!`
                             player.hasLost = true
+                            this.triskaideka = true
                         } else {
-                            this.pirateText = `\nYO-HO-HO! 6 + 6 + ${roll} does not 13 make...\n\n${roll} times the treasure!`
+                            this.pirateText = `\nYO-HO-HO! 6 + 6 + ${roll} does not 13 make...\n\n${roll} times the TREASURE!`
                             player.score *= roll
                         }
 
                         this.gameover = true  
-                        this.gameoverFn()
 
                     } else {
                         this.gameover = true   
@@ -271,8 +268,6 @@ class ShipCapnCrew {
         if (this.gameover) {
          
             this.pirateText = (this.player1.shipCapnCrew) ? "\nSQUEEEK!\n\nYou are a WINNER...take your PRIZE!!" : "\n\nYOU LOST.  I'll be taking that!"
-            
-            this.gameoverFn()
         }
     }
 }

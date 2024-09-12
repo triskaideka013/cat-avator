@@ -11,7 +11,12 @@ class DiceStage extends StageBase {
       this.cameraOffset = vec2(0, -0.5);
       // this.casinoColor = new Color(0, 153, 0, 1);
       this.levelSize = vec2(2, 6);
-      this.pirateText = "Ahoy, matey!\n\nI need a SHIP (6), CAPN (5) and CREW (4).\n\nLet's gamble for treasure, LANDLUBBER!";
+      if (powerupManager.getYarnBallCount() > 0) {
+        this.pirateText = "Ahoy, matey!\n\nI need a SHIP (6), CAPN (5) and CREW (4).\n\nLet's gamble for treasure, LANDLUBBER!";
+      } else {
+        this.pirateText = "Me hearty, you've nothing to BET me!\n\nI sure do like YARN BALLS though...";
+      }
+      
       this.powerupManager = powerupManager
     }
   
@@ -24,16 +29,24 @@ class DiceStage extends StageBase {
       cameraPos = this.levelSize.scale(4);
       // adjust camera scale
       cameraScale = 8;
-      // init dice game!
-      this.game = new ShipCapnCrew(true); // true = sudden death enabled
 
       new PirateMouse(vec2(6,30));
+
+      if (powerupManager.getYarnBallCount() > 0) {
+        // init dice game!
+        this.game = new ShipCapnCrew(true); // true = sudden death enabled
+      }
+
+      
     }
   
     gameUpdate() {
       if (!this.state.isActive() || this.isTimedOut) return;
   
       if (mouseWasPressed(0)) {
+        if(powerupManager.getYarnBallCount() == 0) {
+          return this.fail() // TODO: replace with stage end without life loss
+        }
         this.isTimedOut = true;
         this.game.rollDice();
         setTimeout(() => {
@@ -44,7 +57,13 @@ class DiceStage extends StageBase {
               this.powerupManager.addYarnBalls(this.game.player1.score)
               this.complete();
             } else {
-              this.powerupManager.removeYarnBall()
+              
+              if (this.game.triskaideka) {
+                this.powerupManager.setYarnBalls(0);   
+              } else {
+                this.powerupManager.removeYarnBall();
+              }
+              
               this.fail();
             }
             this.pirateText = this.game.pirateText;
