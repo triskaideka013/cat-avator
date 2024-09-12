@@ -43,7 +43,7 @@ class NPCCat extends RectObject {
       this.direction.x *= -1;
       this.mirror = !this.mirror
     }
-    if (this.pos.y > this.platform.pos.y + 5 || this.pos.y < this.platform.pos.y + this.platform.size.y / 2 + this.size.y / 2) {
+    if (this.pos.y > this.platform.pos.y + 2.5 || this.pos.y < this.platform.pos.y + this.platform.size.y / 2 + this.size.y / 2) {
       this.direction.y *= - 1;
     }
     this.speedDownLooper++;
