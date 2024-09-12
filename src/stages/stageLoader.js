@@ -280,36 +280,34 @@ class StageLoader {
    * @returns
    */
   simplePlatformerLevel3Config() {
+
+    const middlePlatform = this.plat(-30, 30, 2.5, 3.5);
+    const middlePlatformEnemyRanges = Array(6).fill().map((_, i) => this.plat(-30 + 5 * i, -20 + 5 * i, 2.5, 3.5));
+    const upperPlatform = this.plat(-30, 30, 15.5, 16.5);
+    const upperPlatformEnemyRanges = Array(7).fill().map((_, i) => this.plat(-30 + 5 * i, -20 + 5 * i, 15.5, 16.5));
+    const lowerPlatform = this.plat(-50, 50, -8.5, -7.5);
+    const lowerPlatformEnemyRanges = Array(18).fill().map((_, i) => this.plat(-50 + 5 * i, -40 + 5 * i, -8.5, -7.5));
+
     return {
       platforms: [
-        this.plat(-30, 30, 2.5, 3.5),           // 0: middle platform
-        this.plat(-30, -20, 2.5, 3.5),          // 1: enemy range
-        this.plat(-25, -15, 2.5, 3.5),          // 2: enemy range
-        this.plat(-20, -10, 2.5, 3.5),          // 3: enemy range
-        this.plat(-15, -5, 2.5, 3.5),           // 4: enemy range
-        this.plat(10, 20, 2.5, 3.5),            // 5: enemy range
-        this.plat(15, 25, 2.5, 3.5),            // 6: enemy range
-        this.plat(20, 30, 2.5, 3.5),            // 7: enemy range
-        this.plat(-30, 30, 15.5, 16.5),         // 8: upper platform
-        this.plat(-30, -20, 15.5, 16.5),        // 9: enemy range
-        this.plat(-25, -15, 15.5, 16.5),        // 10: enemy range
-        this.plat(-20, -10, 15.5, 16.55),       // 11: enemy range
-        this.plat(-15, -5, 15.5, 16.5),         // 12: enemy range
-        this.plat(10, 20, 15.5, 16.5),          // 13: enemy range
-        this.plat(15, 25, 15.5, 16.5),          // 14: enemy range
-        this.plat(20, 30, 15.5, 16.5),          // 15: enemy range
-        this.plat(-50, 50, -8.5, -7.5)          // 16: lower platform
+        middlePlatform,                            //     0: middle platform
+        ...middlePlatformEnemyRanges,              //   1-6: middle platform enemy ranges
+        upperPlatform,                             //     7: upper platform
+        ...upperPlatformEnemyRanges,               //  8-14: upper platform enemy ranges
+        lowerPlatform,                             //    15: lower platform
+        ...lowerPlatformEnemyRanges                // 16-34: lower platform enemy ranges
       ],
       powerups: [
-        { x: -35, y: 6 },
-        { x: 35, y: 6 },
-        { x: 0, y: 22.5 },
-        { x: 0, y: 30 },
-        { x: -10, y: -4 },
-        { x: 0, y: -4 },
+        { x: -35, y: 6 }, { x: 35, y: 6 },         // middle platform powerups
+        { x: -10, y: -4 }, { x: 0, y: -4 },        // lower platform powerups
         { x: 10, y: -4 },
+        { x: 0, y: 22.5 }, { x: 0, y: 30 },        // upper platform powerups
       ],
-      enemies: [1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15]
+      enemies: [
+        ...Array(6).fill().map((_, i) => i + 1),   // indices of middle platform enemy ranges
+        ...Array(7).fill().map((_, i) => i + 8),   // indices of upper platform enemy ranges
+        ...Array(18).fill().map((_, i) => i + 16)  // indices of lower platform enemy ranges
+      ]
     };
   }
 }
