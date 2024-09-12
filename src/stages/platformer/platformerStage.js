@@ -40,6 +40,8 @@ class PlatformerStage extends StageBase {
     // initialize enemies
     this.enemies = EnemyFactory.createEnemies(this.platforms, this.levelConfig.enemies, this.levelConfig.enemySpeeds);
 
+    window.addEventListener('enemy-destroyed', this.enemyCleanup.bind(this));
+
     // find pos.y of the lowest platform in level
     this.minimumStageY = 0;
     this.platforms.forEach((p) => {
@@ -60,6 +62,10 @@ class PlatformerStage extends StageBase {
     cameraPos = this.player.pos.add(vec2(10, 0));
   }
 
+  enemyCleanup(event) {
+    this.enemies = this.enemies.filter(e => e !== event.detail);
+  }
+
   gameUpdate() {
     if (!this.state.isActive()) return;
 
@@ -71,7 +77,13 @@ class PlatformerStage extends StageBase {
 
     if (mouseWasPressed(0)) {
       // if (!this.player.hasDied) {
-        new HairBall(this.player.pos, pointsToAngle(this.player.pos, mousePos));
+      // console.log(this.powerupManager);
+        if (this.powerupManager.getYarnBallCount() > 0)
+        {
+          new HairBall(this.player.pos, pointsToAngle(this.player.pos, mousePos));
+          this.powerupManager.removeYarnBall();
+        }
+        // new HairBall(this.player.pos, pointsToAngle(this.player.pos, mousePos));
       // }
     }
 
