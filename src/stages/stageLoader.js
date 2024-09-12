@@ -23,11 +23,15 @@ class StageLoader {
         index: 0,
         builder: this.platformerBuilder,
         config: simplePlatformerLevel1,
+        config: {
+          ...simplePlatformerLevel1,
+          enemySpeeds: [vec2(0, 4 / 60), vec2(2 / 60, 0)]
+        }
       },
       {
         index: 1,
         builder: this.puzzleBuilder,
-        config: platformDefaults,
+        config: simplePlatformerLevel1,
       },
       {
         index: 2,
@@ -70,7 +74,7 @@ class StageLoader {
         builder: this.platformerBuilder,
         config: {
           ...stairwayPlatformerLevel,
-          enemySpeeds: Array(stairwayPlatformerLevel.enemies.length).fill().map((_, i) => vec2(4 / 60, 0))
+          enemySpeeds: Array(stairwayPlatformerLevel.enemies.length).fill().map((_, i) => vec2(0, 6 / 60))
         }
       },
       {
@@ -94,7 +98,7 @@ class StageLoader {
         builder: this.platformerBuilder,
         config: {
           ...simplePlatformerLevel3,
-          enemySpeeds: Array(simplePlatformerLevel3.enemies.length).fill().map((_, i) => vec2(6 / 60, 0))
+          enemySpeeds: Array(simplePlatformerLevel3.enemies.length).fill().map((_, i) => vec2(6 / 60, 4 / 60))
         }
       },
       {
