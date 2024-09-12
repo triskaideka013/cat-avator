@@ -13,7 +13,8 @@ class HairBall extends EngineObject
   constructor(pos, angle=45)
   {
     super(pos, vec2(0.01, 0.01)) // set position, size=very smol
-
+    
+    if(angle != 0)
     this.velocity = degreesToVector2(angle) // set motion to
 
     this.powerup = new Sound([,,219,,,.11,1,,,.1,150,-0.01,.01,.1,-1,-0.2,,1.1,,.01,1])
