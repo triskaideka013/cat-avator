@@ -38,7 +38,7 @@ class PlatformerStage extends StageBase {
     this.powerups = PowerupFactory.createPowerups(this.levelConfig.powerups);
 
     // initialize enemies
-    this.enemies = EnemyFactory.createEnemies(this.platforms, this.levelConfig.enemies);
+    this.enemies = EnemyFactory.createEnemies(this.platforms, this.levelConfig.enemies, this.levelConfig.enemySpeeds);
 
     // find pos.y of the lowest platform in level
     this.minimumStageY = 0;

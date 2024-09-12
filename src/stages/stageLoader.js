@@ -14,10 +14,9 @@ class StageLoader {
      */
     var simplePlatformerLevel1 = this.simplePlatformerLevel1Config();
     var simplePlatformerLevel2 = this.simplePlatformerLevel2Config();
-    var stairwayPlatformLevel = this.stairwayPlatformerLevelConfig();
-    var simpleplatformLevel3 = this.simplePlatformerLevel3Config();
-    var simpleplatformLevel4 = this.simplePlatformerLevel4Config();
-    var platformDefaults = this.defaultPlatformLevelConfig();
+    var stairwayPlatformerLevel = this.stairwayPlatformerLevelConfig();
+    var simplePlatformerLevel3 = this.simplePlatformerLevel3Config();
+    var simplePlatformerLevel4 = this.simplePlatformerLevel4Config();
 
     this.levelBuilderConfig = [
       {
@@ -38,47 +37,65 @@ class StageLoader {
       {
         index: 3,
         builder: this.platformerBuilder,
-        config: stairwayPlatformLevel,
+        config: stairwayPlatformerLevel,
       },
       {
         index: 4,
         builder: this.platformerBuilder,
-        config: simpleplatformLevel3,
+        config: simplePlatformerLevel3,
       },
       {
         index: 5,
         builder: this.platformerBuilder,
-        config: simpleplatformLevel4,
+        config: simplePlatformerLevel4,
       },
       {
         index: 6,
         builder: this.platformerBuilder,
-        config: platformDefaults,
+        config: {
+          ...simplePlatformerLevel1,
+          enemySpeeds: Array(simplePlatformerLevel1.enemies.length).fill().map((_, i) => vec2(4 / 60, 0))
+        }
       },
       {
         index: 7,
         builder: this.platformerBuilder,
-        config: platformDefaults,
+        config: {
+          ...simplePlatformerLevel2,
+          enemySpeeds: Array(simplePlatformerLevel2.enemies.length).fill().map((_, i) => vec2(4 / 60, 0))
+        }
       },
       {
         index: 8,
         builder: this.platformerBuilder,
-        config: platformDefaults,
+        config: {
+          ...stairwayPlatformerLevel,
+          enemySpeeds: Array(stairwayPlatformerLevel.enemies.length).fill().map((_, i) => vec2(4 / 60, 0))
+        }
       },
       {
         index: 9,
         builder: this.platformerBuilder,
-        config: platformDefaults,
+        config: {
+          ...simplePlatformerLevel3,
+          enemySpeeds: Array(simplePlatformerLevel3.enemies.length).fill().map((_, i) => vec2(4 / 60, 0))
+        }
       },
       {
         index: 10,
         builder: this.platformerBuilder,
-        config: platformDefaults,
+        config: {
+          ...simplePlatformerLevel4,
+          enemySpeeds: Array(simplePlatformerLevel4.enemies.length).fill().map((_, i) => vec2(4 / 60, 0))
+        }
       },
       {
         index: 11,
         builder: this.platformerBuilder,
-        config: platformDefaults,
+        config: {
+          ...simplePlatformerLevel3,
+          enemySpeeds: Array(simplePlatformerLevel3.enemies.length).fill().map((_, i) => vec2(6 / 60, 0))
+        }
       },
       {
         index: 12,
@@ -145,48 +162,11 @@ class StageLoader {
   }
 
   /**
-   * default platformer configuration values
+   * platformer configuration values
    */
 
   /**
-   * Provide default configuration values for platform levels
-   * @returns
-   */
-  defaultPlatformLevelConfig() {
-    return {
-      platforms: [
-        { x: -30, y: 3, width: 10, height: 1, color: color.yellow },
-        { x: 10, y: 3, width: 10, height: 1, color: color.red },
-        { x: 20, y: 8, width: 10, height: 1, color: color.green },
-        { x: 30, y: 14, width: 10, height: 1, color: color.aqua },
-        { x: 40, y: 8, width: 10, height: 1, color: color.yellow },
-        { x: 50, y: 3, width: 10, height: 1, color: color.fuchsia },
-        { x: 70, y: 3, width: 5, height: 1, color: color.aqua },
-        { x: 90, y: 8, width: 5, height: 1, color: color.red },
-        { x: 95, y: 25, width: 5, height: 1, color: color.black },
-        { x: 110, y: 2, width: 20, height: 1, color: color.green },
-        { x: 140, y: 2, width: 5, height: 1, color: color.red },
-        { x: 180, y: 2, width: 5, height: 1, color: color.aqua },
-        { x: 240, y: 2, width: 5, height: 1, color: color.aqua },
-        { x: 240, y: -50, width: 5, height: 1, color: color.aqua },
-        { x: -50, y: 32, width: 300, height: 1, color: color.black },
-      ],
-      powerups: [
-        { x: -30, y: 5 },
-        { x: 6, y: 5 },
-        { x: 140, y: 5 },
-        { x: 180, y: 7 },
-        { x: 100, y: 30 },
-        { x: 240, y: 4 },
-        { x: 240, y: -48 },
-      ],
-      enemies: [2, 5],
-    };
-  }
-
-  /**
-   * Another platform level configuration
-   * Stairway Level
+   * Stairway Level config
    * @returns
    */
   stairwayPlatformerLevelConfig() {
