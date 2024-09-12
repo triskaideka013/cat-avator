@@ -1,3 +1,4 @@
+const MAX_FRAME_ALT_PLAYER = 13;
 class AltPlayer extends RectObject {
   constructor(pos, opts, size = vec2(2, 2), sprite = tile(0)) {
     super(pos, size, sprite);
@@ -20,6 +21,7 @@ class AltPlayer extends RectObject {
     this.frame = 0;
 
     this.canAct = true;
+
   }
 
   render() {
@@ -46,7 +48,7 @@ class AltPlayer extends RectObject {
     ) {
       direction = keyIsDown(KeyboardKeys.ArrowLeft) ? LEFT : RIGHT;
       this.frame++; // animate the walking!
-      if (this.frame === MAX_FRAME) {
+      if (this.frame === MAX_FRAME_ALT_PLAYER) {
         this.frame = 0;
       }
       this.direction = direction;
@@ -74,20 +76,41 @@ class AltPlayer extends RectObject {
     this.pos = this.pos.add(this.velocity);
   }
 
-  overlapsObject(objPos, objSize) {
-    return isOverlapping(this.pos, this.size, objPos, objSize);
+  overlapsObject(object) {
+    return isOverlapping(this.pos, this.size, object.pos, object.size);
   }
 
-  collideWithPlatform(pos, size) {
+  collideWithPlatform(platform) {
     debugger;
-    if (this.velocity.y <= 0) {
-      this.pos.y = pos.y + size.y / 2 + this.size.y / 2;
+    this.stopMovementY(platform);
+    this.stopMovementX(platform);
+
+  }
+
+  stopMovementY(platform) {
+    if (this.collidesTop(platform)) {
+      this.setPlayerBottom(platform.top);
       this.velocity.y = 0;
       this.isOnGround = true;
       this.jumpCount = 0;
-    } else {
-      this.pos.y = pos.y - size.y / 2 - this.size.y / 2;
+    }
+
+    if (this.collidesBottom(platform)) {
+      this.setPlayerTop(platform.bottom);
       this.velocity.y *= -1;
+    }
+  }
+
+  stopMovementX(platform) {
+    if (this.collidesLeft(platform)) {
+      this.setPlayerRight(platform.left);
+      this.velocity.x = 0;
+    }
+
+    if(this.collidesRight(platform))
+    {
+      this.setPlayerLeft(platform.right);
+      this.velocity.x = 0;
     }
   }
 
@@ -96,4 +119,21 @@ class AltPlayer extends RectObject {
   disable() {
     this.canAct = false;
   }
+
+  setPlayerBottom(y) {
+    this.pos.y = y + this.size.y / 2;
+  }
+
+  setPlayerTop(y) {
+    this.pos.y = y - this.size.y / 2;
+  }
+
+  setPlayerLeft(x) {
+    this.pos.x = x + this.size.x / 2;
+  }
+
+  setPlayerRight(x) {
+    this.pos.x = x - this.size.x / 2;
+  }
+
 }
