@@ -5,21 +5,22 @@
  * @property {number} value
  * @property {boolean} held
  */
+const heldDiceBGColor = hsl(degreesToRadians(72),1,.65) // 80 light green
+const pointDiceBGColor = hsl(degreesToRadians(115),.5,.5)
 
 // TODO: remove debug drudgery
 class ShipCapnCrew {
 
-    constructor(ante=[]) {        
-        this.resetGame()
-        this.player1.ante = ante
+    constructor(suddenDeath=false) {        
+        this.setupGame()
         this.gameoverFn = function() {} // keep gameover function cached
-        this.pirateText = "Let's Gamble, LANDLUBBER!"
+        this.suddenDeath = suddenDeath
     }
 
     ///  SETUP ///
 
-    resetGame() {
-        this.player1 = this.setupPlayer();
+    setupGame() {
+        this.player1 = this.setupPlayer()
         this.setupDice()
         this.gameover = false
         this.isTimedOut = false
@@ -71,8 +72,15 @@ class ShipCapnCrew {
 
         player.rolls = player.rolls - 1;
 
-        player.diceArray.forEach(d => {
+        player.diceArray.forEach((d, i) => {
             if (!d.held) d.roll()
+            // if (i === 0) {d.value = 6}  <-- automatic boxcars condition for testing
+            // if (i === 1) {d.value = 5}
+            // if (i === 2) {d.value = 4}
+            // if (i > 2) {
+            //     d.value = 6;
+            // } 
+            // d.frame = d.value - 1
         })
         
         this.evalDice(player.diceArray)
@@ -111,19 +119,19 @@ class ShipCapnCrew {
         if (!player.ship && iShip !== -1) {
             // ship!  collect dice
             player.ship = true 
-            diceArray[rolledIndices[iShip]].held = true
+            diceArray[rolledIndices[iShip]].collect()
             didCollect = true
         } 
         if (!player.capn && iCapn !== -1 && player.ship) { // player must have ship to colect capn
             // capn!  collect dice
             player.capn = true
-            diceArray[rolledIndices[iCapn]].held = true
+            diceArray[rolledIndices[iCapn]].collect()
             didCollect = true
         }
         if (!player.crew && iCrew !== -1 && player.capn) { // player must have capn to colect crew
             // crew!  collect dice
             player.crew = true
-            diceArray[rolledIndices[iCrew]].held = true
+            diceArray[rolledIndices[iCrew]].collect()
             didCollect = true
         }
         rolledValues = diceArray.filter(function(d){ return !d.held }).map(function(d){ return d.value })
@@ -197,7 +205,7 @@ class ShipCapnCrew {
 
                     this.endGame(player)
 
-                }, 1000)
+                }, 500)
 
                 } else {
                     this.endGame(player) // they have won and don't have any more rolls
@@ -212,45 +220,60 @@ class ShipCapnCrew {
         if (player.shipCapnCrew) {
 
             let riskItAll = false
-            if (player.score == 12)
-                riskItAll = confirm(`risk it all? just don't roll a 1!`)
             
-            if (riskItAll) {
-        
-                let d6 = new PlayerDice(0,vec2(16))
-                let roll = d6.roll().getValue()
+            if (player.score == 12 && this.suddenDeath) {
                 
-                if (roll == 1) {
-                    this.pirateText = `ARRR! 6 + 6 + ${roll} is 13...to davy jones's locker with ye!`
-                    player.hasLost = true
-                } else {
-                    this.pirateText = `YO-HO-HO! 6 + 6 + ${roll} does not 13 make...${roll} times the treasure!`
-                    player.score *= roll
-                }
-                console.log(this.pirateText)
-            } 
-            
-            this.gameover = true    
+                this.isTimedOut = true
+                setTimeout(()=>{
+                    this.isTimedOut = false;
+
+                    riskItAll = confirm(`risk it all? just don't roll a 1!`)
+
+                    if (riskItAll) {
+        
+                        let d6 = new PlayerDice(vec2(8, -22), vec2(16))
+                        
+                        let roll = d6.roll().getValue()
+                        d6.held = true
+                        player.diceArray.forEach(d => {
+                            if (!d.pointDice && d.value == 6) {
+                                d.held = true
+                            }
+                        })
+                        
+                        if (roll == 1) {
+                            this.pirateText = `\nARRR! 6 + 6 + ${roll} is 13...\n\nto davy jones's locker with ye!`
+                            player.hasLost = true
+                        } else {
+                            this.pirateText = `\nYO-HO-HO! 6 + 6 + ${roll} does not 13 make...\n\n${roll} times the treasure!`
+                            player.score *= roll
+                        }
+
+                        this.gameover = true  
+                        this.gameoverFn()
+
+                    } else {
+                        this.gameover = true   
+
+                        this.classicEnding()                
+                    }
+
+                }, 500)
+
+            }
+
         }
+        
+        this.classicEnding()
+    }
 
+    classicEnding() {
         if (this.gameover) {
-
-            this.pirateText = (player.shipCapnCrew) ? `win! score is ${player.score}` : 'lose!'
-            
-            console.log(this.pirateText)
+         
+            this.pirateText = (this.player1.shipCapnCrew) ? "\nSQUEEEK!\n\nYou are a WINNER...take your PRIZE!!" : "\n\nYOU LOST.  I'll be taking that!"
             
             this.gameoverFn()
-        } 
-    }
-
-    /// HELPERS ///
-
-    hasLost() {
-        return this.gameover && this.player1.hasLost
-    }
-
-    hasWon() {
-        return this.gameover && this.player1.shipCapnCrew && !this.hasLost()
+        }
     }
 }
 
@@ -264,6 +287,7 @@ class PlayerDice extends EngineObject {
         this.size = size
 
         this.held = false
+        this.pointDice = false
         this.value = 0
         this.frame = null
         this.angle = degreesToRadians(Math.floor(Math.random()*4)*90)
@@ -283,17 +307,26 @@ class PlayerDice extends EngineObject {
         return this.value
     }
 
-    getValueString() {
-        let str
-        if (this.value !== null) {
-            str =  this.value.toString()
-        } else str = '?'
+    collect() {
+        this.held = true
+        this.pointDice = true
     }
+
+    // reset() {
+    //     this.held = false
+    //     this.pointDice = false
+    //     this.value = 0
+    //     this.frame = null
+    // }
 
     // littlejs
     render() {
         
         if (this.value > 0) {
+
+            if (this.held) // rectangle behind dice to show they are held?
+                drawRect(this.pos, vec2(this.size.x*1.25), this.pointDice ? pointDiceBGColor : heldDiceBGColor);
+            
             drawTile(this.pos, this.size, tile(this.frame, vec2(16,16), 4), new Color(0,0,0,1), this.angle)
         } else {
             drawRect(this.pos, this.size);
