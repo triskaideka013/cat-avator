@@ -74,7 +74,7 @@ class ShipCapnCrew {
 
         player.diceArray.forEach((d, i) => {
             if (!d.held) d.roll()
-            // if (i === 0) {d.value = 6}  <-- automatic boxcars condition for testing
+            // if (i === 0) {d.value = 6} // <-- automatic boxcars condition for testing
             // if (i === 1) {d.value = 5}
             // if (i === 2) {d.value = 4}
             // if (i > 2) {

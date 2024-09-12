@@ -2,7 +2,7 @@
 const anteBGColor = hsl(degreesToRadians(11),.6,.6)
 const textColor = new Color(255,255,255,1);
 class DiceStage extends StageBase {
-    constructor(completedLevels) {
+    constructor(completedLevels, powerupManager) {
       super("dice");
   
       //Game state registers callback to invoke when level is selected
@@ -12,6 +12,7 @@ class DiceStage extends StageBase {
       // this.casinoColor = new Color(0, 153, 0, 1);
       this.levelSize = vec2(2, 6);
       this.pirateText = "Ahoy, matey!\n\nI need a SHIP (6), CAPN (5) and CREW (4).\n\nLet's gamble for treasure, LANDLUBBER!";
+      this.powerupManager = powerupManager
     }
   
     init() {
@@ -38,11 +39,16 @@ class DiceStage extends StageBase {
         setTimeout(() => {
 
           if (this.game.gameover) {
+
             if (this.game.player1.shipCapnCrew) {
-              this.pirateText = this.game.pirateText;
+              this.powerupManager.addYarnBalls(this.game.player1.score)
+              this.complete();
             } else {
-              this.pirateText = this.game.pirateText;
+              this.powerupManager.removeYarnBall()
+              this.fail();
             }
+            this.pirateText = this.game.pirateText;
+            
           }
 
           this.isTimedOut = false;

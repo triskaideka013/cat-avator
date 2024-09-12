@@ -14,12 +14,12 @@ class Platform extends RectObject {
     this.pos = pos;
     this.size = size;
     this.color = color;
-    
+    this.imageIndex = 2
     this.setCollision()
     this.mass = 0 // don't get blown away by projectiles
   }
 
   render() {
-    drawTile(this.pos, this.size, tile(0, vec2(1,16), 1), this.color) // 3 -> burst (green by default, good for grass)
+    drawTile(this.pos, this.size, tile(0, vec2(1,16), this.imageIndex), this.color) // 3 -> burst (green by default, good for grass)
   }
 }

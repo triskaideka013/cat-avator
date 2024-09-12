@@ -139,4 +139,5 @@ engineInit(gameInit, gameUpdate, gameUpdatePost, gameRender, gameRenderPost, [
   "dice_16x16.png",
   "pirate_13x15.png",
   "rat_16x9.png",
+  "cat_idle_16x11.png"
 ]);

@@ -6470,7 +6470,7 @@ class GameOverStage extends StageBase
 const anteBGColor = hsl(degreesToRadians(11),.6,.6)
 const textColor = new Color(255,255,255,1);
 class DiceStage extends StageBase {
-    constructor(completedLevels) {
+    constructor(completedLevels, powerupManager) {
       super("dice");
   
       //Game state registers callback to invoke when level is selected
@@ -6480,6 +6480,7 @@ class DiceStage extends StageBase {
       // this.casinoColor = new Color(0, 153, 0, 1);
       this.levelSize = vec2(2, 6);
       this.pirateText = "Ahoy, matey!\n\nI need a SHIP (6), CAPN (5) and CREW (4).\n\nLet's gamble for treasure, LANDLUBBER!";
+      this.powerupManager = powerupManager
     }
   
     init() {
@@ -6492,7 +6493,7 @@ class DiceStage extends StageBase {
       // adjust camera scale
       cameraScale = 8;
       // init dice game!
-      this.game = new ShipCapnCrew();
+      this.game = new ShipCapnCrew(true); // true = sudden death enabled
 
       new PirateMouse(vec2(6,30));
     }
@@ -6506,11 +6507,16 @@ class DiceStage extends StageBase {
         setTimeout(() => {
 
           if (this.game.gameover) {
+
             if (this.game.player1.shipCapnCrew) {
-              this.pirateText = this.game.pirateText;
+              this.powerupManager.addYarnBalls(this.game.player1.score)
+              this.complete();
             } else {
-              this.pirateText = this.game.pirateText;
+              this.powerupManager.removeYarnBall()
+              this.fail();
             }
+            this.pirateText = this.game.pirateText;
+            
           }
 
           this.isTimedOut = false;
@@ -6665,24 +6671,17 @@ const pointDiceBGColor = hsl(degreesToRadians(115),.5,.5)
 // TODO: remove debug drudgery
 class ShipCapnCrew {
 
-    constructor(ante=[]) {        
+    constructor(suddenDeath=false) {        
         this.setupGame()
-        this.player1.ante = ante
         this.gameoverFn = function() {} // keep gameover function cached
+        this.suddenDeath = suddenDeath
     }
 
     ///  SETUP ///
 
     setupGame() {
-        // if (!!this.player1?.diceArray) {
-        //     this.player1 = this.setupPlayer(this.player1.diceArray) // re-try
-        //     this.player1.diceArray.forEach(d => {
-        //         d.reset()
-        //     })
-        // } else {
-        this.player1 = this.setupPlayer([]) // 1st game
+        this.player1 = this.setupPlayer()
         this.setupDice()
-        // }
         this.gameover = false
         this.isTimedOut = false
     }
@@ -6691,9 +6690,9 @@ class ShipCapnCrew {
      * 
      * @returns {Object}
      */
-    setupPlayer(dice) {
+    setupPlayer() {
         return {
-            diceArray: dice,
+            diceArray: [],
             shipCapnCrew: false,
             hasLost: false,
             ship: false,
@@ -6734,15 +6733,14 @@ class ShipCapnCrew {
         player.rolls = player.rolls - 1;
 
         player.diceArray.forEach((d, i) => {
-            // if (!d.held) d.roll()
-            if (i === 0) {d.value = 6}
-            if (i === 1) {d.value = 5}
-            if (i === 2) {d.value = 4}
-            if (i > 2) {
-                d.value = 6;
-                // d.held = true
-            } 
-            d.frame = d.value - 1
+            if (!d.held) d.roll()
+            // if (i === 0) {d.value = 6} // <-- automatic boxcars condition for testing
+            // if (i === 1) {d.value = 5}
+            // if (i === 2) {d.value = 4}
+            // if (i > 2) {
+            //     d.value = 6;
+            // } 
+            // d.frame = d.value - 1
         })
         
         this.evalDice(player.diceArray)
@@ -6883,8 +6881,7 @@ class ShipCapnCrew {
 
             let riskItAll = false
             
-            
-            if (player.score == 12) {
+            if (player.score == 12 && this.suddenDeath) {
                 
                 this.isTimedOut = true
                 setTimeout(()=>{
@@ -7126,7 +7123,7 @@ class EnemyFactory {
   static createEnemies(platformList, enemyIndexList) {
     const enemies = [];
     enemyIndexList.forEach(enemyIndex => {
-      enemies.push(new NPCCat(platformList[enemyIndex].pos, vec2(2, 2), new Color(1, 0, 0), platformList[enemyIndex]));
+      enemies.push(new NPCCat(platformList[enemyIndex].pos, vec2(2, 2), new Color(1, 0, 0), platformList[enemyIndex], true));
     });
     return enemies;
   }
@@ -7228,7 +7225,7 @@ class Enemy extends RectObject {
 
 // uncomment this line to reference LittleJS types -->
 // import { Color, vec2, drawRect, drawTile, Vector2, RectObject } from "littlejsengine" 
-const MAX_FRAME_NPC = 13;
+const MAX_FRAME_NPC = 2;
 class NPCCat extends RectObject {
   /**
    * 
@@ -7237,21 +7234,20 @@ class NPCCat extends RectObject {
    * @param {Color} tintColor 
    * @param {RectObject} platform 
    */
-  constructor(pos, size, tintColor, platform, mirror=true) {
+  constructor(pos, size, tintColor, platform, mirror=false) {
     super(pos, size);
     this.color = new Color(0,0,0,0); // transparent background
-    // this.size = size;
-    // this.pos = pos;
     this.tintColor = tintColor
     this.platform = platform;
     this.frame = 0;
+    this.mirror = mirror
+    this.imageIndex = 6
     this.speed = vec2(2 / 60, 0);
     this.direction = vec2(1, 0);
     const platformTop = this.platform.pos.y + this.platform.size.y / 2;
     const halfEnemyHeight = this.size.y / 2;
     // make sure the enemy is standing on top of the platform
-    this.pos.y = platformTop + halfEnemyHeight;
-
+    this.pos.y = platformTop;// + halfEnemyHeight;
     this.speedDownLooper = 0;
   }
   
@@ -7271,7 +7267,7 @@ class NPCCat extends RectObject {
     this.speedDownLooper++;
     if (this.speedDownLooper % 3 === 0) {
       this.frame++; // animate the ambling!
-      if (this.frame === MAX_FRAME_NPC) {
+      if (this.frame == MAX_FRAME_NPC) {
         this.frame = 0;
       }
     }
@@ -7283,7 +7279,7 @@ class NPCCat extends RectObject {
 
   render() {
 
-    drawTile(this.pos, this.size, tile(this.frame, vec2(18,14), 0), new Color(0,0,0,1), 0, this.mirror, this.tintColor)
+    drawTile(this.pos, this.size, tile(this.frame, vec2(16,19), this.imageIndex), new Color(0,0,0,1), 0, this.mirror, this.tintColor)
   }
 }
 
@@ -7303,13 +7299,13 @@ class Platform extends RectObject {
     this.pos = pos;
     this.size = size;
     this.color = color;
-    
+    this.imageIndex = 2
     this.setCollision()
     this.mass = 0 // don't get blown away by projectiles
   }
 
   render() {
-    drawTile(this.pos, this.size, tile(0, vec2(1,16), 1), this.color) // 3 -> burst (green by default, good for grass)
+    drawTile(this.pos, this.size, tile(0, vec2(1,16), this.imageIndex), this.color) // 3 -> burst (green by default, good for grass)
   }
 }
 
@@ -7764,12 +7760,12 @@ class StageLoader {
     var triskaedekaGamblerConfig = this.gamblerLevelConfig(true);
     this.levelBuilderConfig = [
       {
-        index: 1,
+        index: 0,
         builder: this.platformerBuilder,
         config: platformDefaults,
       },
       {
-        index: 0,
+        index: 1,
         builder: this.gamblerBuilder,
         config: defaultGamblerConfig,
       },
@@ -8331,6 +8327,7 @@ engineInit(gameInit, gameUpdate, gameUpdatePost, gameRender, gameRenderPost, [
   "dice_16x16.png",
   "pirate_13x15.png",
   "rat_16x9.png",
+  "cat_idle_16x11.png"
 ]);
 
 </script></body></html>
