@@ -1,18 +1,19 @@
 // uncomment this line to reference LittleJS types -->
-// import { Color, vec2, drawRect } from "littlejsengine" 
+// import { Color, vec2, drawRect } from "littlejsengine"
 
 class Enemy extends RectObject {
   /**
-   * 
-   * @param {vec2} position 
-   * @param {vec2} size 
-   * @param {Color} color 
-   * @param {any} platform 
+   *
+   * @param {vec2} position
+   * @param {vec2} size
+   * @param {Color} color
+   * @param {any} platform
+   * @param {vec2} speed
    */
-  constructor(position, size, color, platform) {
+  constructor(position, size, color, platform, speed=vec2(2 / 60, 0)) {
     super(position, size, color);
     this.platform = platform;
-    this.speed = vec2(2 / 60, 0);
+    this.speed = speed;
     this.direction = vec2(1, 0);
     const platformTop = this.platform.pos.y + this.platform.size.y / 2;
     const halfEnemyHeight = this.size.y / 2;
