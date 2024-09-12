@@ -177,6 +177,7 @@ class Player extends RectObject {
         if (this.velocity.y < 0) {
           enemy.destroy();
           this.enemies.splice(this.enemies.indexOf(enemy), 1);
+          window.dispatchEvent(new CustomEvent('enemy-destroyed', {detail: enemy}));
           // bounce off of the enemy's head
           this.velocity.y = this.jumpVelocity;
         } else {
