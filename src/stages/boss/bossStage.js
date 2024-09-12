@@ -1,46 +1,3 @@
-const bossStageConfig = {
-  platforms: [
-    // floor
-  //  getPlatCoords(-10, 10, -1, 1),
-  ],
-  enemies: [],
-
-  genPlats: [
-    {
-      initX: 7,
-      width: 15,
-      height: 1,
-      initYTop: 3,
-      count: 10,
-      driftX: 1,
-      driftY: 6,
-      yarns: {
-        minIndex: 1,
-        modulo: 3,
-      },
-      fishies: {
-        platIndex: [2],
-      },
-    },
-    {
-      initX: -5,
-      width: 7,
-      height: 1,
-      initYTop: 6,
-      count: 10,
-      driftX: -1,
-      driftY: 6,
-      yarns: {
-        minIndex: 1,
-        modulo: 3,
-      },
-      fishies: {
-        platIndex: [8],
-      },
-    },
-  ],
-};
-
 function getPlatCoords(left, right, bottom, top) {
   return {
     x: (left + right) / 2,
@@ -55,6 +12,7 @@ class BossStage extends StageBase {
     super();
     this.player = null;
     this.powerupManager = powerupManager;
+    this.levelConfig = levelConfig;
 
     // setup canvas
     canvasFixedSize = vec2(1920, 1080); // 1080p
@@ -71,7 +29,7 @@ class BossStage extends StageBase {
     this.rng = new RandomGenerator(100111);
 
     // generate platforms
-    for (let gen of bossStageConfig.genPlats) {
+    for (let gen of levelConfig.genPlats) {
       let count = gen.count;
       let x = gen.initX;
       let y = gen.initYTop;
@@ -112,7 +70,7 @@ class BossStage extends StageBase {
       }
     }
     // explicit platforms
-    for (let p of bossStageConfig.platforms) {
+    for (let p of this.levelConfig.platforms) {
       this.platforms.push(
         new Platform(
           vec2(p.x, p.y),
@@ -140,13 +98,6 @@ class BossStage extends StageBase {
   gameUpdate() {
     if (!this.state.isActive()) return;
 
-     //this.player.update();
-
-    // for (let platform of this.platforms) {
-    //   if (this.player.overlapsObject(platform)) {
-    //     this.player.collideWithPlatform(platform);
-    //   }
-
     for (let i = 0; i < this.yarns.length; i++) {
       var yarn = this.yarns[i];
 
@@ -161,24 +112,11 @@ class BossStage extends StageBase {
         yarn.destroy();
       }
     }
-
-    // if (this.boss.overlapsObject(platform)) {
-    //   this.boss.collideWithPlatform(platform);
-    // }
-    // }
   }
 
   gameRender() {}
 
   gameRenderPost() {
-    // this.player.render();
-    // this.boss.render();
-    // this.floor.render();
-
-    // for (let p of this.platforms) {
-    //   //   p.render();
-    // }
-
     for (let y of this.yarns) {
       y.render();
     }
@@ -195,8 +133,5 @@ class BossStage extends StageBase {
     this.platforms.forEach((platform) => platform.render());
     this.fishies.forEach((fishy) => fishy.render());
     this.enemies.forEach((enemy) => enemy.render());
-    this.player.render();
   }
-
-  //  renderFloor() {}
 }
