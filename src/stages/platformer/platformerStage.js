@@ -14,13 +14,14 @@ const color = {
 // Level Config now defined in src/stages/stageLoader.js
 
 class PlatformerStage extends StageBase {
-  constructor(levelConfig) {
+  constructor(levelConfig, powerupManager) {
     super("platformer");
     this.platforms = [];
     this.powerups = [];
     this.enemies = [];
     this.player = null;
     this.levelConfig = levelConfig;
+    this.powerupManager = powerupManager;
   }
 
   init() {
@@ -37,7 +38,7 @@ class PlatformerStage extends StageBase {
     this.powerups = PowerupFactory.createPowerups(this.levelConfig.powerups);
 
     // initialize enemies
-    this.enemies = EnemyFactory.createEnemies(this.platforms, this.levelConfig.enemies);
+    this.enemies = EnemyFactory.createEnemies(this.platforms, this.levelConfig.enemies, this.levelConfig.enemySpeeds);
 
     // find pos.y of the lowest platform in level
     this.minimumStageY = 0;
@@ -88,7 +89,7 @@ class PlatformerStage extends StageBase {
   gameRenderPost() {
     if (!this.state.isActive()) return;
 
-    drawTextScreen("The Platformer Stage", vec2(mainCanvasSize.x / 2, 100), 80);
+    drawTextScreen(`🧶(yarnballs): ${this.powerupManager.getYarnBallCount()}` , vec2(100, 30), 30);
 
     drawTextScreen(
       `Score: ${this.player.getScore()}`,

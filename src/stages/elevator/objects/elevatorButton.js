@@ -7,24 +7,4 @@ class ElevatorButton
         this.index = index;
         this.state = new ElevatorButtonState(enabled, completed);
     }
-
-    getX()
-    {
-        return this.x;
-    }
-
-    getY()
-    {
-        return this.y;
-    }
-
-    getIndex()
-    {
-        return this.index;
-    }
-
-    getState()
-    {
-        return this.state;
-    }
 }

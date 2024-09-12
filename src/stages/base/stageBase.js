@@ -3,9 +3,8 @@
  * Extend to create a custom stage
  */
 class StageBase {
-    constructor(stageName = "") {
-
-      this.state = new StageState(stageName);
+    constructor() {
+      this.state = new StageState();
     }
 
     /**
