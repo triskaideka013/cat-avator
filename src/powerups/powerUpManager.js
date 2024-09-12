@@ -1,23 +1,24 @@
 
 class PowerupManager
 {
+
     constructor()
     {
-        this.powerups = [];
+        this.yarnBallCount =  0;
     }
 
-    getPowerups()
+    getYarnBallCount()
     {
-        return this.powerups;
+        return this.yarnBallCount;
     }
 
-    addPowerup(powerup)
+    addYarnBalls(count)
     {
-        this.powerups.push(powerup);
+        this.yarnBallCount += count;
     }
 
-    removePowerupByIndex(index)
+    removeYarnball(index)
     {
-        this.powerups.splice(index, 1);
+        this.yarnBallCount--;
     }
 }
