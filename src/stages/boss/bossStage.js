@@ -39,6 +39,7 @@ class BossStage extends StageBase {
         // make platforms
         this.platforms.push(
           new Platform(
+            3,
             vec2(coords.x, coords.y),
             vec2(coords.width, coords.height),
             new Color(0.5, 0.5, 0.5)
