@@ -49,7 +49,7 @@ class ShipCapnCrew {
         do {
             this.player1.diceArray.push(new PlayerDice(vec2(offsetX + (22 * i), 0), vec2(16)))
             i++
-        } while (p.diceArray.length < 5)
+        } while (this.player1.diceArray.length < 5)
     }
 
     ///  PLAY GAME ///

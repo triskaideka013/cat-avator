@@ -1,19 +1,13 @@
-// import { drawTextScreen, CanvasTextAlign, mouseWasPressed } from "littlejsengine";
+// import { drawTextScreen, CanvasTextAlign, mainCanvasSize, mouseWasPressed } from "littlejsengine";
 class DiceStage extends StageBase {
     constructor(completedLevels) {
       super("dice");
   
       //Game state registers callback to invoke when level is selected
       this.levelSelectedCallback = null;
-  
-      // buttons
-      this.disabledButtonColor = rgb(0.3, 0.3, 0.3);
-      this.enabledButtonColor = rgb(0.3, 0.8, 0.3);
-      this.buttonPanelOffsetX = 4.5;
-      this.buttonPanelOffsetY = 2.5;
-      this.completeColor = rgb(0, 1, 0, 1);
+      this.backgroundColor = hsl(13.2, 1, .15)
       this.cameraOffset = vec2(0, -0.5);
-      this.backgroundColor = hsl(0, 0, 0.2);
+      this.casinoColor = new Color(0, 153, 0, 1);
       this.levelSize = vec2(2, 6);
     }
   
@@ -48,7 +42,13 @@ class DiceStage extends StageBase {
       if (!this.state.isActive()) return;
 
       // draw to overlay canvas for hud rendering
-      drawTextScreen("Ahoy, matey!\n\nI seek a SHIP, CAPN and CREW\nLet's gamble!  Arrrr", vec2(mainCanvasSize.x / 2, 40), 64);
+      drawTextScreen("Ahoy, matey!\n\nI need a SHIP (6), CAPN (5) and CREW (4)\n\nLet's play for treasure.  Arrrr", vec2(mainCanvasSize.x / 2, 40), 64);
+
+      if (!!this.game?.player1?.rolls) {
+        drawTextScreen(`Score: ${this.game.player1.score}\nNo. rolls: ${this.game.player1.rolls}`, vec2((mainCanvasSize.x / 2)+250, 450), 48);
+      } else if (this.game?.player1?.score) {
+        drawTextScreen(`Score: ${this.game.player1.score}`, vec2((mainCanvasSize.x / 2)+250, 450), 48);
+      }
     }
   
     tryGetDicePressd() {

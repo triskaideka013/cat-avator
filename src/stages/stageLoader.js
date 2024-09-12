@@ -17,12 +17,12 @@ class StageLoader {
     var triskaedekaGamblerConfig = this.gamblerLevelConfig(true);
     this.levelBuilderConfig = [
       {
-        index: 0,
+        index: 1,
         builder: this.platformerBuilder,
         config: platformDefaults,
       },
       {
-        index: 1,
+        index: 0,
         builder: this.gamblerBuilder,
         config: defaultGamblerConfig,
       },
