@@ -22,7 +22,6 @@ class StageLoader {
         index: 0,
         builder: this.platformerBuilder,
         config: simplePlatformerLevel1,
-
       },
       {
         index: 1,
@@ -79,6 +78,11 @@ class StageLoader {
         builder: this.platformerBuilder,
         config: platformDefaults,
       },
+      {
+        index: 12,
+        builder: this.bossBuilder,
+        config: {},
+      },
     ];
 
     // register each level's builder method with the
@@ -122,6 +126,10 @@ class StageLoader {
     return () => new SimplePuzzleStage(config, powerupManager);
   }
 
+  bossBuilder(config, powerupManager){
+    return () => new BossStage(config, powerupManager);
+  }
+
   /**
    * Helper function to create a platform data object
    * @param {number} left
@@ -139,7 +147,7 @@ class StageLoader {
    */
 
   /**
-   * Provide deafult coniguration values for platform levels
+   * Provide default configuration values for platform levels
    * @returns
    */
   defaultPlatformLevelConfig() {
