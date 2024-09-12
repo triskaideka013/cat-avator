@@ -15,6 +15,7 @@ class StageLoader {
     var simplePlatformerLevel1 = this.simplePlatformerLevel1Config();
     var simplePlatformerLevel2 = this.simplePlatformerLevel2Config();
     var stairwayPlatformLevel = this.stairwayPlatformerLevelConfig();
+    var simpleplatformLevel3 = this.simplePlatformerLevel3Config();
     var platformDefaults = this.defaultPlatformLevelConfig();
 
     this.levelBuilderConfig = [
@@ -41,7 +42,7 @@ class StageLoader {
       {
         index: 4,
         builder: this.platformerBuilder,
-        config: platformDefaults,
+        config: simpleplatformLevel3,
       },
       {
         index: 5,
@@ -271,6 +272,44 @@ class StageLoader {
         { x: 35, y: -19.5 }
       ],
       enemies: [2, 4, 5, 6, 7, 8]
+    };
+  }
+
+  /**
+   * A platformer level config
+   * @returns
+   */
+  simplePlatformerLevel3Config() {
+    return {
+      platforms: [
+        this.plat(-30, 30, 2.5, 3.5),           // 0: middle platform
+        this.plat(-30, -20, 2.5, 3.5),          // 1: enemy range
+        this.plat(-25, -15, 2.5, 3.5),          // 2: enemy range
+        this.plat(-20, -10, 2.5, 3.5),          // 3: enemy range
+        this.plat(-15, -5, 2.5, 3.5),           // 4: enemy range
+        this.plat(10, 20, 2.5, 3.5),            // 5: enemy range
+        this.plat(15, 25, 2.5, 3.5),            // 6: enemy range
+        this.plat(20, 30, 2.5, 3.5),            // 7: enemy range
+        this.plat(-30, 30, 15.5, 16.5),         // 8: upper platform
+        this.plat(-30, -20, 15.5, 16.5),        // 9: enemy range
+        this.plat(-25, -15, 15.5, 16.5),        // 10: enemy range
+        this.plat(-20, -10, 15.5, 16.55),       // 11: enemy range
+        this.plat(-15, -5, 15.5, 16.5),         // 12: enemy range
+        this.plat(10, 20, 15.5, 16.5),          // 13: enemy range
+        this.plat(15, 25, 15.5, 16.5),          // 14: enemy range
+        this.plat(20, 30, 15.5, 16.5),          // 15: enemy range
+        this.plat(-50, 50, -8.5, -7.5)          // 16: lower platform
+      ],
+      powerups: [
+        { x: -35, y: 6 },
+        { x: 35, y: 6 },
+        { x: 0, y: 22.5 },
+        { x: 0, y: 30 },
+        { x: -10, y: -4 },
+        { x: 0, y: -4 },
+        { x: 10, y: -4 },
+      ],
+      enemies: [1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15]
     };
   }
 }
