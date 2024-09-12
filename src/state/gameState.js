@@ -64,11 +64,14 @@ class GameState {
   ///////////////////////////////////////////////////////////////////////////////
   // Return to elevator stage
   ///////////////////////////////////////////////////////////////////////////////
-  goToElevator() {
+  goToElevator(levelWon = true) {
     this.elevatorActive = true;
     this.continueStageActive = false;
 
-    this.markCurrentLevelComplete();
+    if(levelWon)
+    {
+      this.markCurrentLevelComplete();
+    }
 
     var elevator = new ElevatorStage(this.completedLevels);
     this.initStage(elevator);

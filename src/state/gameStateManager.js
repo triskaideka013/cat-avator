@@ -38,11 +38,17 @@ class GameStateManager {
    * @returns true if the current level has been failed, false otherwise
    */
   isGameOver() {
-    var hasQuit =
+
+    if (this.getCurrentStage().isImmediateGameOver())
+    {
+      return true;
+    }
+
+    var hasGivenUp =
       this.gameState.isContinueScreen() &&
       this.gameState.getCurrentStage().hasFailed();
 
-    return this.gameState.livesLeft == 0 || hasQuit;
+    return this.gameState.livesLeft == 0 || hasGivenUp;
   }
 
   /**
@@ -55,6 +61,11 @@ class GameStateManager {
 
   levelWasWon() {
     return this.getCurrentStage().hasWon();
+  }
+
+  levelWasQuit()
+  {
+    return this.getCurrentStage().hasQuit();
   }
 
   /**
@@ -79,8 +90,8 @@ class GameStateManager {
   }
 
   // Show the elevator stage
-  returnToElevator() {
-    this.gameState.goToElevator();
+  returnToElevator(levelWon = true) {
+    this.gameState.goToElevator(levelWon);
   }
 
   // Show the provided level

@@ -96,6 +96,15 @@ function resolveNextStage() {
   }
 
   ////////////////////////////////////
+  // Playable level quite w/o dying
+  if(stateManager.levelWasQuit())
+  {
+    stateManager.returnToElevator(false);
+    return;
+  }
+
+
+  ////////////////////////////////////
   // Playable Level -> Continue Screen
   if (stateManager.levelWasFailed()) {
     stateManager.goToContinueScreen();
@@ -109,7 +118,7 @@ function resolveNextStage() {
   // OR
   // Playable Level -> Elevator
   if (stateManager.levelWasWon()) {
-    stateManager.returnToElevator();
+    stateManager.returnToElevator(true);
     return;
   }
 }

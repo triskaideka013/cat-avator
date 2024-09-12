@@ -7,6 +7,8 @@ class StageState {
       this.isFailed = false;
       this.active = false;
       this.result = null;
+      this.instantGameOver = false;
+      this.abortLevel = false;
     }
     
     /**
@@ -18,6 +20,8 @@ class StageState {
       this.isFailed = false;
       this.result = null;
       this.active = true;
+      this.instantGameOver = false;
+      this.abortLevel = false;
     }
   
     /**
@@ -26,6 +30,21 @@ class StageState {
     fail() {
       this.isComplete = true;
       this.isFailed = true;
+      this.active = false;
+    }
+
+    instaKill()
+    {
+      this.instantGameOver = true;
+      this.isComplete = true;
+      this.active = false;
+
+    }
+
+    quit()
+    {
+      this.abortLevel = true;
+      this.isComplete = true;
       this.active = false;
     }
   
@@ -60,6 +79,16 @@ class StageState {
      */
     hasCompleted() {
       return this.isComplete;
+    }
+
+    hasQuit()
+    {
+      return this.abortLevel;
+    }
+
+    isImmediateGameOver()
+    {
+      return this.instantGameOver;
     }
   
     /**

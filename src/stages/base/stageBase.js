@@ -86,6 +86,16 @@ class StageBase {
       this.state.fail();
     }
 
+    instaKill()
+    {
+      this.state.instaKill();
+    }
+
+    quit()
+    {
+      this.state.quit();
+    }
+
     /**
      * Check whether the stage has failed
      * Do not override.
@@ -98,5 +108,15 @@ class StageBase {
     hasWon()
     {
       return this.state.hasSucceeded();
+    }
+
+    hasQuit()
+    {
+      return this.state.hasQuit();
+    }
+
+    isImmediateGameOver()
+    {
+      return this.state.isImmediateGameOver();
     }
   }
