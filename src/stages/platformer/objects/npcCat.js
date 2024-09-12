@@ -31,7 +31,7 @@ class NPCCat extends RectObject {
     } else if ('cat' == character) {
       this.pos.y = platformTop + halfEnemyHeight;
       this.tileVector = vec2(18,14);
-      this.imageIndex = 1
+      this.imageIndex = 7
     }
     this.speedDownLooper = 0;
     this.setCollision();

@@ -148,7 +148,7 @@ engineInit(gameInit, gameUpdate, gameUpdatePost, gameRender, gameRenderPost, [
   "gradient.png", // 1 x 16
   "grit.png", // 1 x 16
   "dice_16x16.png",
-  "pirate_13x15.png",
+  "pirate_13x15.png", 
   "rat_16x9.png",
-  "cat_idle_16x11.png"
+  "blue_gato_18x14.png"
 ]);
