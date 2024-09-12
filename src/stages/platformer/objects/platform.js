@@ -8,13 +8,13 @@ class Platform extends RectObject {
    * @param {Vector2} size 
    * @param {Color} color 
    */
-  constructor(pos, size, color) {
+  constructor(imageIndex, pos, size, color) {
     super(pos, size, color)
 
     this.pos = pos;
     this.size = size;
     this.color = color;
-    this.imageIndex = 2
+    this.imageIndex = imageIndex
     this.setCollision()
     this.mass = 0 // don't get blown away by projectiles
   }

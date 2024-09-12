@@ -267,10 +267,12 @@ class ShipCapnCrew {
 
     classicEnding() {
 
-        if (this.player1.shipCapnCrew) this.player1.diceArray.forEach(d => { // highlight all dice used for score
-            if (!d.gameDice)
-                d.held = true
-        })
+        if (this.player1.shipCapnCrew) {
+            this.player1.diceArray.forEach(d => { // highlight all dice used for score
+                if (!d.gameDice)
+                    d.held = true
+            })
+        } 
         
         this.pirateText = (this.player1.shipCapnCrew) ? "\nSQUEEEK!\n\nYou are a WINNER...take your PRIZE!!" : "\n\nYOU LOST.  I'll be taking that!"
     }

@@ -10,20 +10,29 @@ class NPCCat extends RectObject {
    * @param {RectObject} platform
    * @param {vec2} speed
    */
-  constructor(pos, size, tintColor, platform, speed=vec2(2 / 60, 0), mirror=true) {
+  constructor(character='rat', pos, size, tintColor, platform, speed=vec2(2 / 60, 0), mirror=true) {
     super(pos, size);
     this.color = new Color(0,0,0,0); // transparent background
     this.tintColor = tintColor
     this.platform = platform;
     this.frame = 0;
     this.mirror = mirror
-    this.imageIndex = 6
     this.speed = speed;
     this.direction = vec2(1, 1);
+    this.character = character;
+
     const platformTop = this.platform.pos.y + this.platform.size.y / 2;
     const halfEnemyHeight = this.size.y / 2;
     // make sure the enemy is standing on top of the platform
-    this.pos.y = platformTop;// + halfEnemyHeight;
+    if ('rat' == character) {
+      this.pos.y = platformTop;
+      this.tileVector = vec2(16,19)
+      this.imageIndex = 6
+    } else if ('cat' == character) {
+      this.pos.y = platformTop + halfEnemyHeight;
+      this.tileVector = vec2(18,14);
+      this.imageIndex = 1
+    }
     this.speedDownLooper = 0;
   }
 
@@ -60,6 +69,6 @@ class NPCCat extends RectObject {
 
   render() {
 
-    drawTile(this.pos, this.size, tile(this.frame, vec2(16,19), this.imageIndex), new Color(0,0,0,1), 0, this.mirror, this.tintColor)
+    drawTile(this.pos, this.size, tile(this.frame, this.tileVector, this.imageIndex), new Color(0,0,0,1), 0, this.mirror, this.tintColor)
   }
 }
