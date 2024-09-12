@@ -10,10 +10,11 @@ class DiceStage extends StageBase {
       this.backgroundColor = hsl(degreesToRadians(133), .65, .15);
       this.cameraOffset = vec2(0, -0.5);
       this.levelSize = vec2(2, 6);
-      // powerupManager.setYarnBalls(25) // to debug as 1st level
       if (powerupManager.getYarnBallCount() > 0) {
+        this.moji = '🧶'
         this.pirateText = "Ahoy, matey!\n\nI need a SHIP (6), CAPN (5) and CREW (4).\n\nLet's gamble for treasure, LANDLUBBER!";
       } else {
+        this.moji = '❔'
         this.pirateText = "Me hearty, you've nothing to BET me!\n\nI sure do like YARN BALLS though...";
       }
 
@@ -58,26 +59,32 @@ class DiceStage extends StageBase {
             this.pirateText = this.game.pirateText;
 
             if (this.game.player1.shipCapnCrew) {
-              console.log('adding?', this.powerupManager.getYarnBallCount())
               this.powerupManager.addYarnBalls(this.game.player1.score)
-              console.log('adding?', this.powerupManager.getYarnBallCount())
-              this.complete();
+              setTimeout(() => {
+                this.teardown()
+                this.complete()
+              }, 2000);
             } else {
-              
               if (this.game.triskaideka) {
                 // this.powerupManager.setYarnBalls(0); // notso hard-core ending
-                this.instaKill();
+                setTimeout(() => {
+                  this.teardown();
+                  this.instaKill();
+                }, 2000)
               } else {
-                console.log('schlepping?', this.powerupManager.getYarnBallCount())
                 this.powerupManager.removeYarnBall();
-                console.log('schlepping?', this.powerupManager.getYarnBallCount())
-                this.fail();
+                setTimeout(()=>{
+                  this.teardown();
+                  this.fail();
+                }, 2000)
               }
-            }  
+            }
 
+          } else {
+            this.isTimedOut = false;
           }
 
-          this.isTimedOut = false;
+          
         }, 1000);
 
       }
@@ -95,7 +102,7 @@ class DiceStage extends StageBase {
 
       ///  <bet>
       drawRect(vec2((mainCanvasSize.x / 16) - 165 , 35), vec2(25), anteBGColor);
-      drawTextScreen("🧶", vec2((mainCanvasSize.x / 2)-430, 450), 96);
+      drawTextScreen(this.moji, vec2((mainCanvasSize.x / 2)-430, 450), 96);
       drawTextScreen("Player's Bet", vec2((mainCanvasSize.x / 2)-428, 585), 32);
 
       ///  <score>
@@ -107,7 +114,6 @@ class DiceStage extends StageBase {
     }
 
     teardown() {
-      super.teardown()
 
       this.pirate.destroy()
 
@@ -115,7 +121,7 @@ class DiceStage extends StageBase {
 
         this.game.player1.diceArray.forEach(d => d.destroy())
 
-        delete this.game
+        delete this.game;
       }
     }
   }
