@@ -1,5 +1,5 @@
 // uncomment this line to reference LittleJS types -->
-// import { Color, vec2, drawRect, drawTile, Vector2, RectObject } from "littlejsengine" 
+// import { Color, vec2, drawRect, drawTile, Vector2, RectObject } from "littlejsengine"
 const MAX_FRAME_NPC = 2;
 class NPCCat extends RectObject {
   /**
@@ -34,10 +34,11 @@ class NPCCat extends RectObject {
       this.imageIndex = 1
     }
     this.speedDownLooper = 0;
+    this.setCollision();
   }
 
   update() {
-    if (this.speed.y !== 0 && this.speed.x === 0) this.mirror = true;
+    if (this.speed.y !== 0 && this.speed.x === 0) this.mirror = false;
     this.pos.x += this.speed.x * this.direction.x;
     this.pos.y += this.speed.y * this.direction.y;
 
@@ -51,7 +52,9 @@ class NPCCat extends RectObject {
       this.direction.x *= -1;
       this.mirror = !this.mirror
     }
-    if (this.pos.y > this.platform.pos.y + 2.5 || this.pos.y < this.platform.pos.y + this.platform.size.y / 2 + this.size.y / 2) {
+    if (this.pos.y > this.platform.pos.y + 2.5
+      || this.pos.y < this.platform.pos.y + this.platform.size.y / 2 // + this.size.y / 2
+    ) {
       this.direction.y *= - 1;
     }
     this.speedDownLooper++;
@@ -70,5 +73,9 @@ class NPCCat extends RectObject {
   render() {
 
     drawTile(this.pos, this.size, tile(this.frame, this.tileVector, this.imageIndex), new Color(0,0,0,1), 0, this.mirror, this.tintColor)
+  }
+
+  identifySelf() {
+    return 'enemy';
   }
 }

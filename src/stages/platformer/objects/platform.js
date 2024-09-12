@@ -3,10 +3,10 @@
 
 class Platform extends RectObject {
   /**
-   * 
-   * @param {Vector2} position 
-   * @param {Vector2} size 
-   * @param {Color} color 
+   *
+   * @param {Vector2} position
+   * @param {Vector2} size
+   * @param {Color} color
    */
   constructor(imageIndex, pos, size, color) {
     super(pos, size, color)
@@ -21,5 +21,9 @@ class Platform extends RectObject {
 
   render() {
     drawTile(this.pos, this.size, tile(0, vec2(1,16), this.imageIndex), this.color) // 3 -> burst (green by default, good for grass)
+  }
+
+  identifySelf() {
+    return 'platform';
   }
 }

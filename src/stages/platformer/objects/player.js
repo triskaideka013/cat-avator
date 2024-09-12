@@ -53,6 +53,12 @@ class Player extends RectObject {
     this.succeeded = false;
 
     this.speedDownLooper = 0;
+
+    window.addEventListener('enemy-destroyed', this.enemyCleanup.bind(this));
+  }
+
+  enemyCleanup(event) {
+    this.enemies = this.enemies.filter(e => e !== event.detail);
   }
 
 
