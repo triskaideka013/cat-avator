@@ -13,7 +13,7 @@
  */
 
 const RIGHT = 'R', LEFT = 'L';
-const MAX_FRAME_PLAYER = 13;
+const MAX_FRAME_PLAYER = 4;
 
 class Player extends RectObject {
   /**
