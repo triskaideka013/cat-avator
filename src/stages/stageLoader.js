@@ -16,6 +16,7 @@ class StageLoader {
     var simplePlatformerLevel2 = this.simplePlatformerLevel2Config();
     var stairwayPlatformLevel = this.stairwayPlatformerLevelConfig();
     var simpleplatformLevel3 = this.simplePlatformerLevel3Config();
+    var simpleplatformLevel4 = this.simplePlatformerLevel4Config();
     var platformDefaults = this.defaultPlatformLevelConfig();
 
     this.levelBuilderConfig = [
@@ -47,7 +48,7 @@ class StageLoader {
       {
         index: 5,
         builder: this.platformerBuilder,
-        config: platformDefaults,
+        config: simpleplatformLevel4,
       },
       {
         index: 6,
@@ -308,6 +309,32 @@ class StageLoader {
         ...Array(7).fill().map((_, i) => i + 8),   // indices of upper platform enemy ranges
         ...Array(18).fill().map((_, i) => i + 16)  // indices of lower platform enemy ranges
       ]
+    };
+  }
+
+  /**
+   * A platformer level config
+   * @returns
+   */
+  simplePlatformerLevel4Config() {
+    return {
+      platforms: [
+        { x: -5, y: 3, width: 10, height: 1, color: color.yellow },    // 0
+        { x: 10, y: 3, width: 10, height: 1, color: color.red },       // 1
+        { x: 20, y: 8, width: 10, height: 1, color: color.green },     // 2
+        { x: 30, y: 18, width: 10, height: 1, color: color.aqua },     // 3
+        { x: 40, y: 8, width: 10, height: 1, color: color.yellow },    // 4
+        { x: 50, y: 3, width: 10, height: 1, color: color.fuchsia },   // 5
+        { x: 70, y: 3, width: 5, height: 1, color: color.aqua },       // 6
+        { x: 90, y: 8, width: 5, height: 1, color: color.red },        // 7
+
+      ],
+      powerups: [
+        { x: -5, y: 5 },
+        { x: 90, y: 12 },
+        { x: 30, y: 22}
+      ],
+      enemies: [0, 2, 3, 5],
     };
   }
 }
