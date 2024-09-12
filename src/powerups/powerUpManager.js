@@ -17,8 +17,13 @@ class PowerupManager
         this.yarnBallCount += count;
     }
 
-    removeYarnball(index)
+    removeYarnBall(index)
     {
         this.yarnBallCount--;
+    }
+
+    setYarnBalls(count)
+    {
+        this.yarnBallCount = count;
     }
 }

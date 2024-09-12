@@ -6,25 +6,22 @@
  * @property {boolean} held
  */
 const heldDiceBGColor = hsl(degreesToRadians(72),1,.65) // 80 light green
-const pointDiceBGColor = hsl(degreesToRadians(115),.5,.5)
+const gameDiceBGColor = hsl(degreesToRadians(115),.5,.5)
 
 // TODO: remove debug drudgery
 class ShipCapnCrew {
 
     constructor(suddenDeath=false) {        
-        this.setupGame()
-        this.gameoverFn = function() {} // keep gameover function cached
+        this.player1 = this.setupPlayer()
+        this.setupDice()
+        this.gameover = false
+        this.isTimedOut = false
+        this.triskaideka = false
         this.suddenDeath = suddenDeath
     }
 
     ///  SETUP ///
 
-    setupGame() {
-        this.player1 = this.setupPlayer()
-        this.setupDice()
-        this.gameover = false
-        this.isTimedOut = false
-    }
 
     /**
      * 
@@ -200,7 +197,7 @@ class ShipCapnCrew {
                                 d.held = held
                             }
                         })
-                        return this.rollDice();
+                        return //this.rollDice();
                     }
 
                     this.endGame(player)
@@ -236,23 +233,24 @@ class ShipCapnCrew {
                         let roll = d6.roll().getValue()
                         d6.held = true
                         player.diceArray.forEach(d => {
-                            if (!d.pointDice && d.value == 6) {
+                            if (!d.gameDice) {
                                 d.held = true
                             }
                         })
                         
                         if (roll == 1) {
-                            this.pirateText = `\nARRR! 6 + 6 + ${roll} is 13...\n\nto davy jones's locker with ye!`
+                            this.pirateText = `\nARRR! 6 + 6 + 1 is 13...\n\nHow UNLUCKY! Time to walk the PLANK.`
                             player.hasLost = true
+                            this.triskaideka = true
                         } else {
-                            this.pirateText = `\nYO-HO-HO! 6 + 6 + ${roll} does not 13 make...\n\n${roll} times the treasure!`
+                            this.pirateText = `\nYO-HO-HO! 6 + 6 + ${roll} does not 13 make...\n\n${roll} times the TREASURE!`
                             player.score *= roll
                         }
 
                         this.gameover = true  
-                        this.gameoverFn()
 
                     } else {
+
                         this.gameover = true   
 
                         this.classicEnding()                
@@ -260,20 +258,21 @@ class ShipCapnCrew {
 
                 }, 500)
 
+            } else {
+                this.gameover = true
             }
-
         }
-        
         this.classicEnding()
     }
 
     classicEnding() {
-        if (this.gameover) {
-         
-            this.pirateText = (this.player1.shipCapnCrew) ? "\nSQUEEEK!\n\nYou are a WINNER...take your PRIZE!!" : "\n\nYOU LOST.  I'll be taking that!"
-            
-            this.gameoverFn()
-        }
+
+        if (this.player1.shipCapnCrew) this.player1.diceArray.forEach(d => { // highlight all dice used for score
+            if (!d.gameDice)
+                d.held = true
+        })
+        
+        this.pirateText = (this.player1.shipCapnCrew) ? "\nSQUEEEK!\n\nYou are a WINNER...take your PRIZE!!" : "\n\nYOU LOST.  I'll be taking that!"
     }
 }
 
@@ -287,7 +286,7 @@ class PlayerDice extends EngineObject {
         this.size = size
 
         this.held = false
-        this.pointDice = false
+        this.gameDice = false
         this.value = 0
         this.frame = null
         this.angle = degreesToRadians(Math.floor(Math.random()*4)*90)
@@ -309,12 +308,12 @@ class PlayerDice extends EngineObject {
 
     collect() {
         this.held = true
-        this.pointDice = true
+        this.gameDice = true
     }
 
     // reset() {
     //     this.held = false
-    //     this.pointDice = false
+    //     this.gameDice = false
     //     this.value = 0
     //     this.frame = null
     // }
@@ -325,7 +324,7 @@ class PlayerDice extends EngineObject {
         if (this.value > 0) {
 
             if (this.held) // rectangle behind dice to show they are held?
-                drawRect(this.pos, vec2(this.size.x*1.25), this.pointDice ? pointDiceBGColor : heldDiceBGColor);
+                drawRect(this.pos, vec2(this.size.x*1.25), this.gameDice ? gameDiceBGColor : heldDiceBGColor);
             
             drawTile(this.pos, this.size, tile(this.frame, vec2(16,16), 4), new Color(0,0,0,1), this.angle)
         } else {
