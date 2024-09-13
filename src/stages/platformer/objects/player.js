@@ -34,6 +34,7 @@ class Player extends RectObject {
     this.frame = 0;
     this.failed = false;
     this.succeeded = false;
+    this.speedDownLooper = 0; 
 
     window.addEventListener("enemy-destroyed", this.enemyCleanup.bind(this));
   }
@@ -72,19 +73,21 @@ class Player extends RectObject {
     }
 
     // determine player orientation in x-axis
-    let direction = null;
+    let direction = keyIsDown("ArrowLeft") ? 'L' : keyIsDown("ArrowRight") ? 'R' : null;
     if (
-      keyIsDown("ArrowLeft") ||
-      keyIsDown("ArrowRight")
+      !!direction
     ) {
-      direction = keyIsDown("ArrowLeft") ? 'L' : 'R';
-      this.frame++; // animate the walking!
-      if (this.frame == 2) {
-        this.frame = 0;
+
+      this.speedDownLooper++;
+      if (this.speedDownLooper % 3 == 0) { // cat 2-frame 
+        this.frame++; // animate the walking!
+        if (this.frame == 2) { // cat 2-frame
+          this.frame = 0;
+        }
       }
-      this.direction = direction;
-    }
-    if (direction != null) {
+      this.direction = direction
+      this.speedDownLooper = this.speedDownLooper % 60
+
       // direction changed
       this.mirror = this.direction == 'L';
     }

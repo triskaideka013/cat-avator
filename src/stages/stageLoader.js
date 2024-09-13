@@ -24,10 +24,15 @@ class StageLoader {
         builder: this.platformerBuilder,
         config: simplePlatformerLevel1,
       },
+      // {
+      //   index: 1,
+      //   builder: this.platformerBuilder,
+      //   config: simplePlatformerLevel2,
+      // },
       {
         index: 1,
-        builder: this.platformerBuilder,
-        config: simplePlatformerLevel2,
+        builder: this.gamblerBuilder,
+        config: {suddenDeath: false},
       },
       {
         index: 2,
@@ -95,7 +100,7 @@ class StageLoader {
       {
         index: 11,
         builder: this.gamblerBuilder,
-        // config: defaultGamblerConfig,
+        config: {suddenDeath: true},
       },
       {
         index: 12,

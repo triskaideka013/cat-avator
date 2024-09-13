@@ -2,7 +2,7 @@
 let anteBGColor = hsl(degreesToRadians(11),.6,.6)
 let textColor = new Color(255,255,255,1);
 class DiceStage extends StageBase {
-    constructor(completedLevels, powerupManager) {
+    constructor(levelConfig, powerupManager) {
       super("dice");
   
       //Game state registers callback to invoke when level is selected
@@ -19,6 +19,7 @@ class DiceStage extends StageBase {
       }
 
       this.powerupManager = powerupManager
+      this.suddenDeath = levelConfig.suddenDeath
     }
   
     init() {
@@ -35,7 +36,7 @@ class DiceStage extends StageBase {
 
       if (powerupManager.getYarnBallCount() > 0) {
         // init dice game!
-        this.game = new ShipCapnCrew(); // true = sudden death enabled
+        this.game = new ShipCapnCrew(this.suddenDeath); // true = sudden death enabled
       }
 
       
