@@ -1,7 +1,5 @@
 // uncomment this line to reference LittleJS types -->
 // import { EngineObject, Vector2, vec2, Sound, mainCanvas, collideWithObject } from "littlejsengine";
-
-const MAX_BALL_COLLISIONS = 2
 class HairBall extends EngineObject
 {
 
@@ -35,12 +33,12 @@ class HairBall extends EngineObject
   }
 
   collideWithObject(o) {
-    if(o.identifySelf() === 'enemy') {
+    if(o.identifySelf() == 'enemy') {
       this.destroy();
       o.destroy();
       window.dispatchEvent(new CustomEvent('enemy-destroyed', {detail: o}));
     }
-    if (this.collisions === MAX_BALL_COLLISIONS) {
+    if (this.collisions == 2) {
       this.destroy()
     }
     else {

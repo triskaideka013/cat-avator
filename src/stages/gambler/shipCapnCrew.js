@@ -328,7 +328,7 @@ class PlayerDice extends EngineObject {
             if (this.held) // rectangle behind dice to show they are held?
                 drawRect(this.pos, vec2(this.size.x*1.25), this.gameDice ? gameDiceBGColor : heldDiceBGColor);
             
-            drawTile(this.pos, this.size, tile(this.frame, vec2(16,16), 4), new Color(0,0,0,1), this.angle)
+            drawTile(this.pos, this.size, tile(this.frame, vec2(16,16), 3), new Color(0,0,0,1), this.angle)
         } else {
             drawRect(this.pos, this.size);
         }
@@ -347,6 +347,6 @@ class PirateMouse extends EngineObject {
 
     // littlejs
     render() {
-        drawTile(this.pos, this.size, tile(0, vec2(13,15), 5), new Color(0,0,0,1))
+        drawTile(this.pos, this.size, tile(0, vec2(13,15), 4), new Color(0,0,0,1))
     }
 }

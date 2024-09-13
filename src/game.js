@@ -143,12 +143,10 @@ if (level != null) {
 ///////////////////////////////////////////////////////////////////////////////
 // Startup LittleJS Engine
 engineInit(gameInit, gameUpdate, gameUpdatePost, gameRender, gameRenderPost, [
-  "tiles.png",
-  "grass.png", // 1 x 16
-  "gradient.png", // 1 x 16
-  "grit.png", // 1 x 16
-  "dice_16x16.png",
-  "pirate_13x15.png", 
-  "rat_16x9.png",
-  "blue_gato_18x14.png"
+  "c.png", //player/cat 0
+  "a.png", // 1 x 16 texture grass 1
+  "b.png", // 1 x 16 texture grit 2
+  "d.png", // 3 dice
+  "m.png", // mouse 4
+  "r.png" // rat 5
 ]);
