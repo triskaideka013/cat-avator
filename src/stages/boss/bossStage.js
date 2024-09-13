@@ -60,8 +60,8 @@ class BossStage extends StageBase {
         }
 
         if (gen?.enemies?.length && gen.enemies.indexOf(i) != -1) {
-          var size = gen.isEnemyXl ? 10: gen.isEnemyXs ? 2: 6;
-          var speedBase = gen.isEnemyXl ? 18: gen.isEnemyXs ? 24 : 20 
+          var size = gen.isEnemyXl ? 10 : gen.isEnemyXs ? 2 : 6;
+          var speedBase = gen.isEnemyXl ? 18 : gen.isEnemyXs ? 24 : 20;
           this.enemies.push(
             new NPCCat(
               "rat",
@@ -94,8 +94,7 @@ class BossStage extends StageBase {
   init() {
     super.init();
 
-    window.addEventListener('enemy-destroyed', this.enemyCleanup.bind(this));
-
+    window.addEventListener("enemy-destroyed", this.enemyCleanup.bind(this));
 
     this.player = new Player(vec2(10, 3), {
       platforms: this.platforms,
@@ -136,10 +135,7 @@ class BossStage extends StageBase {
       new HairBall(this.player.pos, pointsToAngle(this.player.pos, mousePos));
       this.powerupManager.removeYarnBall();
     }
-    if (keyWasPressed(KeyboardKeys.KeySpace) && this.powerupManager.getYarnBallCount() > 0) {
-      new HairBall(this.player.pos, pointsToAngle(this.player.pos, vec2(0)));
-      this.powerupManager.removeYarnBall();
-  }
+   
   }
 
   gameRenderPost() {
@@ -171,6 +167,6 @@ class BossStage extends StageBase {
   }
 
   enemyCleanup(event) {
-    this.enemies = this.enemies.filter(e => e !== event.detail);
+    this.enemies = this.enemies.filter((e) => e !== event.detail);
   }
 }
