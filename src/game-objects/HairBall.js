@@ -33,7 +33,7 @@ class HairBall extends EngineObject
   }
 
   collideWithObject(o) {
-    if(o.identifySelf() == 'enemy') {
+    if(o?.identifySelf && o?.identifySelf() == 'enemy') {
       this.destroy();
       o.destroy();
       window.dispatchEvent(new CustomEvent('enemy-destroyed', {detail: o}));

@@ -7,5 +7,6 @@ const KeyboardKeys = {
   KeyR: "KeyR",
   KeyV: "KeyV",
   KeyY: "KeyY", 
-  KeyN: "KeyN"
+  KeyN: "KeyN", 
+  KeySpace: "Space"
 };

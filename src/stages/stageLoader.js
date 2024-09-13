@@ -193,17 +193,17 @@ class StageLoader {
   simplePlatformerLevel1Config() {
     return {
       platforms: [
-        this.plat(7.5, 8.5, 7.5, 8.5),        // 0: wall
+        this.plat(7.5, 8.5, 6, 7),            // 0: wall
         this.plat(7.5, 12.5, 2.5, 3.5),       // 1: platform
         this.plat(10, 15, 2.5, 3.5),          // 2: wall
-        this.plat(17, 18, 2.5, 10.5),         // 3: wall
+        this.plat(17, 18, 2.5, 9.5),          // 3: wall
         this.plat(12.5, 17.5, 2.5, 3.5),      // 4: platform
 
-        this.plat(22, 23, 2.5, 13.5),         // 5: wall
+        this.plat(22, 23, 2.5, 12.5),         // 5: wall
         this.plat(22.5, 27.5, 2.5, 3.5),      // 6: platform
 
         this.plat(37, 42, 2.5, 3.5),          // 7: platform
-        this.plat(41.5, 42.5, 2.5, 7.5)       // 8: wall
+        this.plat(41.5, 42.5, 2.5, 7)       // 8: wall
       ],
       powerups: [
         { x: 42, y: 12 }
@@ -224,8 +224,8 @@ class StageLoader {
         this.plat(9, 13, -6.5, -5.5),         // 2: platform
         this.plat(9, 10, -18.5, -6.5),        // 3: wall
         this.plat(10, 14, -18.5, -17.5),      // 4: platform
-        this.plat(9, 11.5, -25.5, -24.5),     // 5: platform
-        this.plat(11.5, 14, -25.5, -24.5),    // 6: platform
+        this.plat(4, 10, -25.5, -24.5),       // 5: platform
+        this.plat(10, 14, -25.5, -24.5),       // 6: platform
         this.plat(30, 40, -18.5, -17.5),      // 7: platform
         this.plat(30, 40, -25.5, -24.5)       // 8: platform
       ],
@@ -313,33 +313,64 @@ class StageLoader {
           width: 15,
           height: 1,
           initYTop: 3,
-          count: 10,
-          driftX: 1,
-          driftY: 6,
+          count: 5,
+          driftX: 0,
+          driftY: 10,
           yarns: {
             minIndex: 1,
             modulo: 3,
           },
-          fishies: {
-            platIndex: [2],
-          },
+          enemies: [1,3]
         },
         {
-          initX: -5,
-          width: 7,
+          initX: 28,
+          width: 12,
           height: 1,
           initYTop: 6,
           count: 10,
-          driftX: -1,
-          driftY: 6,
+          driftX: 0,
+          driftY: 5,
+          enemies: [0,1,2,3,4,5,6,7,8,9]
+        },
+        {
+          initX: 45,
+          width: 8,
+          height: 1,
+          initYTop: 8,
+          count: 5,
+          driftX: 0,
+          driftY: 10,
           yarns: {
             minIndex: 1,
             modulo: 3,
           },
-          fishies: {
-            platIndex: [8],
-          },
+          enemies: [0,1,2,3]
         },
+        {
+          initX: 130,
+          width: 30,
+          height: 1,
+          initYTop: 57,
+          count: 1,
+          driftX: -1,
+          driftY: 6,
+          fishies: {
+            platIndex: [0],
+          },
+          enemies: [0], 
+          isEnemyXl: true
+        }, 
+        {
+          initX: 42,
+          width: 6,
+          height: 1,
+          initYTop: 55,
+          count: 9,
+          driftX: 9,
+          driftY: 0, 
+          enemies: [0,1,3,4,5,6,7], 
+          isEnemyXs: true
+        }
       ],
     };
   }
