@@ -67,7 +67,6 @@ class BossStage extends StageBase {
               "rat",
               platform.pos,
               vec2(size, size),
-              new Color(1, 0, 0),
               platform,
               vec2(18 / 60, 0),
               true
