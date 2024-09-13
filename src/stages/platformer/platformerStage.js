@@ -97,23 +97,13 @@ class PlatformerStage extends StageBase {
 
     drawTextScreen(
       `🧶(yarnballs): ${this.powerupManager.getYarnBallCount()}`,
-      vec2(110, 30),
+      vec2(130, 30),
       30
     );
 
     drawTextScreen(
-      `Score: ${this.player.getScore()}`,
-      vec2(1000, 50),
-      50,
-      new Color(1, 1, 1)
-    );
-
-    //debug
-    var playerPos = this.player.getPlayerCoords();
-
-    drawTextScreen(
-      `Pos: ${Math.round(playerPos.x)}, ${Math.round(playerPos.y)}`,
-      vec2(1300, 50),
+      `Score: ${this.player.powerupCounter}`,
+      vec2(1000, 30),
       50,
       new Color(1, 1, 1)
     );

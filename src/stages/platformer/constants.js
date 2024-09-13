@@ -8,5 +8,4 @@ const KeyboardKeys = {
   KeyV: "KeyV",
   KeyY: "KeyY", 
   KeyN: "KeyN", 
-  KeySpace: "Space"
 };
