@@ -37,7 +37,7 @@ class NPCCat extends RectObject {
   }
 
   update() {
-    if (this.speed.y !== 0 && this.speed.x === 0) this.mirror = false;
+    if (this.speed.y != 0 && this.speed.x == 0) this.mirror = false;
     this.pos.x += this.speed.x * this.direction.x;
     this.pos.y += this.speed.y * this.direction.y;
 
@@ -57,14 +57,14 @@ class NPCCat extends RectObject {
       this.direction.y *= - 1;
     }
     this.speedDownLooper++;
-    if (this.speedDownLooper % 3 === 0) {
+    if (this.speedDownLooper % 3 == 0) {
       this.frame++; // animate the ambling!
       if (this.frame == 2) {
         this.frame = 0;
       }
     }
 
-    if (60 === this.speedDownLooper) {
+    if (60 == this.speedDownLooper) {
       this.speedDownLooper = 0
     }
   }
