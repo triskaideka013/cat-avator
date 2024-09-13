@@ -26,7 +26,7 @@ class IntroStage extends StageBase {
       "Shoot🧶: Left Click",
       "Jump: Up Arrow | W",
       "Move: L/R Arrow | A/D",
-      "Win con: collect 🐟",
+      "Flappy Cat: Eat🐟",
       "Enemies: Shoot or stomp",
       "Objective: Don't die",
     ];

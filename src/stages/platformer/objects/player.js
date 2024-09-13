@@ -14,6 +14,7 @@ class Player extends RectObject {
    * @param {PlayerInit} opts
    */
   constructor(pos, opts) {
+    const size = vec2(2, 2); 
     super(pos, vec2(2, 2), tile(0));
 
     this.platforms = opts.platforms;
