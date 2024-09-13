@@ -37,10 +37,8 @@ class BossStage extends StageBase {
       for (let i = 0; i < count; i++) {
         let coords = getPlatCoords(x, x + gen.width, y - gen.height, y);
         var platform = new Platform(
-          1,
           vec2(coords.x, coords.y),
-          vec2(coords.width, coords.height),
-          new Color(0.5, 0.5, 0.5)
+          vec2(coords.width, coords.height)
         );
         // make platforms
         this.platforms.push(platform);
@@ -83,8 +81,7 @@ class BossStage extends StageBase {
       this.platforms.push(
         new Platform(
           vec2(p.x, p.y),
-          vec2(p.width, p.height),
-          new Color(0.5, 0.5, 0.5)
+          vec2(p.width, p.height)
         )
       );
     }

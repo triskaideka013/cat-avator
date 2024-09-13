@@ -310,7 +310,7 @@ class PlayerDice extends EngineObject {
             if (this.held) // rectangle behind dice to show they are held?
                 drawRect(this.pos, vec2(this.size.x*1.25), this.gameDice ? gameDiceBGColor : heldDiceBGColor);
             
-            drawTile(this.pos, this.size, tile(this.frame, vec2(16), 3), new Color(0,0,0,1))
+            drawTile(this.pos, this.size, tile(this.frame, vec2(16), 2), new Color(0,0,0,1))
         } else {
             drawRect(this.pos, this.size);
         }

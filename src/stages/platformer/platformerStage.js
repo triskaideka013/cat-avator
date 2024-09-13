@@ -23,10 +23,8 @@ class PlatformerStage extends StageBase {
     this.platforms = this.levelConfig.platforms.map(
       (p) =>
         new Platform(
-          2,
           vec2(p.x, p.y),
-          vec2(p.width, p.height),
-          new Color(1, 0, 0)
+          vec2(p.width, p.height)
         )
     );
 

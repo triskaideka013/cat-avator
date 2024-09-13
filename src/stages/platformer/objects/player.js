@@ -6,8 +6,6 @@
  * @property {number} minimumStageY
  */
 
-const RIGHT = "R",
-  LEFT = "L";
 class Player extends RectObject {
   /**
    * @param {vec2} pos
@@ -27,8 +25,8 @@ class Player extends RectObject {
     this.pos = pos;
     this.size = size;
     this.color = new Color(0, 0, 0, 0); // set background transparent
-    this.direction = RIGHT;
-    this.velocity = vec2(0, 0);
+    this.direction = 'R';
+    this.velocity = vec2(0);
     this.isOnGround = false;
     this.jumpVelocity = 15 / 60;
     this.jumpCount = 0;
@@ -36,7 +34,6 @@ class Player extends RectObject {
     this.frame = 0;
     this.failed = false;
     this.succeeded = false;
-    this.speedDownLooper = 0;
 
     window.addEventListener("enemy-destroyed", this.enemyCleanup.bind(this));
   }
@@ -63,13 +60,13 @@ class Player extends RectObject {
     if (this.failed || this.succeeded) return;
 
     // developer insta-win ~ press 'R' to complete the stage
-    if (keyWasPressed(KeyboardKeys.KeyR)) {
+    if (keyWasPressed("KeyR")) {
       this.succeeded = true;
       return;
     }
 
     // developer insta-fail ~ press 'N' to complete the stage
-    if (keyWasPressed(KeyboardKeys.KeyV)) {
+    if (keyWasPressed("KeyV")) {
       this.failed = true;
       return;
     }
@@ -77,37 +74,30 @@ class Player extends RectObject {
     // determine player orientation in x-axis
     let direction = null;
     if (
-      keyIsDown(KeyboardKeys.ArrowLeft) ||
-      keyIsDown(KeyboardKeys.ArrowRight)
+      keyIsDown("ArrowLeft") ||
+      keyIsDown("ArrowRight")
     ) {
-      direction = keyIsDown(KeyboardKeys.ArrowLeft) ? LEFT : RIGHT;
-
-      this.speedDownLooper++;
-      if (this.speedDownLooper % 2 == 0) {
-        this.frame++; // animate the walking!
-        if (this.frame == 2) {
-          this.frame = 0;
-        }
-      }
-      if (60 == this.speedDownLooper) {
-        this.speedDownLooper = 0;
+      direction = keyIsDown("ArrowLeft") ? 'L' : 'R';
+      this.frame++; // animate the walking!
+      if (this.frame == 2) {
+        this.frame = 0;
       }
       this.direction = direction;
     }
     if (direction != null) {
       // direction changed
-      this.mirror = this.direction == LEFT ? true : false;
+      this.mirror = this.direction == 'L';
     }
 
     // set lateral movement speed (standard velocity)
-    this.velocity.x = keyIsDown(KeyboardKeys.ArrowLeft)
+    this.velocity.x = keyIsDown("ArrowLeft")
       ? -(10 / 60)
-      : keyIsDown(KeyboardKeys.ArrowRight)
+      : keyIsDown("ArrowRight")
       ? 10 / 60
       : 0;
 
     if (
-      keyWasPressed(KeyboardKeys.ArrowUp) &&
+      keyWasPressed("ArrowUp") &&
       this.jumpCount < this.powerupCounter + 1
     ) {
       this.velocity.y = this.jumpVelocity;

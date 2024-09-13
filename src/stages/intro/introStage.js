@@ -19,23 +19,20 @@ class IntroStage extends StageBase {
       "themselves trapped by the terrifying treiskaídeka-ites.",
       "",
       "Now, Triska must challenge the denizens of each floor",
-      "and find a way to escape before their nine lives are up.",
+      "& find a way to escape b4 their 9 lives are up.",
     ];
 
     this.helpTextMap = [
-      "Shoot🧶: Left Click",
-      "Jump: Up Arrow | W",
-      "Move: L/R Arrow | A/D",
-      "Flappy Cat: Eat🐟",
-      "Enemies: Shoot or stomp",
-      "Objective: Don't die",
+      "Shoot🧶: Click",
+      "Jump/Move: Arrows/WASD",
+      "Flappy Cat: 🐟",
+      "Enemies: Shoot/stomp",
+      "Objective: Live",
     ];
 
     this.outroTextMap = [
-      "ALL THEIR BASE ARE BELONG TO YOU!",
-      "",
-      "And so, our hero Triska De Cat escaped every last treachery in that awful hotel.",
-      "With the triskaideka-ite tricksters trounced, all was well again in the land of <13Kb",
+      "\nAlas, you've escaped from that awful hotel!",
+      "With the triskaideka-ite tricksters trounced, all was well again in the land o 13k",
       "for now...",
     ];
 

@@ -38,12 +38,12 @@ class ContinueStage extends StageBase {
         return;
       }
 
-    if (keyWasPressed(KeyboardKeys.KeyY)) {
+    if (keyWasPressed("KeyY")) {
       this.complete();
       return;
     }
 
-    if (keyWasPressed(KeyboardKeys.KeyN)) {
+    if (keyWasPressed("KeyN")) {
       this.fail();
       return;
     }

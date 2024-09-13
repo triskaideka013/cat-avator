@@ -25,7 +25,7 @@ class NPCCat extends RectObject {
     if ('rat' == character) {
       this.pos.y = platformTop;
       this.tileVector = vec2(16,19)
-      this.imageIndex = 4
+      this.imageIndex = 3
     } else if ('cat' == character) {
       this.pos.y = platformTop + halfEnemyHeight;
       this.tileVector = vec2(18,14);
@@ -51,9 +51,9 @@ class NPCCat extends RectObject {
       this.direction.y *= - 1;
     }
     this.speedDownLooper++;
-    if (this.speedDownLooper % 3 == 0) {
-      this.frame++; // animate the ambling!
-      if (this.frame == 2) {
+    if (this.speedDownLooper % 3 == 0 && this.imageIndex == 0) { // cat 2-frame, rat 1-frame
+      this.frame++; // animate the ambling! for cat
+      if (this.frame == 2) { // cat 2-frame
         this.frame = 0;
       }
     }

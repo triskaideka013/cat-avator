@@ -149,7 +149,6 @@ function loadPlayableLevel() {
 engineInit(gameInit, gameUpdate, gameUpdatePost, gameRender, gameRenderPost, [
   "c.png", //player/cat 0
   "a.png", // 1 x 16 texture grass 1
-  "b.png", // 1 x 16 texture grit 2
-  "d.png", // 3 dice
-  "r.png", // rat 4
+  "d.png", // 2 dice
+  "r.png", // rat 3
 ]);
