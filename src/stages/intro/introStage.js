@@ -16,7 +16,7 @@ class IntroStage extends StageBase {
       "rests for the evening at a Totally Normal Hotel™️",
       "",
       "Anything BUT normal, you must challenge the denizens of each floor",
-      "& find a way to escape b4 their 9 lives are up.",
+      "and find a way to escape b4 your 9 lives are up!",
     ];
 
     this.helpTextMap = [

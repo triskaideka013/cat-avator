@@ -11,11 +11,12 @@ let gameDiceBGColor = hsl(degreesToRadians(115),.5,.5)
 // TODO: remove debug drudgery
 class ShipCapnCrew {
 
-    constructor() {        
+    constructor(suddenDeath=false) {        
         this.player1 = this.setupPlayer()
         this.gameover = false
         this.isTimedOut = false
         this.triskaideka = false
+        this.suddenDeath = suddenDeath
     }
 
     ///  SETUP ///
@@ -206,7 +207,7 @@ class ShipCapnCrew {
 
             let riskItAll = false
             
-            if (player.score == 12) {
+            if (player.score == 12 && this.suddenDeath) {
                 
                 this.isTimedOut = true
 
