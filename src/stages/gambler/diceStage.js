@@ -14,7 +14,7 @@ class DiceStage extends StageBase {
         this.bet = '🧶'
         this.pirateText = "Ahoy, matey!\n\nI need a SHIP (6), CAPN (5) and CREW (4).\n\nLet's gamble for treasure, LANDLUBBER!";
       } else {
-        this.bet = '?'
+        this.bet = ''
         this.pirateText = "Me hearty, you've nothing to BET me!\n\nI sure do like YARN BALLS though...";
       }
 
@@ -97,20 +97,18 @@ class DiceStage extends StageBase {
       ///
       ///  Parlor HUD
       ///
-
+      let half = mainCanvasSize.x / 2;
       ///  <pirate-talk>
-      drawTextScreen(this.pirateText, vec2(mainCanvasSize.x / 2, 40), 64);
+      drawTextScreen(this.pirateText, vec2(half, 40), 64);
 
       ///  <bet>
       drawRect(vec2((mainCanvasSize.x / 16) - 165 , 35), vec2(25), anteBGColor);
-      drawTextScreen(this.bet, vec2((mainCanvasSize.x / 2)-430, 450), 96);
-      drawTextScreen("Ante", vec2((mainCanvasSize.x / 2)-428, 585), 32);
+      drawTextScreen(this.bet, vec2((half)-430, 450), 96);
+      drawTextScreen("Ante", vec2((half)-428, 585), 32);
 
       ///  <score>
-      if (!!this.game?.player1?.rolls >= 1) {
-        drawTextScreen(`Score: ${this.game.player1.score}\n\nNo. rolls: ${this.game.player1.rolls}`, vec2((mainCanvasSize.x / 2)+500, 450), 48, textColor, 0, textColor, 'right');
-      } else if (this.game?.player1?.score >= 0) {
-        drawTextScreen(`Score: ${this.game.player1.score}`, vec2((mainCanvasSize.x / 2)+500, 450), 48, textColor, 0, textColor, 'right');
+      if (!!this.game?.player1?.rolls >= 0) {
+        drawTextScreen(`Score: ${this.game.player1.score}\n\nNo. rolls: ${this.game.player1.rolls}`, vec2((half)+500, 450), 48, textColor, 0, textColor, 'right');
       }
     }
 
