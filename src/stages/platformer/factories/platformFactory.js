@@ -2,13 +2,7 @@ class PlatformFactory {
   static createPlatforms(platformList) {
     const platforms = [];
     platformList.forEach(platform => {
-      let platformColor;
-      if (platform?.color) {
-        platformColor = new Color(...platform.color);
-      } else {
-        platformColor = new Color(color.red);
-      }
-      platforms.push(new Platform(2, vec2(platform.x, platform.y), vec2(platform.width, platform.height), platformColor));
+      platforms.push(new Platform(2, vec2(platform.x, platform.y), vec2(platform.width, platform.height), new Color(1, 0, 0)));
     });
     return platforms;
   }

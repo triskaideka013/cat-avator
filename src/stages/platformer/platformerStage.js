@@ -1,16 +1,6 @@
 // uncomment this line to reference LittleJS types -->
 // import { Color, vec2, drawTextScreen, mousePos, mouseWasPressed } from "littlejsengine"
 
-// color constants
-const color = {
-  red: [1, 0, 0],
-  yellow: [1, 1, 0],
-  green: [0, 1, 0],
-  aqua: [0, 1, 1],
-  fuchsia: [1, 0, 1],
-  black: [0, 0, 0]
-};
-
 // Level Config now defined in src/stages/stageLoader.js
 
 class PlatformerStage extends StageBase {
