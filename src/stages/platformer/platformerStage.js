@@ -20,11 +20,19 @@ class PlatformerStage extends StageBase {
     cameraScale = 4 * 12;
 
     // initialize platforms and powerups
-    this.platforms = PlatformFactory.createPlatforms(this.levelConfig.platforms);
-    this.powerups = PowerupFactory.createPowerups(this.levelConfig.powerups);
+    this.platforms = this.levelConfig.platforms.map(platform => {
+      return new Platform(2, vec2(platform.x, platform.y), vec2(platform.width, platform.height), new Color(1, 0, 0));
+    });
+
+    this.powerups = this.levelConfig.powerups.map(powerup => {
+      return new PowerUp(vec2(powerup.x, powerup.y), vec2(1, 1), new Color(1, 1, 0));
+    });
 
     // initialize enemies
-    this.enemies = EnemyFactory.createEnemies(this.platforms, this.levelConfig.enemies, this.levelConfig.enemySpeeds);
+    this.levelConfig.enemySpeeds ??= Array(this.levelConfig.enemies.length).fill().map((_, i) => vec2(2 / 60, 0));
+    this.levelConfig.enemies.map((enemyIndex, i) => {
+      return new NPCCat('rat', this.platforms[enemyIndex].pos, vec2(2, 2), new Color(1, 0, 0), this.platforms[enemyIndex], this.levelConfig.enemySpeeds[i], true);
+    });
 
     window.addEventListener('enemy-destroyed', this.enemyCleanup.bind(this));
 
