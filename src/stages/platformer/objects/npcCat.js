@@ -41,13 +41,8 @@ class NPCCat extends RectObject {
     this.pos.x += this.speed.x * this.direction.x;
     this.pos.y += this.speed.y * this.direction.y;
 
-    const enemyLeft = this.pos.x - this.size.x / 2;
-    const platformLeft = this.platform.pos.x - this.platform.size.x / 2;
-    const enemyRight = this.pos.x + this.size.x / 2;
-    const platformRight = this.platform.pos.x + this.platform.size.x / 2;
-
     // when the enemy reaches the edge of a platform, it changes direction
-    if (enemyLeft < platformLeft || enemyRight > platformRight) {
+    if (this.left < this.platform.left || this.right > this.platform.right) {
       this.direction.x *= -1;
       this.mirror = !this.mirror
     }
