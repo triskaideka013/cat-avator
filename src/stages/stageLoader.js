@@ -224,8 +224,8 @@ class StageLoader {
         this.plat(9, 13, -6.5, -5.5),         // 2: platform
         this.plat(9, 10, -18.5, -6.5),        // 3: wall
         this.plat(10, 14, -18.5, -17.5),      // 4: platform
-        this.plat(9, 11.5, -25.5, -24.5),     // 5: platform
-        this.plat(11.5, 14, -25.5, -24.5),    // 6: platform
+        this.plat(4, 10, -25.5, -24.5),       // 5: platform
+        this.plat(10, 14, -25.5, -24.5),       // 6: platform
         this.plat(30, 40, -18.5, -17.5),      // 7: platform
         this.plat(30, 40, -25.5, -24.5)       // 8: platform
       ],
