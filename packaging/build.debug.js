@@ -19,7 +19,19 @@ const BUILD_FOLDER = "build";
 const sourceFiles = [];
 const sources = ["state", "stages", "game-objects", "util", "powerups"];
 
-sourceFiles.push("./vendor/littlejs/littlejs.js");
+const vendorFiles = [
+  "./vendor/src/engineRelease.js",
+  "./vendor/src/engineUtilities.js",
+  "./vendor/src/engineSettings.js",
+  "./vendor/src/engineObject.js",
+  "./vendor/src/engineDraw.js",
+  "./vendor/src/engineInput.js",
+  "./vendor/src/engineAudio.js",
+  "./vendor/src/engineTileLayer.js",
+  "./vendor/src/engine.js",
+];
+
+vendorFiles.forEach((v) => sourceFiles.push(v));
 
 for (let source of sources) {
   findGameFiles("./src", source, sourceFiles);
@@ -43,7 +55,7 @@ fs.mkdirSync(BUILD_FOLDER);
 ////////////////////////////////////////
 // Move assets to build directory
 for (const src of assets) {
-  let file = src.split('/')[2]
+  let file = src.split("/")[2];
   fs.copyFileSync(src, `${BUILD_FOLDER}/${file}`);
 }
 
@@ -79,7 +91,7 @@ function closureCompilerStep(filename) {
   const filenameTemp = filename + ".tmp";
   fs.copyFileSync(filename, filenameTemp);
   child_process.execSync(
-    `npx google-closure-compiler --js=${filenameTemp} --js_output_file=${filename} --compilation_level=SIMPLE --language_in=ECMASCRIPT_2021 --language_out=ECMASCRIPT_2021 --warning_level=VERBOSE --jscomp_off=* --assume_function_wrapper`,
+    `npx google-closure-compiler --js=${filenameTemp} --js_output_file=${filename} --compilation_level=ADVANCED --language_in=ECMASCRIPT_2021 --language_out=ECMASCRIPT_2021 --warning_level=VERBOSE --jscomp_off=* --assume_function_wrapper`,
     { stdio: "inherit" }
   );
   fs.rmSync(filenameTemp);
@@ -133,7 +145,7 @@ function findGameFiles(path, entry, gameFiles) {
   }
 }
 
-function findGameAssets(gameFiles, path='./assets') {
+function findGameAssets(gameFiles, path = "./assets") {
   let target = `${path}`;
 
   if (fs.lstatSync(target).isFile()) {
