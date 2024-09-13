@@ -4,7 +4,9 @@
 "use strict";
 glEnable = false;
 
-window.cheat = ()=>{window['playerIsACheater'] = true;}
+window.cheat = () => {
+  window["playerIsACheater"] = true;
+};
 
 ///////////////////////////////////////////////////////////////////////////////
 // State Management
@@ -42,7 +44,6 @@ function gameUpdate() {
 }
 
 function gameUpdatePost() {
-
   var currentStage = stateManager.getCurrentStage();
 
   if (currentStage.gameUpdatePost) {
@@ -88,6 +89,12 @@ function resolveNextStage() {
     return;
   }
 
+  if (stateManager.hasBeatenGame()) {
+    stateManager.CAN_PLAY = false;
+    stateManager.startNewLevel(stageLoader.loadOutro());
+    return;
+  }
+
   ////////////////////////////////////
   // Elevator -> Playable Level
   if (stateManager.isElevatorStage()) {
@@ -97,12 +104,10 @@ function resolveNextStage() {
 
   ////////////////////////////////////
   // Playable level quite w/o dying
-  if(stateManager.levelWasQuit())
-  {
+  if (stateManager.levelWasQuit()) {
     stateManager.returnToElevator(false);
     return;
   }
-
 
   ////////////////////////////////////
   // Playable Level -> Continue Screen
@@ -112,7 +117,7 @@ function resolveNextStage() {
   }
 
   ////////////////////////////////////
-  // Intro -> Elevator 
+  // Intro -> Elevator
   // OR
   // Continue -> Elevator
   // OR
@@ -125,19 +130,18 @@ function resolveNextStage() {
 
 ///////////////////////////////////////////////////////////////////////////////
 // Resolve & load playable level
-function loadPlayableLevel()
-{
-// get the currently selected level index
-var elevatorResult = stateManager.getCurrentStageResult();
-// retrieve the level builder function ()=> GameStage 
-var levelBuilder = stageLoader.getLevelBuilderByIndex(elevatorResult.index);
-// instantiate the level
-var level = levelBuilder();
+function loadPlayableLevel() {
+  // get the currently selected level index
+  var elevatorResult = stateManager.getCurrentStageResult();
+  // retrieve the level builder function ()=> GameStage
+  var levelBuilder = stageLoader.getLevelBuilderByIndex(elevatorResult.index);
+  // instantiate the level
+  var level = levelBuilder();
 
-if (level != null) {
-  //transition to level
-  stateManager.startNewLevel(level);
-}
+  if (level != null) {
+    //transition to level
+    stateManager.startNewLevel(level);
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -147,5 +151,5 @@ engineInit(gameInit, gameUpdate, gameUpdatePost, gameRender, gameRenderPost, [
   "a.png", // 1 x 16 texture grass 1
   "b.png", // 1 x 16 texture grit 2
   "d.png", // 3 dice
-  "r.png" // rat 4
+  "r.png", // rat 4
 ]);

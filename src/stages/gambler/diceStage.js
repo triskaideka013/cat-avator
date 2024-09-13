@@ -107,7 +107,7 @@ class DiceStage extends StageBase {
       drawTextScreen("Ante", vec2((half)-428, 585), 32);
 
       ///  <score>
-      if (!!this.game?.player1?.rolls >= 0) {
+      if (this.game && !!this.game?.player1?.rolls >= 0) {
         drawTextScreen(`Score: ${this.game.player1.score}\n\nNo. rolls: ${this.game.player1.rolls}`, vec2((half)+500, 450), 48, textColor, 0, textColor, 'right');
       }
     }
