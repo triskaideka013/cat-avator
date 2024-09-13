@@ -6,10 +6,6 @@
 class PlatformerStage extends StageBase {
   constructor(levelConfig, powerupManager) {
     super("platformer");
-    this.platforms = [];
-    this.powerups = [];
-    this.enemies = [];
-    this.player = null;
     this.levelConfig = levelConfig;
     this.powerupManager = powerupManager;
   }
