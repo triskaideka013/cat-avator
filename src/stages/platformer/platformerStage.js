@@ -40,12 +40,7 @@ class PlatformerStage extends StageBase {
     // initialize player
     this.player = new Player(
       vec2(10, 4),
-      {
-        platforms: this.platforms,
-        powerups: this.powerups,
-        minimumStageY: this.minimumStageY,
-        enemies: this.enemies
-      }
+      {...this}
     );
 
     // center camera on player
@@ -65,16 +60,9 @@ class PlatformerStage extends StageBase {
       return;
     }
 
-    if (mouseWasPressed(0)) {
-      // if (!this.player.hasDied) {
-      // console.log(this.powerupManager);
-        if (this.powerupManager.getYarnBallCount() > 0)
-        {
-          new HairBall(this.player.pos, pointsToAngle(this.player.pos, mousePos));
-          this.powerupManager.removeYarnBall();
-        }
-        // new HairBall(this.player.pos, pointsToAngle(this.player.pos, mousePos));
-      // }
+    if (mouseWasPressed(0) && this.powerupManager.getYarnBallCount() > 0) {
+        new HairBall(this.player.pos, pointsToAngle(this.player.pos, mousePos));
+        this.powerupManager.removeYarnBall();
     }
 
     if (this.player.hasWon()) {
