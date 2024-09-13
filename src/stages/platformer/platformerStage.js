@@ -110,10 +110,7 @@ class PlatformerStage extends StageBase {
       new Color(1, 1, 1)
     );
 
-    this.platforms.forEach((platform) => platform.render());
-    this.powerups.forEach((powerup) => powerup.render());
-    this.enemies.forEach((enemy) => enemy.render());
-    this.player.render();
+    [this.platforms, this.powerups, this.enemies, [this.player]].forEach(lst => lst.forEach(el => el.render()));
 
     // center on player
     cameraPos = this.player.pos.add(vec2(10, 0));
@@ -122,9 +119,6 @@ class PlatformerStage extends StageBase {
   // destroy game objects
   teardown()
   {
-    this.player.destroy();
-    this.platforms.forEach(p => p.destroy());
-    this.powerups.forEach(p => p.destroy());
-    this.enemies.forEach(e => e.destroy());
+    [[this.player], this.platforms, this.powerups, this.enemies].forEach(lst => lst.forEach(el => el.destroy()));
   }
 }
