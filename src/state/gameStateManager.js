@@ -132,6 +132,6 @@ class GameStateManager {
 
   hasBeatenGame()
   {
-    return this.getCurrentStage().getResult()?.gameComplete;
+    return this.getCurrentStage()?.getState()?.getResult()?.gameComplete ?? false;
   }
 }

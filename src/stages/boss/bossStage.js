@@ -121,6 +121,7 @@ class BossStage extends StageBase {
       this.teardown();
       this.state.setResult({gameComplete: true});
       this.complete();
+      return;
     }
 
     for (let i = 0; i < this.yarns.length; i++) {
