@@ -23,10 +23,6 @@ class StageLoader {
         index: 0,
         builder: this.platformerBuilder,
         config: simplePlatformerLevel1,
-        config: {
-          ...stairwayPlatformerLevel,
-          enemySpeeds: Array(stairwayPlatformerLevel.enemies.length).fill().map((_, i) => vec2(0, 6 / 60))
-        }
       },
       {
         index: 1,
@@ -177,29 +173,11 @@ class StageLoader {
     return {
       platforms: [
         // steps
-        { x: 10, y: 3, width: 5, height: 1, color: color.red },
-        { x: 15, y: 6, width: 5, height: 1, color: color.red },
-        { x: 20, y: 9, width: 5, height: 1, color: color.red },
-        { x: 25, y: 12, width: 5, height: 1, color: color.red },
-        { x: 30, y: 15, width: 5, height: 1, color: color.red },
-        { x: 35, y: 18, width: 5, height: 1, color: color.red },
-        { x: 40, y: 21, width: 5, height: 1, color: color.red },
-        { x: 45, y: 24, width: 5, height: 1, color: color.red },
-        { x: 50, y: 27, width: 5, height: 1, color: color.red },
-        { x: 55, y: 30, width: 5, height: 1, color: color.red },
+        ...Array(10).fill().map((_, i) => {return { x: 10 + i * 5, y: 3 + i * 3, width: 5, height: 1 }}),
         // left wall
-        { x: 7.5, y: 20.5, width: 1, height: 36, color: color.red },
+        { x: 7.5, y: 20.5, width: 1, height: 36 },
         // risers
-        { x: 12.5, y: 4.5, width: 1, height: 4, color: color.red },
-        { x: 17.5, y: 7.5, width: 1, height: 4, color: color.red },
-        { x: 22.5, y: 10.5, width: 1, height: 4, color: color.red },
-        { x: 27.5, y: 13.5, width: 1, height: 4, color: color.red },
-        { x: 32.5, y: 16.5, width: 1, height: 4, color: color.red },
-        { x: 37.5, y: 19.5, width: 1, height: 4, color: color.red },
-        { x: 42.5, y: 22.5, width: 1, height: 4, color: color.red },
-        { x: 47.5, y: 25.5, width: 1, height: 4, color: color.red },
-        { x: 52.5, y: 28.5, width: 1, height: 4, color: color.red },
-        { x: 57.5, y: 31.5, width: 1, height: 4, color: color.red }
+        ...Array(10).fill().map((_, i) => {return { x: 12.5 + i * 5, y: 4.5 + i * 3, width: 1, height: 4 }})
       ],
       powerups: [
         { x: 55, y: 33 }
@@ -303,14 +281,14 @@ class StageLoader {
   simplePlatformerLevel4Config() {
     return {
       platforms: [
-        { x: -5, y: 3, width: 10, height: 1, color: color.yellow },    // 0
-        { x: 10, y: 3, width: 10, height: 1, color: color.red },       // 1
-        { x: 20, y: 8, width: 10, height: 1, color: color.green },     // 2
-        { x: 30, y: 18, width: 10, height: 1, color: color.aqua },     // 3
-        { x: 40, y: 8, width: 10, height: 1, color: color.yellow },    // 4
-        { x: 50, y: 3, width: 10, height: 1, color: color.fuchsia },   // 5
-        { x: 70, y: 3, width: 5, height: 1, color: color.aqua },       // 6
-        { x: 90, y: 8, width: 5, height: 1, color: color.red },        // 7
+        { x: -5, y: 3, width: 10, height: 1 },    // 0
+        { x: 10, y: 3, width: 10, height: 1 },    // 1
+        { x: 20, y: 8, width: 10, height: 1 },    // 2
+        { x: 30, y: 18, width: 10, height: 1 },   // 3
+        { x: 40, y: 8, width: 10, height: 1 },    // 4
+        { x: 50, y: 3, width: 10, height: 1 },    // 5
+        { x: 70, y: 3, width: 5, height: 1 },     // 6
+        { x: 90, y: 8, width: 5, height: 1 },     // 7
 
       ],
       powerups: [
@@ -328,7 +306,7 @@ class StageLoader {
       platforms: [
       ],
       enemies: [],
-    
+
       genPlats: [
         {
           initX: 7,

@@ -33,19 +33,6 @@ class RectObject extends EngineObject {
 
   get top() {return this.y + this.height / 2;}
 
-  getBoundingRect() {
-    return {
-      x: this.x,
-      y: this.y,
-      width: this.width,
-      height: this.height,
-      left: this.left,
-      right: this.right,
-      bottom: this.bottom,
-      top: this.top
-    }
-  }
-
   /**
    * Is this colliding with other from the top?
    * @param {RectObject} other
