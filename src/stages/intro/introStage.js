@@ -30,16 +30,20 @@ class IntroStage extends StageBase {
     ];
 
     this.activeText = this.textMap;
-    
-    let btns = [this.startButton,this.controlsButton];
-    ["Start","Help"].map((text,i) => {
-      btns[i] = new SimpleButton(
-        vec2(-3, -5),
+    let i = -3;
+    do {
+      let btn = new SimpleButton(
+        vec2(i, -5),
         vec2(4, 2),
         new Color(0.7, 0.3, 0.3, 1)
-      );
-      btns[i].setText(text, 1, new Color(0, 0, 0, 1));
-    })
+      )
+      btn.setText((i == -3 ? "Start" : "Help"))
+      if (i == 3)
+        this.controlsButton = btn
+      else
+        this.startButton = btn
+      i=i+6
+    } while (i < 4)
 
     // kitty sprite
     this.kittyPos = this.getRandomPos();
