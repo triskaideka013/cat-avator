@@ -182,7 +182,10 @@ class StageLoader {
       powerups: [
         { x: 55, y: 33 }
       ],
-      enemies: [1, 2, 3, 4, 5, 6, 7, 8]
+      enemies: [1, 2, 3, 4, 5, 6, 7, 8],
+      yarnballs: [
+        ...Array(9).fill().map((_, i) => {return { x: 10 + i * 5, y: 7 + i * 3 }})
+      ]
     };
   }
 
@@ -203,12 +206,16 @@ class StageLoader {
         this.plat(22.5, 27.5, 2.5, 3.5),      // 6: platform
 
         this.plat(37, 42, 2.5, 3.5),          // 7: platform
-        this.plat(41.5, 42.5, 2.5, 7)       // 8: wall
+        this.plat(41.5, 42.5, 2.5, 7)         // 8: wall
       ],
       powerups: [
         { x: 42, y: 12 }
       ],
-      enemies: [4, 6]
+      enemies: [4, 6],
+      yarnballs: [
+        { x: 14, y: 8 },
+        { x: 25, y: 8}
+      ]
     };
   }
 
@@ -225,7 +232,7 @@ class StageLoader {
         this.plat(9, 10, -18.5, -6.5),        // 3: wall
         this.plat(10, 14, -18.5, -17.5),      // 4: platform
         this.plat(4, 10, -25.5, -24.5),       // 5: platform
-        this.plat(10, 14, -25.5, -24.5),       // 6: platform
+        this.plat(10, 14, -25.5, -24.5),      // 6: platform
         this.plat(30, 40, -18.5, -17.5),      // 7: platform
         this.plat(30, 40, -25.5, -24.5)       // 8: platform
       ],
@@ -234,7 +241,12 @@ class StageLoader {
         { x: 11.5, y: -19.5 },
         { x: 35, y: -19.5 }
       ],
-      enemies: [2, 4, 5, 6, 7, 8]
+      enemies: [2, 4, 5, 6, 7, 8],
+      yarnballs: [
+        { x: 10, y: 6 },
+        { x: 10, y: -3 },
+        { x: 35, y: -12 }
+      ]
     };
   }
 
@@ -270,6 +282,10 @@ class StageLoader {
         ...Array(6).fill().map((_, i) => i + 1),   // indices of middle platform enemy ranges
         ...Array(7).fill().map((_, i) => i + 8),   // indices of upper platform enemy ranges
         ...Array(18).fill().map((_, i) => i + 16)  // indices of lower platform enemy ranges
+      ],
+      yarnballs: [
+        ...Array(6).fill().map((_, i) => {return { x : -30 + 5 * i, y: 22 }}),
+        ...Array(6).fill().map((_, i) => {return { x : 5 + 5 * i, y: 22 }}),
       ]
     };
   }
@@ -297,6 +313,10 @@ class StageLoader {
         { x: 30, y: 22}
       ],
       enemies: [0, 2, 3, 5],
+      yarnballs: [
+        { x: 20, y: 13 },
+        { x: 50, y: 8 }
+      ]
     };
   }
 
@@ -357,9 +377,9 @@ class StageLoader {
           fishies: {
             platIndex: [0],
           },
-          enemies: [0], 
+          enemies: [0],
           isEnemyXl: true
-        }, 
+        },
         {
           initX: 42,
           width: 6,
@@ -367,8 +387,8 @@ class StageLoader {
           initYTop: 55,
           count: 9,
           driftX: 9,
-          driftY: 0, 
-          enemies: [0,1,3,4,5,6,7], 
+          driftY: 0,
+          enemies: [0,1,3,4,5,6,7],
           isEnemyXs: true
         }
       ],

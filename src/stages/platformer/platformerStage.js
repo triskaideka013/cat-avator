@@ -27,6 +27,8 @@ class PlatformerStage extends StageBase {
     // initialize enemies
     this.enemies = EnemyFactory.createEnemies(this.platforms, this.levelConfig.enemies, this.levelConfig.enemySpeeds);
 
+    this.yarns = this.levelConfig.yarnballs.map(yarn => new HairBall(vec2(yarn.x, yarn.y), 0));
+
     window.addEventListener('enemy-destroyed', this.enemyCleanup.bind(this));
 
     // find pos.y of the lowest platform in level
@@ -76,7 +78,7 @@ class PlatformerStage extends StageBase {
   gameRenderPost() {
     if (!this.state.isActive()) return;
 
-    drawTextScreen(`🧶(yarnballs): ${this.powerupManager.getYarnBallCount()}` , vec2(100, 30), 30);
+    drawTextScreen(`🧶(yarnballs): ${this.powerupManager.getYarnBallCount()}` , vec2(110, 30), 30);
 
     drawTextScreen(
       `Score: ${this.player.getScore()}`,
@@ -104,6 +106,6 @@ class PlatformerStage extends StageBase {
   // destroy game objects
   teardown()
   {
-    [[this.player], this.platforms, this.powerups, this.enemies].forEach(lst => lst.forEach(el => el.destroy()));
+    [[this.player], this.platforms, this.powerups, this.enemies, this.yarns].forEach(lst => lst.forEach(el => el.destroy()));
   }
 }

@@ -28,7 +28,9 @@ class Player extends RectObject {
       platforms: this.platforms,
       powerups: this.powerups,
       enemies: this.enemies,
-      minimumStageY: this.minimumStageY
+      minimumStageY: this.minimumStageY,
+      yarns: this.yarns,
+      powerupManager: this.powerupManager
     } = opts);
 
     this.startPos = pos;
@@ -190,6 +192,19 @@ class Player extends RectObject {
         powerup.destroy();
         this.powerups.splice(this.powerups.indexOf(powerup), 1);
         this.powerupCounter += 1;
+      }
+    }
+
+    if (Symbol.iterator in Object(this.yarns)) {
+      for (const yarn of this.yarns) {
+        if (
+          isOverlapping(this.pos, this.size, yarn.pos, yarn.size)
+        ) {
+          this.powerupManager.addYarnBalls(1);
+          // remove from list.
+          this.yarns = this.yarns.filter(y => y !== yarn);
+          yarn.destroy();
+        }
       }
     }
 

@@ -4,7 +4,7 @@ class PowerupManager
 
     constructor()
     {
-        this.yarnBallCount =  24;
+        this.yarnBallCount =  0;
     }
 
     getYarnBallCount()
