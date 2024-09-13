@@ -147,6 +147,5 @@ engineInit(gameInit, gameUpdate, gameUpdatePost, gameRender, gameRenderPost, [
   "a.png", // 1 x 16 texture grass 1
   "b.png", // 1 x 16 texture grit 2
   "d.png", // 3 dice
-  "m.png", // mouse 4
-  "r.png" // rat 5
+  "r.png" // rat 4
 ]);
