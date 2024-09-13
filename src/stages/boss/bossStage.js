@@ -36,15 +36,14 @@ class BossStage extends StageBase {
 
       for (let i = 0; i < count; i++) {
         let coords = getPlatCoords(x, x + gen.width, y - gen.height, y);
-        // make platforms
-        this.platforms.push(
-          new Platform(
-            3,
-            vec2(coords.x, coords.y),
-            vec2(coords.width, coords.height),
-            new Color(0.5, 0.5, 0.5)
-          )
+        var platform = new Platform(
+          1,
+          vec2(coords.x, coords.y),
+          vec2(coords.width, coords.height),
+          new Color(0.5, 0.5, 0.5)
         );
+        // make platforms
+        this.platforms.push(platform);
         // make yarns
         if (gen.yarns && i >= gen.yarns.minIndex && i % gen.yarns.modulo == 0) {
           var yarnX = this.rng.int(x, x + gen.width);
@@ -52,19 +51,29 @@ class BossStage extends StageBase {
           this.yarns.push(new HairBall(vec2(yarnX, yarnY), 0));
         }
         // make fishies
-        if(gen.fishies)
-        {
-          if(gen.fishies.platIndex.indexOf(i) != -1)
-          {
-            var fishX = this.rng.int(x, x + gen.width);
-            var fishY = this.rng.int(y + 1, y + 4);
-            this.fishies.push(
-              new PowerUp(vec2(fishX, fishY), vec2(1, 1), new Color(1, 1, 0))
-            );
-          }
+        if (gen.fishies && gen.fishies.platIndex.indexOf(i) != -1) {
+          var fishX = this.rng.int(x, x + gen.width);
+          var fishY = this.rng.int(y + 1, y + 4);
+          this.fishies.push(
+            new PowerUp(vec2(fishX, fishY), vec2(1, 1), new Color(1, 1, 0))
+          );
         }
-         
-        
+
+        if (gen?.enemies?.length && gen.enemies.indexOf(i) != -1) {
+          var size = gen.isEnemyXl ? 10 : gen.isEnemyXs ? 2 : 6;
+          var speedBase = gen.isEnemyXl ? 18 : gen.isEnemyXs ? 24 : 20;
+          this.enemies.push(
+            new NPCCat(
+              "rat",
+              platform.pos,
+              vec2(size, size),
+              new Color(1, 0, 0),
+              platform,
+              vec2(18 / 60, 0),
+              true
+            )
+          );
+        }
 
         x += gen.driftX;
         y += gen.driftY;
@@ -85,7 +94,9 @@ class BossStage extends StageBase {
   init() {
     super.init();
 
-    this.player = new Player(vec2(10,3), {
+    window.addEventListener("enemy-destroyed", this.enemyCleanup.bind(this));
+
+    this.player = new Player(vec2(10, 3), {
       platforms: this.platforms,
       powerups: this.fishies,
       minimumStageY: -10,
@@ -98,6 +109,12 @@ class BossStage extends StageBase {
 
   gameUpdate() {
     if (!this.state.isActive()) return;
+
+    if (this.player.hasDied()) {
+      this.teardown();
+      this.fail();
+      return;
+    }
 
     for (let i = 0; i < this.yarns.length; i++) {
       var yarn = this.yarns[i];
@@ -113,9 +130,13 @@ class BossStage extends StageBase {
         yarn.destroy();
       }
     }
-  }
 
-  gameRender() {}
+    if (mouseWasPressed(0) && this.powerupManager.getYarnBallCount() > 0) {
+      new HairBall(this.player.pos, pointsToAngle(this.player.pos, mousePos));
+      this.powerupManager.removeYarnBall();
+    }
+   
+  }
 
   gameRenderPost() {
     for (let y of this.yarns) {
@@ -125,14 +146,27 @@ class BossStage extends StageBase {
     // center on player
     cameraPos = this.player.pos.add(vec2(10, 0));
 
+    this.platforms.forEach((platform) => platform.render());
+    this.fishies.forEach((fishy) => fishy.render());
+    this.enemies.forEach((enemy) => enemy.render());
+
     drawTextScreen(
       `🧶(yarnballs): ${this.powerupManager.getYarnBallCount()}`,
       vec2(100, 30),
       30
     );
+  }
 
-    this.platforms.forEach((platform) => platform.render());
-    this.fishies.forEach((fishy) => fishy.render());
-    this.enemies.forEach((enemy) => enemy.render());
+  // destroy game objects
+  teardown() {
+    this.platforms.forEach((platform) => platform.destroy());
+    this.fishies.forEach((fishy) => fishy.destroy());
+    this.enemies.forEach((enemy) => enemy.destroy());
+    this.player.destroy();
+    this.player = null;
+  }
+
+  enemyCleanup(event) {
+    this.enemies = this.enemies.filter((e) => e !== event.detail);
   }
 }

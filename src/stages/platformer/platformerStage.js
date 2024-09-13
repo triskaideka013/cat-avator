@@ -8,6 +8,7 @@ class PlatformerStage extends StageBase {
     super("platformer");
     this.levelConfig = levelConfig;
     this.powerupManager = powerupManager;
+    debugger;
   }
 
   init() {
