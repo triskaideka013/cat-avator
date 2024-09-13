@@ -31,7 +31,7 @@ class DiceStage extends StageBase {
       // adjust camera scale
       cameraScale = 8;
 
-      this.pirate = new PirateMouse(vec2(6,30));
+      this.pirate = new PirateMouse(vec2(6,30), vec2(16,9));
 
       if (powerupManager.getYarnBallCount() > 0) {
         // init dice game!

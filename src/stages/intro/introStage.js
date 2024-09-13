@@ -15,10 +15,7 @@ class IntroStage extends StageBase {
       "The story begins when our travel-weary hero, Triska De Cat",
       "rests for the evening at a Totally Normal Hotel™️",
       "",
-      "However, this hotel is anything BUT normal, and Triska finds",
-      "themselves trapped by the terrifying treiskaídeka-ites.",
-      "",
-      "Now, Triska must challenge the denizens of each floor",
+      "Anything BUT normal, you must challenge the denizens of each floor",
       "& find a way to escape b4 their 9 lives are up.",
     ];
 
@@ -26,14 +23,11 @@ class IntroStage extends StageBase {
       "Shoot🧶: Click",
       "Jump/Move: Arrows/WASD",
       "Flappy Cat: 🐟",
-      "Enemies: Shoot/stomp",
-      "Objective: Live",
+      "Enemies: Shoot/stomp"
     ];
 
     this.outroTextMap = [
-      "\nAlas, you've escaped from that awful hotel!",
-      "With the triskaideka-ite tricksters trounced, all was well again in the land o 13k",
-      "for now...",
+      "\n\nfin."
     ];
 
     this.activeText = this.isOutro ? this.outroTextMap : this.textMap;

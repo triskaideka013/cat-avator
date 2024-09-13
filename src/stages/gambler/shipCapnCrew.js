@@ -321,14 +321,14 @@ class PirateMouse extends EngineObject {
 
     constructor(pos, size) {
 
-        super(pos)
+        super(pos, size)
 
         this.pos = pos
-        this.size = vec2(16,9)
+        this.size = size
     }
 
     // littlejs
     render() {
-        drawTile(this.pos, this.size, tile(0, this.size, 4), new Color(0,0,0,1))
+        drawTile(this.pos, this.size, tile(0, this.size, 3), new Color(0,0,0,1))
     }
 }
