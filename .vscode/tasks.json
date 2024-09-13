@@ -6,7 +6,7 @@
     {
       "label": "dev-build",
       "type": "shell",
-      "command": "node ./packaging/build.debug.js",
+      "command": "node ./packaging/build.default.js",
       "problemMatcher": [],
       "group": {
         "kind": "build",
