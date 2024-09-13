@@ -30,21 +30,16 @@ class IntroStage extends StageBase {
     ];
 
     this.activeText = this.textMap;
-
-    this.startButton = new SimpleButton(
-      vec2(-3, -5),
-      vec2(4, 2),
-      new Color(0.7, 0.3, 0.3, 1)
-    );
-    this.startButton.setText("Start", 1, new Color(0, 0, 0, 1));
-
-    // controls overlay
-    this.controlsButton = new SimpleButton(
-      vec2(3, -5),
-      vec2(4, 2),
-      new Color(0.7, 0.3, 0.3, 1)
-    );
-    this.controlsButton.setText("Help", 1, new Color(0, 0, 0, 1));
+    
+    let btns = [this.startButton,this.controlsButton];
+    ["Start","Help"].map((text,i) => {
+      btns[i] = new SimpleButton(
+        vec2(-3, -5),
+        vec2(4, 2),
+        new Color(0.7, 0.3, 0.3, 1)
+      );
+      btns[i].setText(text, 1, new Color(0, 0, 0, 1));
+    })
 
     // kitty sprite
     this.kittyPos = this.getRandomPos();
@@ -73,16 +68,18 @@ class IntroStage extends StageBase {
     }
 
     if (this.controlsButton.wasClicked()) {
+        let text;
         if(this.helpActive)
         {
           this.activeText = this.textMap;
-          this.controlsButton.setText("Help", 1, new Color(0, 0, 0, 1));
+          text = "Help";
         }
         else 
         {
           this.activeText = this.helpTextMap;
-          this.controlsButton.setText("Story", 1, new Color(0, 0, 0, 1));
+          text = "Story";
         }
+        this.controlsButton.setText(text)
         this.helpActive =  !this.helpActive;
     }
   }
