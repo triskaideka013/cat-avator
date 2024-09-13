@@ -34,7 +34,7 @@ class IntroStage extends StageBase {
     let btns = [this.startButton,this.controlsButton];
     ["Start","Help"].map((text,i) => {
       btns[i] = new SimpleButton(
-        vec2(-3, -5),
+        vec2((i == 0 ? -3 : 3), -5),
         vec2(4, 2),
         new Color(0.7, 0.3, 0.3, 1)
       );
