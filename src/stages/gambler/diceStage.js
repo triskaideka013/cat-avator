@@ -1,6 +1,6 @@
 // import { drawTextScreen, CanvasTextAlign, mainCanvasSize, mouseWasPressed, drawRectScreen } from "littlejsengine";
-const anteBGColor = hsl(degreesToRadians(11),.6,.6)
-const textColor = new Color(255,255,255,1);
+let anteBGColor = hsl(degreesToRadians(11),.6,.6)
+let textColor = new Color(255,255,255,1);
 class DiceStage extends StageBase {
     constructor(completedLevels, powerupManager) {
       super("dice");
@@ -11,10 +11,10 @@ class DiceStage extends StageBase {
       this.cameraOffset = vec2(0, -0.5);
       this.levelSize = vec2(2, 6);
       if (powerupManager.getYarnBallCount() > 0) {
-        this.moji = '🧶'
+        this.bet = '🧶'
         this.pirateText = "Ahoy, matey!\n\nI need a SHIP (6), CAPN (5) and CREW (4).\n\nLet's gamble for treasure, LANDLUBBER!";
       } else {
-        this.moji = '❔'
+        this.bet = '?'
         this.pirateText = "Me hearty, you've nothing to BET me!\n\nI sure do like YARN BALLS though...";
       }
 
@@ -35,7 +35,7 @@ class DiceStage extends StageBase {
 
       if (powerupManager.getYarnBallCount() > 0) {
         // init dice game!
-        this.game = new ShipCapnCrew(true); // true = sudden death enabled
+        this.game = new ShipCapnCrew(); // true = sudden death enabled
       }
 
       
@@ -52,6 +52,7 @@ class DiceStage extends StageBase {
 
         this.isTimedOut = true;
         this.game.rollDice();
+        let t0 = 1000
         setTimeout(() => {
 
           if (this.game.gameover) {
@@ -63,20 +64,20 @@ class DiceStage extends StageBase {
               setTimeout(() => {
                 this.teardown()
                 this.complete()
-              }, 2000);
+              }, t0);
             } else {
               if (this.game.triskaideka) {
                 // this.powerupManager.setYarnBalls(0); // notso hard-core ending
                 setTimeout(() => {
                   this.teardown();
                   this.instaKill();
-                }, 2000)
+                }, t0)
               } else {
                 this.powerupManager.removeYarnBall();
                 setTimeout(()=>{
                   this.teardown();
                   this.fail();
-                }, 2000)
+                }, t0)
               }
             }
 
@@ -85,7 +86,7 @@ class DiceStage extends StageBase {
           }
 
           
-        }, 1000);
+        }, t0);
 
       }
     }
@@ -102,8 +103,8 @@ class DiceStage extends StageBase {
 
       ///  <bet>
       drawRect(vec2((mainCanvasSize.x / 16) - 165 , 35), vec2(25), anteBGColor);
-      drawTextScreen(this.moji, vec2((mainCanvasSize.x / 2)-430, 450), 96);
-      drawTextScreen("Player's Bet", vec2((mainCanvasSize.x / 2)-428, 585), 32);
+      drawTextScreen(this.bet, vec2((mainCanvasSize.x / 2)-430, 450), 96);
+      drawTextScreen("Ante", vec2((mainCanvasSize.x / 2)-428, 585), 32);
 
       ///  <score>
       if (!!this.game?.player1?.rolls >= 1) {
