@@ -6,4 +6,4 @@ Now, you must challenge the denizens of each floor and find a way to escape befo
 
 Use W, A, S, D or ARROW keys to jump and move, and CLICK or use SPACEBAR to shoot yarn at enemies
 
-Competition Notes -- unless we can re-submit, our came had a one-off bug when we submitted before 7am on Friday, 13, 2024.  We have patched the code and re-zipped here #inCaseItMatters
+Competition Notes -- Unless we can re-submit, our Game had a one-off bug when we submitted in a rush on Friday, 13 right before 7:00 AM EST.  We submitted early IN ERRORdeadline was actually 1:00 PM CST (and this note was writted and committed before that time).  We have patched the code and re-zipped here #inCaseItMatters
