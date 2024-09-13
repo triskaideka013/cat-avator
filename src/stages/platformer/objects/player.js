@@ -13,8 +13,6 @@
  */
 
 const RIGHT = 'R', LEFT = 'L';
-const MAX_FRAME_PLAYER = 4;
-
 class Player extends RectObject {
   /**
    * @param {vec2} pos
@@ -95,20 +93,20 @@ class Player extends RectObject {
       direction = keyIsDown(KeyboardKeys.ArrowLeft) ? LEFT : RIGHT;
 
       this.speedDownLooper++;
-      if (this.speedDownLooper % 2 === 0) {
+      if (this.speedDownLooper % 2 == 0) {
         this.frame++; // animate the walking!
-        if (this.frame === MAX_FRAME_PLAYER) {
+        if (this.frame == 2) {
           this.frame = 0;
         }
       }
-      if (60 === this.speedDownLooper) {
+      if (60 == this.speedDownLooper) {
         this.speedDownLooper = 0
       }
       this.direction = direction;
     }
-    if (direction !== null) {
+    if (direction != null) {
       // direction changed
-      this.mirror = (this.direction === LEFT) ? true : false;
+      this.mirror = (this.direction == LEFT) ? true : false;
     }
 
 
@@ -199,7 +197,7 @@ class Player extends RectObject {
       this.failed = true;
     }
 
-    if (this.powerups.length === 0) {
+    if (this.powerups.length == 0) {
       this.succeeded = true;
     }
   }

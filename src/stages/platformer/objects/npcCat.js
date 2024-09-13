@@ -1,6 +1,5 @@
 // uncomment this line to reference LittleJS types -->
 // import { Color, vec2, drawRect, drawTile, Vector2, RectObject } from "littlejsengine"
-const MAX_FRAME_NPC = 2;
 class NPCCat extends RectObject {
   /**
    *
@@ -27,11 +26,11 @@ class NPCCat extends RectObject {
     if ('rat' == character) {
       this.pos.y = platformTop;
       this.tileVector = vec2(16,19)
-      this.imageIndex = 6
+      this.imageIndex = 5
     } else if ('cat' == character) {
       this.pos.y = platformTop + halfEnemyHeight;
       this.tileVector = vec2(18,14);
-      this.imageIndex = 7
+      this.imageIndex = 0
     }
     this.speedDownLooper = 0;
     this.setCollision();
@@ -60,7 +59,7 @@ class NPCCat extends RectObject {
     this.speedDownLooper++;
     if (this.speedDownLooper % 3 === 0) {
       this.frame++; // animate the ambling!
-      if (this.frame == MAX_FRAME_NPC) {
+      if (this.frame == 2) {
         this.frame = 0;
       }
     }
