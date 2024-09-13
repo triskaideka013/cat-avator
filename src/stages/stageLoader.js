@@ -193,7 +193,7 @@ class StageLoader {
   simplePlatformerLevel1Config() {
     return {
       platforms: [
-        this.plat(7.5, 8.5, 7.5, 8.5),        // 0: wall
+        this.plat(7.5, 8.5, 6.5, 7.5),        // 0: wall
         this.plat(7.5, 12.5, 2.5, 3.5),       // 1: platform
         this.plat(10, 15, 2.5, 3.5),          // 2: wall
         this.plat(17, 18, 2.5, 10.5),         // 3: wall
