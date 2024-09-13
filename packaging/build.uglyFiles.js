@@ -20,24 +20,26 @@ const sourceFiles = [];
 const sources = ["state", "stages", "game-objects", "util", "powerups"];
 
 const vendorFiles = [
-  "./vendor/src/engineRelease.js",
   "./vendor/src/engineUtilities.js",
-  "./vendor/src/engineSettings.js",
-  "./vendor/src/engineObject.js",
-  "./vendor/src/engineDraw.js",
-  "./vendor/src/engineInput.js",
-  "./vendor/src/engineAudio.js",
-  "./vendor/src/engineTileLayer.js",
-  "./vendor/src/engine.js",
+"./vendor/src/engineSettings.js",
+"./vendor/src/engineObject.js",
+"./vendor/src/engineDraw.js",
+"./vendor/src/engineInput.js",
+"./vendor/src/engineAudio.js",
+"./vendor/src/engineTileLayer.js",
+"./vendor/src/engineParticles.js",
+"./vendor/src/engine.js"
 ];
 
-vendorFiles.forEach((v) => sourceFiles.push(v));
+//vendorFiles.forEach(v => sourceFiles.push(v));
+
+//sourceFiles.push("./vendor/littlejs/littlejs.min.js");
 
 for (let source of sources) {
   findGameFiles("./src", source, sourceFiles);
 }
 
-sourceFiles.push("./src/game.js");
+//sourceFiles.push("./src/game.js");
 
 console.log("Found Source Files:");
 console.log(sourceFiles);
@@ -55,34 +57,41 @@ fs.mkdirSync(BUILD_FOLDER);
 ////////////////////////////////////////
 // Move assets to build directory
 for (const src of assets) {
-  let file = src.split("/")[2];
+  let file = src.split('/')[2]
   fs.copyFileSync(src, `${BUILD_FOLDER}/${file}`);
 }
 
 ////////////////////////////////////////
 // Compile
 
-Build(`${BUILD_FOLDER}/index.js`, sourceFiles, [
-  closureCompilerStep,
+Build(`${BUILD_FOLDER}`, sourceFiles, [
+ // closureCompilerStep,
   uglifyBuildStep,
-  roadrollerBuildStep,
-  htmlBuildStep,
+//  roadrollerBuildStep,
+//  htmlBuildStep,
 ]);
 
 ////////////////////////////////////////
 // Compilation steps
 // A single build with its own source files, build steps, and output file
 // - each build step is a callback that accepts a single filename
-function Build(outputFile, files = [], buildSteps = []) {
+function Build(outputDir, files = [], buildSteps = []) {
   // copy files into a buffer
   let buffer = "";
-  for (const file of files) buffer += fs.readFileSync(file) + "\n";
+  for (const file of files) 
+  {
+    const parts = file.split("/");
+    const name = parts[parts.length -1];
+    buffer = fs.readFileSync( file) ;
+    fs.writeFileSync(outputDir+ "/ugly." + name, buffer, { flag: "w+" });
+    for (const buildStep of buildSteps) buildStep(outputDir+ "/ugly." + name);
+  }
 
   // output file
-  fs.writeFileSync(outputFile, buffer, { flag: "w+" });
+  
 
   // execute build steps in order
-  for (const buildStep of buildSteps) buildStep(outputFile);
+  
 }
 
 function closureCompilerStep(filename) {
@@ -99,7 +108,7 @@ function closureCompilerStep(filename) {
 
 function uglifyBuildStep(filename) {
   console.log(`Running uglify...`);
-  child_process.execSync(`npx uglifyjs ${filename} -c -m -o ${filename}`, {
+  child_process.execSync(`npx uglifyjs ${filename} -c -m --mangle-props -o ${filename}`, {
     stdio: "inherit",
   });
 }
@@ -145,7 +154,7 @@ function findGameFiles(path, entry, gameFiles) {
   }
 }
 
-function findGameAssets(gameFiles, path = "./assets") {
+function findGameAssets(gameFiles, path='./assets') {
   let target = `${path}`;
 
   if (fs.lstatSync(target).isFile()) {
