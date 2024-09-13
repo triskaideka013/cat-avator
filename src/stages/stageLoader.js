@@ -104,7 +104,7 @@ class StageLoader {
       {
         index: 12,
         builder: this.bossBuilder,
-        config: {},
+        config: this.bossStageConfig(),
       },
     ];
 
@@ -319,6 +319,50 @@ class StageLoader {
         { x: 30, y: 22}
       ],
       enemies: [0, 2, 3, 5],
+    };
+  }
+
+  bossStageConfig()
+  {
+    return {
+      platforms: [
+      ],
+      enemies: [],
+    
+      genPlats: [
+        {
+          initX: 7,
+          width: 15,
+          height: 1,
+          initYTop: 3,
+          count: 10,
+          driftX: 1,
+          driftY: 6,
+          yarns: {
+            minIndex: 1,
+            modulo: 3,
+          },
+          fishies: {
+            platIndex: [2],
+          },
+        },
+        {
+          initX: -5,
+          width: 7,
+          height: 1,
+          initYTop: 6,
+          count: 10,
+          driftX: -1,
+          driftY: 6,
+          yarns: {
+            minIndex: 1,
+            modulo: 3,
+          },
+          fishies: {
+            platIndex: [8],
+          },
+        },
+      ],
     };
   }
 }
