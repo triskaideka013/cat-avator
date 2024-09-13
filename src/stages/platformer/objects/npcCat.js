@@ -26,7 +26,7 @@ class NPCCat extends RectObject {
     if ('rat' == character) {
       this.pos.y = platformTop;
       this.tileVector = vec2(16,19)
-      this.imageIndex = 5
+      this.imageIndex = 4
     } else if ('cat' == character) {
       this.pos.y = platformTop + halfEnemyHeight;
       this.tileVector = vec2(18,14);

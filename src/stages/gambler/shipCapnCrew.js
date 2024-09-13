@@ -321,10 +321,10 @@ class PirateMouse extends EngineObject {
 
     constructor(pos, size) {
 
-        super(pos, size)
+        super(pos)
 
         this.pos = pos
-        this.size = vec2(13,15)
+        this.size = vec2(16,9)
     }
 
     // littlejs
