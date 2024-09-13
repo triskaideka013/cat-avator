@@ -5,19 +5,17 @@
  * @property {number} value
  * @property {boolean} held
  */
-const heldDiceBGColor = hsl(degreesToRadians(72),1,.65) // 80 light green
-const gameDiceBGColor = hsl(degreesToRadians(115),.5,.5)
+let heldDiceBGColor = hsl(degreesToRadians(72),1,.65) // 80 light green
+let gameDiceBGColor = hsl(degreesToRadians(115),.5,.5)
 
 // TODO: remove debug drudgery
 class ShipCapnCrew {
 
-    constructor(suddenDeath=false) {        
+    constructor() {        
         this.player1 = this.setupPlayer()
-        this.setupDice()
         this.gameover = false
         this.isTimedOut = false
         this.triskaideka = false
-        this.suddenDeath = suddenDeath
     }
 
     ///  SETUP ///
@@ -28,7 +26,7 @@ class ShipCapnCrew {
      * @returns {Object}
      */
     setupPlayer() {
-        return {
+        let player = {
             diceArray: [],
             shipCapnCrew: false,
             hasLost: false,
@@ -38,16 +36,15 @@ class ShipCapnCrew {
             rolls: 3,
             score: 0
         }
-    }
-
-    setupDice() {
         // create 5 dice
         let i = 0
         let offsetX = -36;
         do {
-            this.player1.diceArray.push(new PlayerDice(vec2(offsetX + (22 * i), 0), vec2(16)))
+            player.diceArray.push(new PlayerDice(vec2(offsetX + (22 * i), 0), vec2(16)))
             i++
-        } while (this.player1.diceArray.length < 5)
+        } while (player.diceArray.length < 5)
+
+        return player
     }
 
     ///  PLAY GAME ///
@@ -93,14 +90,14 @@ class ShipCapnCrew {
         diceArray.forEach(d => {
             if (!d.held) {
                 // create parallel arrays with values of dice and their indices
-                rolledValues.push(d.getValue())
+                rolledValues.push(d.value)
                 rolledIndices.push(i)
             } else if (d.held) {
-                if (d.getValue() < 4 || // if dice value is not 6, 5, 4
-                    collectedDice.indexOf(d.getValue()) !== -1) { // -- or we have already counted them
-                    heldDiceValue += d.getValue()
+                if (d.value < 4 || // if dice value is not 6, 5, 4
+                    collectedDice.indexOf(d.value) != -1) { // -- or we have already counted them
+                    heldDiceValue += d.value
                 } else {
-                    collectedDice.push(d.getValue()) // 6, 5, 4
+                    collectedDice.push(d.value) // 6, 5, 4
                 }
                 
             }
@@ -113,19 +110,19 @@ class ShipCapnCrew {
         let iCapn = rolledValues.indexOf(5)
         let iCrew = rolledValues.indexOf(4)
 
-        if (!player.ship && iShip !== -1) {
+        if (!player.ship && iShip != -1) {
             // ship!  collect dice
             player.ship = true 
             diceArray[rolledIndices[iShip]].collect()
             didCollect = true
         } 
-        if (!player.capn && iCapn !== -1 && player.ship) { // player must have ship to colect capn
+        if (!player.capn && iCapn != -1 && player.ship) { // player must have ship to colect capn
             // capn!  collect dice
             player.capn = true
             diceArray[rolledIndices[iCapn]].collect()
             didCollect = true
         }
-        if (!player.crew && iCrew !== -1 && player.capn) { // player must have capn to colect crew
+        if (!player.crew && iCrew != -1 && player.capn) { // player must have capn to colect crew
             // crew!  collect dice
             player.crew = true
             diceArray[rolledIndices[iCrew]].collect()
@@ -149,15 +146,6 @@ class ShipCapnCrew {
             player.score += heldDiceValue
         }
         let scoreMsg = `your score is ${player.score}`
-
-        console.log({
-            "score": player.score,
-            "collect": didCollect, 
-            "loser": player.hasLost,
-            "ship-capn-crew": player.shipCapnCrew,
-        }) 
-        console.log(rolledValues, "rolled-after-collecting")
-        console.log(heldDiceValue, "held")
 
         // winning, losing or re-rolling
         if (player.hasLost) {
@@ -189,10 +177,10 @@ class ShipCapnCrew {
                             // what are we holding?
                             if (!d.held) {
                                 let held
-                                if (d.getValue() == 6) {
+                                if (d.value == 6) {
                                     held = true // hold the 6 for the player
                                 } else {
-                                    held = confirm(`hold ${d.getValue()}?`);
+                                    held = confirm(`hold ${d.value}?`);
                                 }
                                 d.held = held
                             }
@@ -218,25 +206,25 @@ class ShipCapnCrew {
 
             let riskItAll = false
             
-            if (player.score == 12 && this.suddenDeath) {
+            if (player.score == 12) {
                 
                 this.isTimedOut = true
+
                 setTimeout(()=>{
+
                     this.isTimedOut = false;
 
-                    riskItAll = confirm(`risk it all? just don't roll a 1!`)
+                    riskItAll = confirm(`risk it all? just don't roll a 1..`)
+
+                    this.gameover = true   
 
                     if (riskItAll) {
         
                         let d6 = new PlayerDice(vec2(8, -22), vec2(16))
                         
-                        let roll = d6.roll().getValue()
+                        let roll = d6.roll().value
                         d6.held = true
-                        player.diceArray.forEach(d => {
-                            if (!d.gameDice) {
-                                d.held = true
-                            }
-                        })
+                        this.highlight()
                         
                         if (roll == 1) {
                             this.pirateText = `\nARRR! 6 + 6 + 1 is 13...\n\nHow UNLUCKY! Time to walk the PLANK.`
@@ -247,11 +235,7 @@ class ShipCapnCrew {
                             player.score *= roll
                         }
 
-                        this.gameover = true  
-
                     } else {
-
-                        this.gameover = true   
 
                         this.classicEnding()                
                     }
@@ -268,13 +252,17 @@ class ShipCapnCrew {
     classicEnding() {
 
         if (this.player1.shipCapnCrew) {
-            this.player1.diceArray.forEach(d => { // highlight all dice used for score
-                if (!d.gameDice)
-                    d.held = true
-            })
+            this.highlight()
         } 
         
         this.pirateText = (this.player1.shipCapnCrew) ? "\nSQUEEEK!\n\nYou are a WINNER...take your PRIZE!!" : "\n\nYOU LOST.  I'll be taking that!"
+    }
+
+    highlight() {
+        this.player1.diceArray.forEach(d => { // highlight all dice used for score
+            if (!d.gameDice)
+                d.held = true
+        })
     }
 }
 
@@ -290,8 +278,6 @@ class PlayerDice extends EngineObject {
         this.held = false
         this.gameDice = false
         this.value = 0
-        this.frame = null
-        this.angle = degreesToRadians(Math.floor(Math.random()*4)*90)
     }
 
     /**
@@ -302,10 +288,6 @@ class PlayerDice extends EngineObject {
         this.frame = Math.floor(Math.random() * 6) // 0-5
         this.value = this.frame + 1 // number on dice
         return this
-    }
-
-    getValue() {
-        return this.value
     }
 
     collect() {
@@ -328,7 +310,7 @@ class PlayerDice extends EngineObject {
             if (this.held) // rectangle behind dice to show they are held?
                 drawRect(this.pos, vec2(this.size.x*1.25), this.gameDice ? gameDiceBGColor : heldDiceBGColor);
             
-            drawTile(this.pos, this.size, tile(this.frame, vec2(16,16), 3), new Color(0,0,0,1), this.angle)
+            drawTile(this.pos, this.size, tile(this.frame, vec2(16), 3), new Color(0,0,0,1))
         } else {
             drawRect(this.pos, this.size);
         }
@@ -337,16 +319,16 @@ class PlayerDice extends EngineObject {
 
 class PirateMouse extends EngineObject {
 
-    constructor(pos, size=vec2(13,15)) {
+    constructor(pos, size) {
 
         super(pos, size)
 
         this.pos = pos
-        this.size = size
+        this.size = vec2(13,15)
     }
 
     // littlejs
     render() {
-        drawTile(this.pos, this.size, tile(0, vec2(13,15), 4), new Color(0,0,0,1))
+        drawTile(this.pos, this.size, tile(0, this.size, 4), new Color(0,0,0,1))
     }
 }
