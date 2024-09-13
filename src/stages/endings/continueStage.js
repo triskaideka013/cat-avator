@@ -4,7 +4,7 @@ class ContinueStage extends StageBase {
     this.lifeCount = lifeCount;
 
     this.messages = [
-      "the bell hath tolled for thee",
+      "Pfft. More like none orange brain cell.",
       "can haz try again?",
       // "don't fear the reaper",
       "the reaper has been grim to ye",
