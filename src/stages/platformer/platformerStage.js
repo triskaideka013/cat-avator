@@ -39,7 +39,6 @@ class PlatformerStage extends StageBase {
           "rat",
           this.platforms[e].pos,
           vec2(2, 2),
-          new Color(1, 0, 0),
           this.platforms[e],
           this.levelConfig.enemySpeeds?.[i] ?? vec2(2 / 60, 0),
           true

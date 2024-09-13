@@ -9,10 +9,9 @@ class NPCCat extends RectObject {
    * @param {RectObject} platform
    * @param {vec2} speed
    */
-  constructor(character='rat', pos, size, tintColor, platform, speed=vec2(2 / 60, 0), mirror=true) {
+  constructor(character='rat', pos, size, platform, speed=vec2(2 / 60, 0), mirror=true) {
     super(pos, size);
     this.color = new Color(0,0,0,0); // transparent background
-    this.tintColor = tintColor
     this.platform = platform;
     this.frame = 0;
     this.mirror = mirror
@@ -66,7 +65,7 @@ class NPCCat extends RectObject {
 
   render() {
 
-    drawTile(this.pos, this.size, tile(this.frame, this.tileVector, this.imageIndex), new Color(0,0,0,1), 0, this.mirror, this.tintColor)
+    drawTile(this.pos, this.size, tile(this.frame, this.tileVector, this.imageIndex), new Color(0,0,0,1), 0, this.mirror)
   }
 
   identifySelf() {
