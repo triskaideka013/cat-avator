@@ -5,3 +5,5 @@ Triskaideka-Cat is the star of this purr-fectly cuddly elevator caper.  The stor
 Now, you must challenge the denizens of each floor and find a way to escape before your nine lives are up.  Jump, collect, flap, and fight the rascally rats that fill the hotel floors--throwing balls of yarn, bopping, and even gambling your way out of treachery.  Reach the 13th floor and a fat cat boss is waiting to annoy you.
 
 Use W, A, S, D or ARROW keys to jump and move, and CLICK or use SPACEBAR to shoot yarn at enemies
+
+Competition Notes -- unless we can re-submit, our came had a one-off bug when we submitted before 7am on Friday, 13, 2024.  We have patched the code and re-zipped here #inCaseItMatters
