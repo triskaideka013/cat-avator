@@ -127,6 +127,14 @@ class StageLoader {
   }
 
   /**
+   * load the closing screen on game complete
+   */
+  loadOutro()
+  {
+      return new IntroStage({isOutro: true});
+  }
+
+  /**
    * Creates a closure which returns an instance of platformer stage.
    * @param {*} config the mapped level config to provided to the stage
    * @param {PowerupManager} powerupManager pass stageLoader's powerup manager to each stage

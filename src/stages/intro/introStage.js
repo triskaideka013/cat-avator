@@ -1,5 +1,5 @@
 class IntroStage extends StageBase {
-  constructor() {
+  constructor(config) {
     super("intro");
     this.rng = new RandomGenerator(100101);
   }
